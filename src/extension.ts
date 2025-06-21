@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CommandCodeLensProvider } from './commandCodeLensProvider';
-import cp = require('child_process');
+import * as cp from 'child_process';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(

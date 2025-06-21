@@ -1,13 +1,13 @@
 {
-	"name": "markdown-command-runner",
-	"displayName": "Markdown Command Runner",
-	"description": "Easily run commands in markdown files",
-	"version": "0.1.5",
-	"publisher": "Sycl",
+	"name": "vscode-weaponized",
+	"displayName": "Weaponized VSCode",
+	"description": "using vscode to hack the world",
+	"version": "0.0.1",
+	"publisher": "Esonhugh",
 	"icon": "images/icon.png",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Ackar/markdown-command-runner.git"
+		"url": "https://github.com/Esonhugh/vscode-weaponized.git"
 	},
 	"engines": {
 		"vscode": "^1.37.0"
@@ -35,14 +35,18 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.37.0",
-		"glob": "^7.1.4",
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^10.17.60",
+		"@types/vscode": "^1.101.0",
+		"glob": "^7.2.3",
 		"mocha": "^6.2.3",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.0.2"
+		"tslint": "^5.20.1",
+		"typescript": "^3.9.10",
+		"vscode-test": "^1.6.1"
+	},
+	"dependencies": {
+		"ts-node": "^10.9.2",
+		"yaml": "^2.8.0"
 	}
 }
