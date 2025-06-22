@@ -22,9 +22,16 @@ function GenerateEnvExportCodeLens(
   let configs: string = "";
   try {
     if (configtype === "user") {
-      configs = dumpUserCredentials(parseUserCredentialsYaml(config), "env");
+      let users = parseUserCredentialsYaml(config);
+      users.forEach((v) => {
+        return v.setAsCurrent();
+      });
+
+      configs = dumpUserCredentials(users, "env");
     } else if (configtype === "host") {
-      configs = dumpHosts(parseHostsYaml(config), "env");
+      let hosts = parseHostsYaml(config)
+      hosts.forEach((v)=>{return v.setAsCurrent()})
+      configs = dumpHosts(hosts, "env");
     } else {
       new Error(
         `Unknown config type: ${configtype}. Expected 'user' or 'host'.`
@@ -109,6 +116,7 @@ export class DumpProvider implements vscode.CodeLensProvider {
           codeLenses.push(
             ...GenerateEnvExportCodeLens(configtype, currentYaml, yamlStartLine),
           );
+          
           if (configtype == "user") {
             for (let fmt of ["impacket", "nxc"]) {
               var format = fmt as UserDumpFormat
@@ -128,7 +136,7 @@ export class DumpProvider implements vscode.CodeLensProvider {
       if (line.startsWith("```yaml")) {
         inYaml = true;
         yamlStartLine = i;
-        if (line.includes("user")) {
+        if (line.includes("credentials")) {
           configtype = "user";
         } else if (line.includes("host")) {
           configtype = "host";

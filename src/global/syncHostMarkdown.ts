@@ -6,9 +6,8 @@ import {
   UserCredential,
 } from "../model";
 import { logger } from "./log";
-import { Key } from "readline";
 
-function getCodeblock(content: string, identity: string): string[] {
+export function getCodeblock(content: string, identity: string): string[] {
   let lines = content.split("\n");
 
   var inYaml = false;
@@ -21,6 +20,7 @@ function getCodeblock(content: string, identity: string): string[] {
         logger.debug(`Found end of the yaml block`);
         inYaml = false;
         ret.push(currentYaml);
+        logger.trace(`Pushed yaml block for config type: ${identity}`);
       }
       currentYaml += line + "\n";
     }
@@ -52,20 +52,20 @@ function uniqueUsers(old_user: UserCredential[]): UserCredential[]{
     let uniqmap = new Map<string,number>();
     let newUser: UserCredential[] = [];
     for (let u of old_user) {
-        if (uniqmap.has(`${u.login}/${u.username}`)) {
+        if (uniqmap.has(`${u.login}/${u.user}`)) {
             continue
         }
         newUser.push(u)
-        uniqmap.set(`${u.login}/${u.username}`, 1)
+        uniqmap.set(`${u.login}/${u.user}`, 1)
     }
     return newUser
 }
 
-function parseUserCredYamlCodeBlock(
+export function parseUserCredYamlCodeBlock(
   content: string,
   old_user_list: UserCredential[]
 ): UserCredential[] {
-  let blocks = getCodeblock(content, "user");
+  let blocks = getCodeblock(content, "credentials");
   for (let b of blocks) {
     try {
         let users: UserCredential[] = parseUserCredentialsYaml(b);
@@ -77,7 +77,7 @@ function parseUserCredYamlCodeBlock(
   return uniqueUsers(old_user_list);
 }
 
-function parseHostYamlCodeBlock(
+export function parseHostYamlCodeBlock(
   content: string,
   old_host_list: Host[]
 ): Host[] {

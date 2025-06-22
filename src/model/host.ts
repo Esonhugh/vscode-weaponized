@@ -64,7 +64,7 @@ export class Host {
           ret = `${ret} DC_HOST=${this.aliases[0]} DC_IP=${this.ip}`;
         }
         if (this.is_current) {
-          ret = `${ret} HOST=${this.hostname} DOMAIN=${this.hostname} RHOST=${this.ip} IP=${this.ip}`;
+          ret = `${ret} HOST=${this.hostname} DOMAIN=${this.hostname} RHOST=${this.ip} IP=${this.ip} TARGET=${this.hostname}`;
         }
 
         break;
@@ -75,12 +75,14 @@ export class Host {
     return ret;
   }
 
-  setAsCurrent() {
+  setAsCurrent(): Host {
     this.is_current = true;
+    return this
   }
 
-  setAsCurrentDC() {
+  setAsCurrentDC():Host{
     this.is_current_dc = true;
+    return this
   }
 }
 

@@ -2,10 +2,10 @@ import { parse as yamlParse } from "yaml";
 
 import { envVarSafer } from "./util";
 
-const default_bad_nt_hash = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+const default_bad_nt_hash = "ffffffffffffffffffffffffffffffff";
 
 interface innerUserCredential {
-  username?: string;
+  user?: string;
   password?: string;
   nt_hash?: string;
   login?: string;
@@ -26,7 +26,7 @@ export function parseUserCredentialsYaml(content: string): UserCredential[] {
 export type UserDumpFormat = "env" | "impacket" | "nxc";
 
 export class UserCredential {
-  username: string = "";
+  user: string = "";
   password: string = "";
   nt_hash: string = default_bad_nt_hash;
   login: string = "";
@@ -34,7 +34,7 @@ export class UserCredential {
   props: { [key: string]: string } = {};
 
   init(iuser: innerUserCredential):UserCredential {
-    this.username = iuser.username? iuser.username : ""
+    this.user = iuser.user? iuser.user : ""
     if (iuser.password) {
       this.password = iuser.password;
     }
@@ -52,13 +52,13 @@ export class UserCredential {
     switch (format) {
       default:
       case "env":
-        let safename = envVarSafer(this.username);
+        let safename = envVarSafer(this.user);
         if (safename.length > 10) {
           safename = safename.substring(0, 10);
         }
-        ret = `export USER_${safename}="${this.username}"`;
+        ret = `export USER_${safename}="${this.user}"`;
         if (this.is_current) {
-          ret = `${ret} USER=${this.username} USERNAME='${this.username}'`;
+          ret = `${ret} USER=${this.user} USERNAME='${this.user}'`;
         }
         if (this.nt_hash === default_bad_nt_hash) {
           ret = `${ret} PASS_${safename}='${this.password}'`;
@@ -73,21 +73,21 @@ export class UserCredential {
         }
         break;
       case "impacket":
-        if (this.login && (this.login !== "" || this.login !== this.username )) {
+        if (this.login && (this.login !== "" || this.login !== this.user )) {
           // if login is empty or same as username
           ret = `'${this.login}'/`;
         }
         if (this.nt_hash === default_bad_nt_hash) {
-          ret = `${ret}'${this.username}':'${this.password}'`;
+          ret = `${ret}'${this.user}':'${this.password}'`;
         } else {
-          ret = `${ret}'${this.username}' -hashes ':${this.nt_hash}'`;
+          ret = `${ret}'${this.user}' -hashes ':${this.nt_hash}'`;
         }
         break;
       case "nxc":
-        if (this.login && (this.login != "" || this.login !== this.username)) {
-          ret = `'${this.login}' -u '${this.username}'`;
+        if (this.login && (this.login != "" || this.login !== this.user)) {
+          ret = `'${this.login}' -u '${this.user}'`;
         } else {
-          ret = `-u '${this.username}'`
+          ret = `-u '${this.user}'`
         }
         if (this.nt_hash === default_bad_nt_hash) {
           ret = `${ret} -p '${this.password}'`;
@@ -99,8 +99,9 @@ export class UserCredential {
     return ret;
   }
 
-  setAsCurrent() {
+  setAsCurrent(): UserCredential {
     this.is_current = true
+    return this;
   }
 }
 
