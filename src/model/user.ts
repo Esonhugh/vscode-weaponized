@@ -53,9 +53,7 @@ export class UserCredential {
       default:
       case "env":
         let safename = envVarSafer(this.user);
-        if (safename.length > 10) {
-          safename = safename.substring(0, 10);
-        }
+        
         ret = `export USER_${safename}="${this.user}"`;
         if (this.is_current) {
           ret = `${ret} USER=${this.user} USERNAME='${this.user}'`;

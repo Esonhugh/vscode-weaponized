@@ -6,6 +6,7 @@ import {
   UserCredential,
 } from "../model";
 import { logger } from "./log";
+import { Extension } from "./context";
 
 export function getCodeblock(content: string, identity: string): string[] {
   let lines = content.split("\n");
@@ -94,9 +95,9 @@ export function parseHostYamlCodeBlock(
 }
 
 export async function ProcessMarkdownFileToWorkspaceState(
-  store: vscode.Memento,
   file: vscode.Uri
 ) {
+    let store = Extension.context.workspaceState;
   const content = await vscode.workspace.fs.readFile(file);
   let old_user_list = store.get<UserCredential[]>("users");
   if (!old_user_list) {

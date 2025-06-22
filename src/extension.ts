@@ -1,7 +1,15 @@
 import * as vscode from "vscode";
 import { logger } from "./global/log";
 import { ProcessMarkdownFileToWorkspaceState } from "./global/syncHostMarkdown";
-import { runCommand, CommandCodeLensProvider, DumpProvider, displayVirtualContent, ReadOnlyProvider, dumpetchosts } from "./commands";
+import {
+  runCommand,
+  CommandCodeLensProvider,
+  DumpProvider,
+  displayVirtualContent,
+  ReadOnlyProvider,
+  dumpetchosts,
+  dumpalluser,
+} from "./commands";
 import { Extension } from "./global/context";
 
 const targetFilePattern = "**/{users,hosts,services}/*/*.md";
@@ -22,19 +30,31 @@ export async function activate(context: vscode.ExtensionContext) {
   }
   logger.info("Activating vscode weaponized extension...");
 
-  let filewatcher = vscode.workspace.createFileSystemWatcher(targetFilePattern);
-  filewatcher.onDidChange((e) => {});
+  // clean update the extension's workspace state
+  context.workspaceState.update("users", [] as any);
+  context.workspaceState.update("hosts", [] as any);
   let files = await vscode.workspace.findFiles(targetFilePattern);
   for (const file of files) {
     logger.info(`Processing file: ${file.fsPath}`);
-    await ProcessMarkdownFileToWorkspaceState(context.workspaceState, file);
+    await ProcessMarkdownFileToWorkspaceState(file);
   }
+  context.workspaceState.keys().forEach((key) => {
+    logger.info(
+      `Workspace state key: ${key} => ${JSON.stringify(
+        context.workspaceState.get(key)
+      )}`
+    );
+  });
+
+  let filewatcher = vscode.workspace.createFileSystemWatcher(targetFilePattern);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "weapon.dump_hosts",
-      dumpetchosts
-    ),
+    filewatcher.onDidChange(async (file) => {
+      logger.info(`Watched file changed: ${file.fsPath}`);
+      await ProcessMarkdownFileToWorkspaceState(file);
+    }),
+    vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
+    vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand(
       "weapon.display_virtual_content",

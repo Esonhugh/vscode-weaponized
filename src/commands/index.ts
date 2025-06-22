@@ -2,4 +2,5 @@ export * from "./runcommand/runcommand";
 export * from "./runcommand/commandCodeLensProvider";
 export * from "./utilcommand/readonlyDisplay";
 export * from "./dump/dumpProvider";
-export * from "./dumphosts/dumphost";
+export * from "./dump/dumphost";
+export * from "./dump/dumpuser";

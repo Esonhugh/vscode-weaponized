@@ -6,7 +6,7 @@ export const ReadOnlyProvider = class
   implements vscode.TextDocumentContentProvider
 {
   provideTextDocumentContent(uri: vscode.Uri): string {
-    return uri.path;
+    return uri.query;
   }
 };
 
@@ -15,9 +15,16 @@ export const displayVirtualContent: callback = async (args) => {
   if (!args || !args.content) {
     content = "testcontent";
   } else {
-    content =  args.content;
+    content = encodeURIComponent(args.content);
   }
-  let uri = vscode.Uri.parse("weaponized-editor:" + content);
+  let title = "Virtual Content";
+  if (!args || !args.title) {
+    title = "Virtual Content";
+  } else {
+    title = encodeURIComponent(args.title);
+  }
+  let uri = vscode.Uri.parse("weaponized-editor:" + title + "?" + content);
+  // let uri = vscode.Uri.parse("weaponized-editor:" + content);
   let doc = await vscode.workspace.openTextDocument(uri);
   await vscode.window.showTextDocument(doc, { preview: false });
 };

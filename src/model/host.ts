@@ -5,7 +5,7 @@ import { envVarSafer } from "./util";
 interface innerHost {
   hostname?: string;
   ip?: string;
-  aliases?: string[];
+  alias?: string[];
   is_dc?: boolean;
   is_current?: boolean;
   is_current_dc?: boolean;
@@ -27,7 +27,7 @@ export type HostDumpFormat = "env" | "file";
 export class Host {
   hostname: string = "";
   ip: string = "";
-  aliases: string[] = [this.hostname];
+  alias: string[] = [this.hostname];
   is_dc: boolean = false;
   is_current: boolean = false;
   is_current_dc: boolean = false;
@@ -36,10 +36,10 @@ export class Host {
   init(ihost: innerHost):Host {
     this.hostname = ihost.hostname ? ihost.hostname : "";
     this.ip = ihost.ip ? ihost.ip : "";
-    if (ihost.aliases) {
-      this.aliases = [...new Set(ihost.aliases?.concat(this.hostname))];
+    if (ihost.alias) {
+      this.alias = [...new Set(ihost.alias?.concat(this.hostname))];
     } else {
-      this.aliases = [this.hostname];
+      this.alias = [this.hostname];
     }
     this.is_dc = ihost.is_dc ? ihost.is_dc : false;
     this.props = ihost.props ? ihost.props : {};
@@ -57,11 +57,11 @@ export class Host {
         let safename = envVarSafer(this.hostname);
         ret = `export HOST_${safename}=${this.hostname} IP_${safename}=${this.ip}`;
         if (this.is_dc) {
-          ret = `${ret} DC_HOST_${safename}=${this.aliases[0]} DC_IP_${safename}=${this.ip}`;
+          ret = `${ret} DC_HOST_${safename}=${this.alias[0]} DC_IP_${safename}=${this.ip}`;
         }
 
         if (this.is_current_dc) {
-          ret = `${ret} DC_HOST=${this.aliases[0]} DC_IP=${this.ip}`;
+          ret = `${ret} DC_HOST=${this.alias[0]} DC_IP=${this.ip}`;
         }
         if (this.is_current) {
           ret = `${ret} HOST=${this.hostname} DOMAIN=${this.hostname} RHOST=${this.ip} IP=${this.ip} TARGET=${this.hostname}`;
@@ -69,7 +69,7 @@ export class Host {
 
         break;
       case "file":
-        ret = `${this.ip}\t${this.aliases.join(" ")}`;
+        ret = `${this.ip}\t${this.alias.join(" ")}`;
         break;
     }
     return ret;
@@ -103,7 +103,7 @@ function test() {
   });
   hosta.setAsCurrent();
   hosta.setAsCurrentDC();
-  console.log(hosta.aliases);
+  console.log(hosta.alias);
   console.log(hosta.dump("env"));
   let content = `
 - hostname: github.com

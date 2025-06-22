@@ -28,6 +28,10 @@
 			{
 				"command": "weapon.dump_hosts",
 				"title": "weapon: Dump hosts as /etc/hosts format"
+			},
+			{
+				"command": "weapon.dump_users",
+				"title": "weapon: List all user credentials"
 			}
 		]
 	},
