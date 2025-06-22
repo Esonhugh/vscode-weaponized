@@ -75,24 +75,24 @@ export class UserCredential {
       case "impacket":
         if (this.login && (this.login !== "" || this.login !== this.username )) {
           // if login is empty or same as username
-          ret = `${this.login}/`;
+          ret = `'${this.login}'/`;
         }
         if (this.nt_hash === default_bad_nt_hash) {
-          ret = `${ret}${this.username}:${this.password}`;
+          ret = `${ret}'${this.username}':'${this.password}'`;
         } else {
-          ret = `${ret}${this.username} -hashes :${this.nt_hash}`;
+          ret = `${ret}'${this.username}' -hashes ':${this.nt_hash}'`;
         }
         break;
       case "nxc":
         if (this.login && (this.login != "" || this.login !== this.username)) {
-          ret = `${this.login} -u ${this.username}`;
+          ret = `'${this.login}' -u '${this.username}'`;
         } else {
-          ret = `-u ${this.username}`
+          ret = `-u '${this.username}'`
         }
         if (this.nt_hash === default_bad_nt_hash) {
-          ret = `${ret} -p ${this.password}`;
+          ret = `${ret} -p '${this.password}'`;
         } else {
-          ret = `${ret} -H :${this.nt_hash}`;
+          ret = `${ret} -H ':${this.nt_hash}'`;
         }
         break
     }
