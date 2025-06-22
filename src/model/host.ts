@@ -3,31 +3,26 @@ import { parse as yamlParse } from "yaml";
 import { envVarSafer } from "./util";
 
 interface innerHost {
-  hostname: string;
-  ip: string;
-  aliases: string[];
-  is_dc: boolean;
-  is_current: boolean;
-  is_current_dc: boolean;
-  props: { [key: string]: string };
+  hostname?: string;
+  ip?: string;
+  aliases?: string[];
+  is_dc?: boolean;
+  is_current?: boolean;
+  is_current_dc?: boolean;
+  props?: { [key: string]: string };
 }
 
 export function parseHostsYaml(content: string): Host[] {
   let hostContent = yamlParse(content) as innerHost[];
   let ret: Host[] = [];
   for (let host of hostContent) {
-    let newHost = new Host();
-    newHost.init(host.hostname, host.ip, host.aliases, host.is_dc, host.props);
-    if (host.is_current) {
-      newHost.setAsCurrent();
-    }
-    if (host.is_current_dc) {
-      newHost.setAsCurrentDC();
-    }
+    let newHost = new Host().init(host);
     ret.push(newHost);
   }
   return ret;
 }
+
+export type HostDumpFormat = "env" | "file";
 
 export class Host {
   hostname: string = "";
@@ -38,31 +33,29 @@ export class Host {
   is_current_dc: boolean = false;
   props: { [key: string]: string } = {};
 
-  init(
-    hostname: string,
-    ip: string,
-    aliases?: string[],
-    is_dc: boolean = false,
-    props: { [key: string]: string } = {}
-  ) {
-    this.hostname = hostname;
-    this.ip = ip;
-    if (aliases) {
-      this.aliases = [...new Set(aliases?.concat(hostname))];
+  init(ihost: innerHost):Host {
+    this.hostname = ihost.hostname ? ihost.hostname : "";
+    this.ip = ihost.ip ? ihost.ip : "";
+    if (ihost.aliases) {
+      this.aliases = [...new Set(ihost.aliases?.concat(this.hostname))];
     } else {
-      this.aliases = [hostname];
+      this.aliases = [this.hostname];
     }
-    this.is_dc = is_dc;
-    this.props = props;
+    this.is_dc = ihost.is_dc ? ihost.is_dc : false;
+    this.props = ihost.props ? ihost.props : {};
+    this.is_current = ihost.is_current ? ihost.is_current : false;
+    this.is_current_dc = ihost.is_current_dc ? ihost.is_current_dc : false;
+    this.is_dc = ihost.is_dc ? ihost.is_dc : false;
+    return this
   }
 
-  dump(format: "env" | "file"): string {
+  dump(format: HostDumpFormat): string {
     let ret = "";
     switch (format) {
       default:
       case "env":
         let safename = envVarSafer(this.hostname);
-        ret = `HOST_${safename}=${this.hostname} IP_${safename}=${this.ip}`;
+        ret = `export HOST_${safename}=${this.hostname} IP_${safename}=${this.ip}`;
         if (this.is_dc) {
           ret = `${ret} DC_HOST_${safename}=${this.aliases[0]} DC_IP_${safename}=${this.ip}`;
         }
@@ -91,17 +84,21 @@ export class Host {
   }
 }
 
-export function dumpHosts(hosts: Host[], format: "env" | "file"): string {
-    let ret = "";
-    for (let host of hosts) {
-        ret += `${host.dump(format)}\n`;
-    }
-    return ret;
+export function dumpHosts(hosts: Host[], format: HostDumpFormat): string {
+  let ret = "";
+  for (let h of hosts) {
+    var host = new Host();
+    host.init(h);
+    ret += `${host.dump(format)}\n`;
+  }
+  return ret;
 }
 
 function test() {
   let hosta = new Host();
-  hosta.init("github.com", "127.0.0.1", ["dc01.github.com"], true);
+  hosta.init({
+    hostname: "github.com",
+  });
   hosta.setAsCurrent();
   hosta.setAsCurrentDC();
   console.log(hosta.aliases);
@@ -123,8 +120,9 @@ function test() {
     - test-data.github.com
   `;
   let hosts = parseHostsYaml(content);
-  console.log(dumpHosts(hosts,"env"));
+  console.log(dumpHosts(hosts, "env"));
 }
-(() => {
-  test();
-})();
+
+//(() => {
+//  test();
+//})();

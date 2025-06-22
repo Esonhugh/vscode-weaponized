@@ -1,12 +1,11 @@
-import vscode = require('vscode');
-
-export class CommandCodeLensProvider implements vscode.CodeLensProvider {
-    onDidChangeCodeLenses?: vscode.Event<void>;
-
-    provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CodeLens[]> {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CommandCodeLensProvider = void 0;
+const vscode = require("vscode");
+class CommandCodeLensProvider {
+    provideCodeLenses(document, token) {
         var codeLenses = [];
         const lines = document.getText().split('\n');
-
         var inCommand = false;
         var currentCommand = '';
         var commandStartLine = 0;
@@ -14,24 +13,20 @@ export class CommandCodeLensProvider implements vscode.CodeLensProvider {
             const line = lines[i].trim();
             if (inCommand) {
                 if (line === '```') {
-                    const cmd: vscode.Command = {
+                    const cmd = {
                         title: 'Run command in terminal',
-                        command: 'markdown.run.command',
+                        command: 'weapon.run_command',
                         arguments: [{ command: currentCommand }]
                     };
-                    codeLenses.push(
-                        new vscode.CodeLens(new vscode.Range(new vscode.Position(commandStartLine, 0), new vscode.Position(commandStartLine + 1, 0)), cmd)
-                    );
+                    codeLenses.push(new vscode.CodeLens(new vscode.Range(new vscode.Position(commandStartLine, 0), new vscode.Position(commandStartLine + 1, 0)), cmd));
                     inCommand = false;
                     currentCommand = '';
                     continue;
                 }
-
                 currentCommand += line + '\n';
                 continue;
             }
-
-            if (line.startsWith('```') || line.startsWith('```sh') || line.startsWith('```bash')) {
+            if (line.startsWith('```zsh') || line.startsWith('```bash') || line.startsWith('```sh')) {
                 inCommand = true;
                 commandStartLine = i;
                 continue;
@@ -39,10 +34,9 @@ export class CommandCodeLensProvider implements vscode.CodeLensProvider {
         }
         return codeLenses;
     }
-
-    resolveCodeLens?(codeLens: vscode.CodeLens, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CodeLens> {
+    resolveCodeLens(codeLens, token) {
         return null;
     }
-
-
 }
+exports.CommandCodeLensProvider = CommandCodeLensProvider;
+//# sourceMappingURL=commandCodeLensProvider.js.map

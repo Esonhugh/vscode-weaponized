@@ -16,14 +16,18 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onLanguage:markdown"
+		"workspaceContains:**/.vscode/.zshrc"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "markdown.run.command",
-				"title": "Run markdown command"
+				"command": "weapon.run_command",
+				"title": "weapon: Run markdown command in code block"
+			},
+			{
+				"command": "weapon.dump_hosts",
+				"title": "weapon: Dump hosts as /etc/hosts format"
 			}
 		]
 	},

@@ -1,37 +1,59 @@
-import * as vscode from 'vscode';
-import { CommandCodeLensProvider } from './commandCodeLensProvider';
-import * as cp from 'child_process';
+import * as vscode from "vscode";
+import { logger } from "./global/log";
+import { ProcessMarkdownFileToWorkspaceState } from "./global/syncHostMarkdown";
+import { runCommand, CommandCodeLensProvider } from "./commands";
+import { DumpProvider } from "./commands/dump/dumpProvider";
+import {
+  displayVirtualContent,
+  ReadOnlyProvider,
+} from "./commands/utilcommand/readonlyDisplay";
+import { dumpetchosts } from "./commands/dumphosts/dumphost";
 
-export function activate(context: vscode.ExtensionContext) {
-	context.subscriptions.push(
-		vscode.commands.registerCommand('markdown.run.command', (args) => {
-			var term = vscode.window.activeTerminal || vscode.window.createTerminal();
-			// check if there's a running command in the active terminal, if there is one
-			// create a new term
-			term.processId.then(pid => {
-				cp.exec('ps -o state= -p ' + pid, (error, stdout, stderr) => {
-					if (error) {
-						// if we can't check just send to the current one...
-						term.show();
-						term.sendText(args.command);
-						return;
-					}
+const targetFilePattern = "**/{users,hosts,services}/*/*.md";
 
-					// a + in the state indicates a process running in foreground
-					if (!stdout.includes('+')) {
-						term = vscode.window.createTerminal();
-					}
-					term.show();
-					term.sendText(args.command);
-				});
-			});
-		})
-	);
+export async function activate(context: vscode.ExtensionContext) {
+  console.log(
+    'Congratulations, your extension "vscode weaponized" is now active!'
+  );
+  if (
+    !vscode.workspace.workspaceFolders ||
+    vscode.workspace.workspaceFolders.length === 0
+  ) {
+    vscode.window.showErrorMessage(
+      "Please open a workspace folder to use this extension."
+    );
+    return;
+  }
+  logger.info("Activating vscode weaponized extension...");
 
-	context.subscriptions.push(
-		vscode.languages.registerCodeLensProvider({ language: 'markdown', scheme: 'file' },
-			new CommandCodeLensProvider())
-	);
+  let filewatcher = vscode.workspace.createFileSystemWatcher(targetFilePattern);
+  filewatcher.onDidChange((e) => {});
+  let files = await vscode.workspace.findFiles(targetFilePattern);
+  for (const file of files) {
+    logger.info(`Processing file: ${file.fsPath}`);
+    await ProcessMarkdownFileToWorkspaceState(context.workspaceState, file);
+  }
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts(context.workspaceState)),
+    vscode.commands.registerCommand("weapon.run_command", runCommand),
+    vscode.commands.registerCommand(
+      "weapon.display_virtual_content",
+      displayVirtualContent
+    ),
+    vscode.languages.registerCodeLensProvider(
+      { language: "markdown", scheme: "file", pattern: targetFilePattern },
+      new CommandCodeLensProvider()
+    ),
+    vscode.languages.registerCodeLensProvider(
+      { language: "markdown", scheme: "file", pattern: targetFilePattern },
+      new DumpProvider()
+    ),
+    vscode.workspace.registerTextDocumentContentProvider(
+      "weaponized-editor",
+      new ReadOnlyProvider()
+    )
+  );
 }
 
-export function deactivate() { }
+export function deactivate() {}

@@ -5,27 +5,25 @@ import { envVarSafer } from "./util";
 const default_bad_nt_hash = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
 interface innerUserCredential {
-  username: string;
-  password: string;
-  nt_hash: string;
-  login: string;
-  is_current: boolean;
-  props: { [key: string]: string };
+  username?: string;
+  password?: string;
+  nt_hash?: string;
+  login?: string;
+  is_current?: boolean;
+  props?: { [key: string]: string };
 }
 
 export function parseUserCredentialsYaml(content: string): UserCredential[] {
   let userContent = yamlParse(content) as innerUserCredential[];
   let ret: UserCredential[] = [];
   for (let user of userContent) {
-    let newUser = new UserCredential();
-    newUser.init(user.login, user.username, user.password, user.nt_hash, user.props);
-    if (user.is_current) {
-      newUser.setAsCurrent();
-    }
+    let newUser = new UserCredential().init(user);
     ret.push(newUser);
   }
   return ret;
 }
+
+export type UserDumpFormat = "env" | "impacket" | "nxc";
 
 export class UserCredential {
   username: string = "";
@@ -35,25 +33,21 @@ export class UserCredential {
   is_current: boolean = false;
   props: { [key: string]: string } = {};
 
-  init(
-    login: string,
-    username: string,
-    password?: string,
-    nt_hash?: string,
-    props: { [key: string]: string } = {}
-  ) {
-    this.username = username;
-    if (password) {
-      this.password = password;
+  init(iuser: innerUserCredential):UserCredential {
+    this.username = iuser.username? iuser.username : ""
+    if (iuser.password) {
+      this.password = iuser.password;
     }
-    if (nt_hash) {
-      this.nt_hash = nt_hash;
+    if (iuser.nt_hash) {
+      this.nt_hash = iuser.nt_hash;
     }
-    this.login = login;
-    this.props = props;
+    this.login = iuser.login ? iuser.login : ""
+    this.props = iuser.props ? iuser.props : {}
+    this.is_current = iuser.is_current ? iuser.is_current : false
+    return this
   }
 
-  dumpUser(format?: "env" | "impacket" | "nxc"): string {
+  dumpUser(format?: UserDumpFormat): string {
     let ret = "";
     switch (format) {
       default:
@@ -62,7 +56,7 @@ export class UserCredential {
         if (safename.length > 10) {
           safename = safename.substring(0, 10);
         }
-        ret = `USER_${safename}="${this.username}"`;
+        ret = `export USER_${safename}="${this.username}"`;
         if (this.is_current) {
           ret = `${ret} USER=${this.username} USERNAME='${this.username}'`;
         }
@@ -79,7 +73,7 @@ export class UserCredential {
         }
         break;
       case "impacket":
-        if (this.login !== "" || this.login !== this.username) {
+        if (this.login && (this.login !== "" || this.login !== this.username )) {
           // if login is empty or same as username
           ret = `${this.login}/`;
         }
@@ -90,7 +84,11 @@ export class UserCredential {
         }
         break;
       case "nxc":
-        ret = `${this.login} -u ${this.username}`;
+        if (this.login && (this.login != "" || this.login !== this.username)) {
+          ret = `${this.login} -u ${this.username}`;
+        } else {
+          ret = `-u ${this.username}`
+        }
         if (this.nt_hash === default_bad_nt_hash) {
           ret = `${ret} -p ${this.password}`;
         } else {
@@ -106,9 +104,10 @@ export class UserCredential {
   }
 }
 
-export function dumpUserCredentials(users: UserCredential[], format: "env"|"impacket"|"nxc"): string {
+export function dumpUserCredentials(users: UserCredential[], format: UserDumpFormat): string {
   let ret = "";
-  for (let user of users) {
+  for (let u of users) {
+    let user = new UserCredential().init(u)
     ret += `${user.dumpUser(format)}\n`;
   }
   return ret;
@@ -116,7 +115,9 @@ export function dumpUserCredentials(users: UserCredential[], format: "env"|"impa
 
 function test() {
   let usera = new UserCredential();
-  usera.init("github.com", "usera", "password")
+  usera.init({
+    login:"github.com"
+  })
   usera.setAsCurrent()
   console.log(  usera.dumpUser())
   let content = `
@@ -133,4 +134,4 @@ function test() {
 }
 
 
-(()=> { test() })();
+// (()=> { test() })();
