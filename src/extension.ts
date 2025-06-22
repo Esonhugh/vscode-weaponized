@@ -8,10 +8,12 @@ import {
   ReadOnlyProvider,
 } from "./commands/utilcommand/readonlyDisplay";
 import { dumpetchosts } from "./commands/dumphosts/dumphost";
+import { Extension } from "./global/context";
 
 const targetFilePattern = "**/{users,hosts,services}/*/*.md";
 
 export async function activate(context: vscode.ExtensionContext) {
+  Extension.context = context;
   console.log(
     'Congratulations, your extension "vscode weaponized" is now active!'
   );
@@ -35,7 +37,10 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts(context.workspaceState)),
+    vscode.commands.registerCommand(
+      "weapon.dump_hosts",
+      dumpetchosts
+    ),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand(
       "weapon.display_virtual_content",
