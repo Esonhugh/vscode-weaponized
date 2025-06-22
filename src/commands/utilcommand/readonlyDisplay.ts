@@ -11,16 +11,12 @@ export const ReadOnlyProvider = class
 };
 
 export const displayVirtualContent: callback = async (args) => {
-  let content = "";
-  if (!args || !args.content) {
-    content = "testcontent";
-  } else {
+  let content = "Here is the example content";
+  if (args && args.content) {
     content = encodeURIComponent(args.content);
   }
   let title = "Virtual Content";
-  if (!args || !args.title) {
-    title = "Virtual Content";
-  } else {
+  if (args && args.title) {
     title = encodeURIComponent(args.title);
   }
   let uri = vscode.Uri.parse("weaponized-editor:" + title + "?" + content);
