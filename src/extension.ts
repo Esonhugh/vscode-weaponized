@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { logger } from "./global/log";
 import { Extension } from "./global/context";
 import { registerCommandsPackage } from "./commands";
-import { registerVariablesWatcher } from "./global/filewatcher";
+import { registerVariablesWatcher } from "./variableProcessor";
 
 export async function activate(context: vscode.ExtensionContext) {
   Extension.context = context;

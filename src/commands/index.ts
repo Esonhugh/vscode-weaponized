@@ -11,7 +11,7 @@ import { targetFilePattern } from "../global/const";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.tasks.registerTaskProvider("weapon", new WeaponTaskProvider()),
+    // vscode.tasks.registerTaskProvider("weapon", new WeaponTaskProvider()),
     vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
     vscode.commands.registerCommand("weapon.run_command", runCommand),

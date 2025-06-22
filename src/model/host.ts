@@ -1,6 +1,8 @@
+import * as vscode from "vscode";
+
 import { parse as yamlParse } from "yaml";
 
-import { envVarSafer } from "./util";
+import { envVarSafer, setEnvironment } from "./util";
 
 interface innerHost {
   hostname?: string;
@@ -48,6 +50,31 @@ export class Host {
     this.is_dc = ihost.is_dc ? ihost.is_dc : false;
     return this
   }
+
+  setEnvironmentCollection(collection: vscode.EnvironmentVariableCollection): void {
+    let safename = envVarSafer(this.hostname);
+    
+    setEnvironment(collection, `HOST_${safename}`, this.hostname);
+    setEnvironment(collection, `IP_${safename}`, this.ip);
+    if (this.is_dc) {
+      setEnvironment(collection, `DC_HOST_${safename}`, this.alias[0]);
+      setEnvironment(collection, `DC_IP_${safename}`, this.ip);
+    }
+    if (this.is_current_dc) {
+      setEnvironment(collection, `DC_HOST`, this.alias[0]);
+      setEnvironment(collection, `DC_IP`, this.ip);
+    }
+    if (this.is_current) {
+      setEnvironment(collection, `HOST`, this.hostname);
+      setEnvironment(collection, `DOMAIN`, this.hostname);
+      setEnvironment(collection, `RHOST`, this.ip);
+      setEnvironment(collection, `IP`, this.ip);
+      setEnvironment(collection, `TARGET`, this.hostname);
+    }
+    for (let key in this.props) {
+      setEnvironment(collection, `${envVarSafer(key)}`, this.props[key]);
+    }
+  };
 
   dump(format: HostDumpFormat): string {
     let ret = "";

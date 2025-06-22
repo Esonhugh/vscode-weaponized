@@ -1,13 +1,17 @@
 
 import * as vscode from "vscode";
-import { targetFilePattern } from "./const";
+import { targetFilePattern } from "../global/const";
 import { ProcessMarkdownFileToWorkspaceState } from "./syncHostMarkdown";
-import { logger } from "./log";
+import { logger } from "../global/log";
 
 export async function registerVariablesWatcher(context: vscode.ExtensionContext) {
   // clean update the extension's workspace state
   context.workspaceState.update("users", [] as any);
   context.workspaceState.update("hosts", [] as any);
+
+  let collection = context.environmentVariableCollection.getScoped({workspaceFolder: vscode.workspace.workspaceFolders?.[0]})
+  collection.persistent = true;
+  
   let files = await vscode.workspace.findFiles(targetFilePattern);
   for (const file of files) {
     logger.info(`Processing file: ${file.fsPath}`);
@@ -28,4 +32,5 @@ export async function registerVariablesWatcher(context: vscode.ExtensionContext)
       await ProcessMarkdownFileToWorkspaceState(file);
     })
   );
+  // 
 }

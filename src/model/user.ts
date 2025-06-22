@@ -1,6 +1,8 @@
+import * as vscode from "vscode";
+
 import { parse as yamlParse } from "yaml";
 
-import { envVarSafer } from "./util";
+import { envVarSafer, setEnvironment} from "./util";
 
 const default_bad_nt_hash = "ffffffffffffffffffffffffffffffff";
 
@@ -45,6 +47,39 @@ export class UserCredential {
     this.props = iuser.props ? iuser.props : {}
     this.is_current = iuser.is_current ? iuser.is_current : false
     return this
+  }
+
+  setEnvironmentCollection(collection: vscode.EnvironmentVariableCollection): void {
+    let safename = envVarSafer(this.user);
+    
+    setEnvironment(collection, `USER_${safename}`, this.user);
+    if (this.login && (this.login !== "" || this.login !== this.user)) {
+      setEnvironment(collection, `LOGIN_${safename}`, this.login);
+    }
+
+    if (this.is_current) {
+      setEnvironment(collection, "USER", this.user);
+      setEnvironment(collection, "USERNAME", this.user);
+    }
+
+    if (this.nt_hash === default_bad_nt_hash || this.nt_hash === undefined) {
+      setEnvironment(collection, `PASS_${safename}`, this.password);
+      if (this.is_current) {
+        setEnvironment(collection, "PASS", this.password);
+        setEnvironment(collection, "PASSWORD", this.password);
+      }
+    } else {
+      setEnvironment(collection, `NT_HASH_${safename}`, this.nt_hash);
+      if (this.is_current) {
+        setEnvironment(collection, "NT_HASH", this.nt_hash);
+      }
+    }
+    
+    if (this.props) {
+      for (let key in this.props) {
+        setEnvironment(collection, `${envVarSafer(key)}`, this.props[key]);
+      }
+    }
   }
 
   dumpUser(format?: UserDumpFormat): string {
