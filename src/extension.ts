@@ -1,13 +1,7 @@
 import * as vscode from "vscode";
 import { logger } from "./global/log";
 import { ProcessMarkdownFileToWorkspaceState } from "./global/syncHostMarkdown";
-import { runCommand, CommandCodeLensProvider } from "./commands";
-import { DumpProvider } from "./commands/dump/dumpProvider";
-import {
-  displayVirtualContent,
-  ReadOnlyProvider,
-} from "./commands/utilcommand/readonlyDisplay";
-import { dumpetchosts } from "./commands/dumphosts/dumphost";
+import { runCommand, CommandCodeLensProvider, DumpProvider, displayVirtualContent, ReadOnlyProvider, dumpetchosts } from "./commands";
 import { Extension } from "./global/context";
 
 const targetFilePattern = "**/{users,hosts,services}/*/*.md";
