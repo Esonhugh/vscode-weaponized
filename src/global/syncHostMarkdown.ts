@@ -62,7 +62,7 @@ function uniqueUsers(old_user: UserCredential[]): UserCredential[]{
     return newUser
 }
 
-export function parseUserCredYamlCodeBlock(
+export function mergeUserCredFromFile(
   content: string,
   old_user_list: UserCredential[]
 ): UserCredential[] {
@@ -75,10 +75,10 @@ export function parseUserCredYamlCodeBlock(
         logger.error(`parse failed, content: ${b}`)
     }
   }
-  return uniqueUsers(old_user_list);
+  return uniqueUsers(old_user_list.reverse()); // let new changes on top
 }
 
-export function parseHostYamlCodeBlock(
+export function mergeHostFromFile(
   content: string,
   old_host_list: Host[]
 ): Host[] {
@@ -91,7 +91,7 @@ export function parseHostYamlCodeBlock(
         logger.error(`parse failed, content: ${b}`)
     }
   }
-  return uniqueHosts(old_host_list);
+  return uniqueHosts(old_host_list.reverse());
 }
 
 export async function ProcessMarkdownFileToWorkspaceState(
@@ -105,7 +105,7 @@ export async function ProcessMarkdownFileToWorkspaceState(
   } else {
     store.update(
       "users",
-      parseUserCredYamlCodeBlock(content.toString(), old_user_list));
+      mergeUserCredFromFile(content.toString(), old_user_list));
   }
   let old_host_list = store.get<Host[]>("hosts");
   if (!old_host_list) {
@@ -113,6 +113,6 @@ export async function ProcessMarkdownFileToWorkspaceState(
   } else {
     store.update(
       "hosts",
-      parseHostYamlCodeBlock(content.toString(), old_host_list));
+      mergeHostFromFile(content.toString(), old_host_list));
   }
 }
