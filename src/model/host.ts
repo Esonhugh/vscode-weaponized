@@ -63,6 +63,7 @@ export class Host {
       collects[`DC_IP`] = this.ip;
     }
     if (this.is_current) {
+      collects[`CURRENT_HOST`] = this.hostname;
       collects[`HOST`] = this.hostname;
       collects[`DOMAIN`] = this.hostname;
       collects[`RHOST`] = this.ip;

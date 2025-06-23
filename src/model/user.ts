@@ -57,6 +57,7 @@ export class UserCredential {
     }
 
     if (this.is_current) {
+      collects["CURRENT_USER"] = this.user;
       collects["USER"] = this.user;
       collects["USERNAME"] = this.user;
     }
