@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import {
-  parseHostsYaml,
+  UserCredential,
+  Host,
+  parseHostsYaml, 
   parseUserCredentialsYaml,
   dumpHosts,
   dumpUserCredentials,
@@ -8,6 +10,8 @@ import {
 } from "../../model";
 import { logger } from "../../global/log";
 import { ConfigType } from "../../model";
+import { parse as yamlParse } from "yaml";
+
 
 function GenerateEnvExportCodeLens(
   configtype: ConfigType,
@@ -29,8 +33,10 @@ function GenerateEnvExportCodeLens(
 
       configs = dumpUserCredentials(users, "env");
     } else if (configtype === "host") {
-      let hosts = parseHostsYaml(config)
-      hosts.forEach((v)=>{return v.setAsCurrent()})
+      let hosts = parseHostsYaml(config);
+      hosts.forEach((v) => {
+        return v.setAsCurrent();
+      });
       configs = dumpHosts(hosts, "env");
     } else {
       new Error(
@@ -66,7 +72,9 @@ function GenerateUserCredCodeLens(
   format: UserDumpFormat,
   yamlStartLine: number
 ): vscode.CodeLens[] {
-  logger.debug(`Generating code lens for user credentials with content: ${config}`);
+  logger.debug(
+    `Generating code lens for user credentials with content: ${config}`
+  );
   let codeLenses: vscode.CodeLens[] = [];
   const Users = parseUserCredentialsYaml(config);
   if (Users.length === 0) {
@@ -93,6 +101,59 @@ function GenerateUserCredCodeLens(
   return codeLenses;
 }
 
+function GenerateSetAsCurrentCodeLens(
+  configtype: ConfigType,
+  config: string,
+  yamlStartLine: number
+): vscode.CodeLens[] {
+  let codeLenses: vscode.CodeLens[] = [];
+  for (let active of [true, false]) {
+    let title = active ? "set as current" : "unset as current";
+    const cmd: vscode.Command = {
+      title: title,
+      command: "weapon.replace_document",
+      arguments: [
+        {
+          file: vscode.window.activeTextEditor?.document.uri,
+          startLine: yamlStartLine,
+          current: config,
+          target: ((): string => {
+            if (configtype === "user") {
+              let users = yamlParse(config) as UserCredential[];
+              users.forEach((v) => {
+                return (v.is_current = active);
+              });
+              return dumpUserCredentials(users, "yaml");
+            } else if (configtype === "host") {
+              let hosts = yamlParse(config) as Host[]; 
+              hosts.forEach((v) => {
+                return (v.is_current = active);
+              });
+              return dumpHosts(hosts, "yaml");
+            } else {
+              throw new Error(
+                `Unknown config type: ${configtype}. Expected 'user' or 'host'.`
+              );
+            }
+          })(),
+        },
+      ],
+    };
+
+    codeLenses.push(
+      new vscode.CodeLens(
+        new vscode.Range(
+          new vscode.Position(yamlStartLine, 0),
+          new vscode.Position(yamlStartLine + 1, 0)
+        ),
+        cmd
+      )
+    );
+  }
+
+  return codeLenses;
+}
+
 export class DumpProvider implements vscode.CodeLensProvider {
   provideCodeLenses(
     document: vscode.TextDocument,
@@ -115,12 +176,19 @@ export class DumpProvider implements vscode.CodeLensProvider {
 
           codeLenses.push(
             ...GenerateEnvExportCodeLens(configtype, currentYaml, yamlStartLine),
+            ...GenerateSetAsCurrentCodeLens(
+              configtype,
+              currentYaml,
+              yamlStartLine
+            )
           );
-          
+
           if (configtype == "user") {
             for (let fmt of ["impacket", "nxc"]) {
-              var format = fmt as UserDumpFormat
-              codeLenses.push(...GenerateUserCredCodeLens(currentYaml, format, yamlStartLine))
+              var format = fmt as UserDumpFormat;
+              codeLenses.push(
+                ...GenerateUserCredCodeLens(currentYaml, format, yamlStartLine)
+              );
             }
           }
 

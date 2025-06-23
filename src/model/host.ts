@@ -1,4 +1,4 @@
-import { parse as yamlParse } from "yaml";
+import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
 import { envVarSafer, setEnvironment } from "./util";
 
@@ -22,7 +22,7 @@ export function parseHostsYaml(content: string): Host[] {
   return ret;
 }
 
-export type HostDumpFormat = "env" | "file";
+export type HostDumpFormat = "env" | "file" | "yaml";
 
 export class Host {
   hostname: string = "";
@@ -91,6 +91,9 @@ export class Host {
       case "file":
         ret = `${this.ip}\t${this.alias.join(" ")}`;
         break;
+      case "yaml":
+        ret = yamlStringify(this)
+        break
     }
     return ret;
   }
@@ -108,6 +111,10 @@ export class Host {
 
 export function dumpHosts(hosts: Host[], format: HostDumpFormat): string {
   let ret = "";
+  if (format === "yaml") {
+    ret = yamlStringify(hosts);
+    return ret;
+  }
   for (let h of hosts) {
     var host = new Host();
     host.init(h);

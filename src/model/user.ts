@@ -1,4 +1,4 @@
-import { parse as yamlParse } from "yaml";
+import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
 import { envVarSafer, setEnvironment} from "./util";
 
@@ -23,7 +23,7 @@ export function parseUserCredentialsYaml(content: string): UserCredential[] {
   return ret;
 }
 
-export type UserDumpFormat = "env" | "impacket" | "nxc";
+export type UserDumpFormat = "env" | "impacket" | "nxc" | "yaml";
 
 export class UserCredential {
   user: string = "";
@@ -96,7 +96,7 @@ export class UserCredential {
         ret = ret.trim();
         break;
       case "impacket":
-        if (this.login && (this.login !== "" || this.login !== this.user )) {
+        if (this.login && this.login !== "" && this.login !== this.user ) {
           // if login is empty or same as username
           ret = `'${this.login}'/`;
         }
@@ -107,7 +107,7 @@ export class UserCredential {
         }
         break;
       case "nxc":
-        if (this.login && (this.login != "" || this.login !== this.user)) {
+        if (this.login && this.login != "" && this.login !== this.user) {
           ret = `'${this.login}' -u '${this.user}'`;
         } else {
           ret = `-u '${this.user}'`
@@ -118,6 +118,8 @@ export class UserCredential {
           ret = `${ret} -H ':${this.nt_hash}'`;
         }
         break
+      case "yaml":
+        ret = yamlStringify(this);
     }
     return ret;
   }
@@ -130,6 +132,10 @@ export class UserCredential {
 
 export function dumpUserCredentials(users: UserCredential[], format: UserDumpFormat): string {
   let ret = "";
+  if (format === "yaml") {
+    ret = yamlStringify(users);
+    return ret;
+  }
   for (let u of users) {
     let user = new UserCredential().init(u)
     ret += `${user.dumpUser(format)}\n`;

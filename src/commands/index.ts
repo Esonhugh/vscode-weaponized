@@ -8,6 +8,7 @@ import { CommandCodeLensProvider } from "./runcommand/commandCodeLensProvider";
 import { DumpProvider } from "./dump/dumpProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { targetFilePattern } from "../global/const";
+import { replacer } from "./utilcommand/replacer";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -15,6 +16,7 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
+    vscode.commands.registerCommand("weapon.replace_document", replacer),
     vscode.commands.registerCommand(
       "weapon.display_virtual_content",
       displayVirtualContent
