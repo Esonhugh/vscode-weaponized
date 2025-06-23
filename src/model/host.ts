@@ -1,5 +1,3 @@
-import * as vscode from "vscode";
-
 import { parse as yamlParse } from "yaml";
 
 import { envVarSafer, setEnvironment } from "./util";
@@ -35,7 +33,7 @@ export class Host {
   is_current_dc: boolean = false;
   props: { [key: string]: string } = {};
 
-  init(ihost: innerHost):Host {
+  init(ihost: innerHost): Host {
     this.hostname = ihost.hostname ? ihost.hostname : "";
     this.ip = ihost.ip ? ihost.ip : "";
     if (ihost.alias) {
@@ -48,52 +46,46 @@ export class Host {
     this.is_current = ihost.is_current ? ihost.is_current : false;
     this.is_current_dc = ihost.is_current_dc ? ihost.is_current_dc : false;
     this.is_dc = ihost.is_dc ? ihost.is_dc : false;
-    return this
+    return this;
   }
 
-  setEnvironmentCollection(collection: vscode.EnvironmentVariableCollection): void {
+  exportEnvironmentCollects(): { [key: string]: string } {
     let safename = envVarSafer(this.hostname);
-    
-    setEnvironment(collection, `HOST_${safename}`, this.hostname);
-    setEnvironment(collection, `IP_${safename}`, this.ip);
+    let collects = {} as { [key: string]: string };
+    collects[`HOST_${safename}`] = this.hostname;
+    collects[`IP_${safename}`] = this.ip;
     if (this.is_dc) {
-      setEnvironment(collection, `DC_HOST_${safename}`, this.alias[0]);
-      setEnvironment(collection, `DC_IP_${safename}`, this.ip);
+      collects[`DC_HOST_${safename}`] = this.alias[0];
+      collects[`DC_IP_${safename}`] = this.ip;
     }
     if (this.is_current_dc) {
-      setEnvironment(collection, `DC_HOST`, this.alias[0]);
-      setEnvironment(collection, `DC_IP`, this.ip);
+      collects[`DC_HOST`] = this.alias[0];
+      collects[`DC_IP`] = this.ip;
     }
     if (this.is_current) {
-      setEnvironment(collection, `HOST`, this.hostname);
-      setEnvironment(collection, `DOMAIN`, this.hostname);
-      setEnvironment(collection, `RHOST`, this.ip);
-      setEnvironment(collection, `IP`, this.ip);
-      setEnvironment(collection, `TARGET`, this.hostname);
+      collects[`HOST`] = this.hostname;
+      collects[`DOMAIN`] = this.hostname;
+      collects[`RHOST`] = this.ip;
+      collects[`IP`] = this.ip;
+      collects[`TARGET`] = this.hostname;
     }
     for (let key in this.props) {
-      setEnvironment(collection, `${envVarSafer(key)}`, this.props[key]);
+      collects[`${envVarSafer(key)}`] = this.props[key];
     }
-  };
+    return collects;
+  }
 
   dump(format: HostDumpFormat): string {
     let ret = "";
     switch (format) {
       default:
       case "env":
-        let safename = envVarSafer(this.hostname);
-        ret = `export HOST_${safename}=${this.hostname} IP_${safename}=${this.ip}`;
-        if (this.is_dc) {
-          ret = `${ret} DC_HOST_${safename}=${this.alias[0]} DC_IP_${safename}=${this.ip}`;
+        let collects = this.exportEnvironmentCollects();
+        ret = "export ";
+        for (let key in collects) {
+          ret += `${key}='${collects[key]}' `;
         }
-
-        if (this.is_current_dc) {
-          ret = `${ret} DC_HOST=${this.alias[0]} DC_IP=${this.ip}`;
-        }
-        if (this.is_current) {
-          ret = `${ret} HOST=${this.hostname} DOMAIN=${this.hostname} RHOST=${this.ip} IP=${this.ip} TARGET=${this.hostname}`;
-        }
-
+        ret = ret.trim();
         break;
       case "file":
         ret = `${this.ip}\t${this.alias.join(" ")}`;
@@ -104,12 +96,12 @@ export class Host {
 
   setAsCurrent(): Host {
     this.is_current = true;
-    return this
+    return this;
   }
 
-  setAsCurrentDC():Host{
+  setAsCurrentDC(): Host {
     this.is_current_dc = true;
-    return this
+    return this;
   }
 }
 
@@ -152,6 +144,4 @@ function test() {
   console.log(dumpHosts(hosts, "env"));
 }
 
-//(() => {
-//  test();
-//})();
+//(() => { test(); })();

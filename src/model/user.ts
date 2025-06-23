@@ -1,5 +1,3 @@
-import * as vscode from "vscode";
-
 import { parse as yamlParse } from "yaml";
 
 import { envVarSafer, setEnvironment} from "./util";
@@ -49,37 +47,39 @@ export class UserCredential {
     return this
   }
 
-  setEnvironmentCollection(collection: vscode.EnvironmentVariableCollection): void {
+  exportEnvironmentCollects(): { [key: string]: string } {
     let safename = envVarSafer(this.user);
-    
-    setEnvironment(collection, `USER_${safename}`, this.user);
+    let collects = {} as { [key: string]: string }; 
+
+    collects[`USER_${safename}`] = this.user;
     if (this.login && (this.login !== "" || this.login !== this.user)) {
-      setEnvironment(collection, `LOGIN_${safename}`, this.login);
+      collects[`LOGIN_${safename}`] = this.login;
     }
 
     if (this.is_current) {
-      setEnvironment(collection, "USER", this.user);
-      setEnvironment(collection, "USERNAME", this.user);
+      collects["USER"] = this.user;
+      collects["USERNAME"] = this.user;
     }
 
     if (this.nt_hash === default_bad_nt_hash || this.nt_hash === undefined) {
-      setEnvironment(collection, `PASS_${safename}`, this.password);
+      collects[`PASS_${safename}`] = this.password;
       if (this.is_current) {
-        setEnvironment(collection, "PASS", this.password);
-        setEnvironment(collection, "PASSWORD", this.password);
+        collects["PASS"] = this.password;
+        collects["PASSWORD"] = this.password;
       }
     } else {
-      setEnvironment(collection, `NT_HASH_${safename}`, this.nt_hash);
+      collects[`NT_HASH_${safename}`] = this.nt_hash;
       if (this.is_current) {
-        setEnvironment(collection, "NT_HASH", this.nt_hash);
+        collects["NT_HASH"] = this.nt_hash;
       }
     }
-    
+
     if (this.props) {
       for (let key in this.props) {
-        setEnvironment(collection, `${envVarSafer(key)}`, this.props[key]);
+        collects[`${envVarSafer(key)}`] = this.props[key];
       }
     }
+    return collects
   }
 
   dumpUser(format?: UserDumpFormat): string {
@@ -87,23 +87,12 @@ export class UserCredential {
     switch (format) {
       default:
       case "env":
-        let safename = envVarSafer(this.user);
-        
-        ret = `export USER_${safename}="${this.user}"`;
-        if (this.is_current) {
-          ret = `${ret} USER=${this.user} USERNAME='${this.user}'`;
+        let collects = this.exportEnvironmentCollects();
+        ret = 'export ';
+        for( let key in collects) {
+          ret += `${key}='${collects[key]}' `;
         }
-        if (this.nt_hash === default_bad_nt_hash) {
-          ret = `${ret} PASS_${safename}='${this.password}'`;
-          if (this.is_current) {
-            ret = `${ret} PASS='${this.password}' PASSWORD='${this.password}'`;
-          }
-        } else {
-          ret = `${ret} NT_HASH_${safename}="${this.nt_hash}"`;
-          if (this.is_current) {
-            ret = `${ret} NT_HASH="${this.nt_hash}"`;
-          }
-        }
+        ret = ret.trim();
         break;
       case "impacket":
         if (this.login && (this.login !== "" || this.login !== this.user )) {

@@ -94,16 +94,56 @@ export function mergeHostFromFile(
   return uniqueHosts(old_host_list.reverse());
 }
 
-export async function ProcessMarkdownFileToWorkspaceState(file: vscode.Uri) {
+type Collects = { [key: string]: string };
+function mergeCollects(...cs: Collects[]): Collects {
+  let ret: Collects = {};
+  for (let c of cs) {
+    for (let key in c) {
+      if (ret[key]) {
+        continue;
+      }
+      ret[key] = c[key];
+    }
+  }
+  return ret;
+}
+
+export async function ProcessWorkspaceStateToEnvironmentCollects(workspace: vscode.WorkspaceFolder) {
   let store = Extension.context.workspaceState;
   let collection = Extension.context.environmentVariableCollection.getScoped({
-    workspaceFolder: vscode.workspace.getWorkspaceFolder(file),
+    workspaceFolder: workspace 
   });
-  collection.persistent = true;
-  collection.description =
-    "This is a scoped environment variable collection for the workspace";
-  collection.prepend(`WEAPON_EXTENSION_ENABLED`, "true");
-  collection.prepend(`PROJECT_FOLDER`, vscode.workspace.getWorkspaceFolder(file)?.uri.fsPath || "");
+  
+  let old_user_list = store.get<UserCredential[]>("users");
+  if (old_user_list) {
+    let ul: Collects = {};
+    for (let user of old_user_list) {
+      let u = new UserCredential().init(user);
+      var uc = u.exportEnvironmentCollects();
+      ul = mergeCollects(ul, uc);
+    }
+    console.info(`Merged user credentials: ${JSON.stringify(ul)}`);
+    for (let key in ul) {
+      collection.prepend(key, ul[key]);
+    }
+  }
+
+  let old_host_list = store.get<Host[]>("hosts");
+  if (old_host_list) {
+    let hl: Collects = {};
+    for (let host of old_host_list) {
+      let h = new Host().init(host);
+      hl = mergeCollects(hl, h.exportEnvironmentCollects());
+    }
+    console.info(`Merged hosts: ${JSON.stringify(hl)}`);
+    for (let key in hl) {
+      collection.prepend(key, hl[key]);
+    }
+  }
+}
+
+export async function ProcessMarkdownFileToWorkspaceState(file: vscode.Uri) {
+  let store = Extension.context.workspaceState;
 
   const content = await vscode.workspace.fs.readFile(file);
 
@@ -114,10 +154,6 @@ export async function ProcessMarkdownFileToWorkspaceState(file: vscode.Uri) {
     old_user_list = mergeUserCredFromFile(content.toString(), old_user_list);
     logger.trace(`Merged user credentials from file: ${file.fsPath} `);
     store.update("users", old_user_list);
-    for (let user of old_user_list) {
-      let u = new UserCredential().init(user);
-      u.setEnvironmentCollection(collection);
-    }
   }
 
   let old_host_list = store.get<Host[]>("hosts");
@@ -127,10 +163,6 @@ export async function ProcessMarkdownFileToWorkspaceState(file: vscode.Uri) {
     old_host_list = mergeHostFromFile(content.toString(), old_host_list);
     logger.trace(`Merged hosts from file: ${file.fsPath} `);
     store.update("hosts", old_host_list);
-    for (let host of old_host_list) {
-      let h = new Host().init(host);
-      h.setEnvironmentCollection(collection);
-    }
   }
   
 }
