@@ -183,7 +183,7 @@ export class DumpProvider implements vscode.CodeLensProvider {
             )
           );
 
-          if (configtype == "user") {
+          if (configtype === "user") {
             for (let fmt of ["impacket", "nxc"]) {
               var format = fmt as UserDumpFormat;
               codeLenses.push(

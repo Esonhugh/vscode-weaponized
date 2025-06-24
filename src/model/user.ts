@@ -107,7 +107,7 @@ export class UserCredential {
         }
         break;
       case "nxc":
-        if (this.login && this.login != "" && this.login !== this.user) {
+        if (this.login && this.login !== "" && this.login !== this.user) {
           ret = `'${this.login}' -u '${this.user}'`;
         } else {
           ret = `-u '${this.user}'`;
