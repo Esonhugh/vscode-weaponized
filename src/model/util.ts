@@ -3,6 +3,7 @@ export const envVarSafer = (variable: string): string => {
     return variable.replace(/[^a-zA-Z0-9_]/g, '_');
 };
 
+export type Collects = { [key: string]: string };
 
 export type ConfigType = "host" | "user";
 

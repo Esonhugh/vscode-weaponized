@@ -1,6 +1,6 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
-import { envVarSafer, setEnvironment } from "./util";
+import { Collects, envVarSafer, setEnvironment } from "./util";
 
 interface innerHost {
   hostname?: string;
@@ -9,7 +9,7 @@ interface innerHost {
   is_dc?: boolean;
   is_current?: boolean;
   is_current_dc?: boolean;
-  props?: { [key: string]: string };
+  props?: Collects; 
 }
 
 export function parseHostsYaml(content: string): Host[] {
@@ -31,7 +31,7 @@ export class Host {
   is_dc: boolean = false;
   is_current: boolean = false;
   is_current_dc: boolean = false;
-  props: { [key: string]: string } = {};
+  props: Collects = {};
 
   init(ihost: innerHost): Host {
     this.hostname = ihost.hostname ? ihost.hostname : "";
@@ -49,9 +49,9 @@ export class Host {
     return this;
   }
 
-  exportEnvironmentCollects(): { [key: string]: string } {
+  exportEnvironmentCollects(): Collects {
     let safename = envVarSafer(this.hostname);
-    let collects = {} as { [key: string]: string };
+    let collects = {} as Collects;
     collects[`HOST_${safename}`] = this.hostname;
     collects[`IP_${safename}`] = this.ip;
     if (this.is_dc) {
