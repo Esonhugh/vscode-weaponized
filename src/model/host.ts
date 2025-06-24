@@ -92,8 +92,8 @@ export class Host {
         ret = `${this.ip}\t${this.alias.join(" ")}`;
         break;
       case "yaml":
-        ret = yamlStringify(this)
-        break
+        ret = yamlStringify(this);
+        break;
     }
     return ret;
   }

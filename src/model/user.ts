@@ -34,17 +34,17 @@ export class UserCredential {
   props: { [key: string]: string } = {};
 
   init(iuser: innerUserCredential):UserCredential {
-    this.user = iuser.user? iuser.user : ""
+    this.user = iuser.user? iuser.user : "";
     if (iuser.password) {
       this.password = iuser.password;
     }
     if (iuser.nt_hash) {
       this.nt_hash = iuser.nt_hash;
     }
-    this.login = iuser.login ? iuser.login : ""
-    this.props = iuser.props ? iuser.props : {}
-    this.is_current = iuser.is_current ? iuser.is_current : false
-    return this
+    this.login = iuser.login ? iuser.login : "";
+    this.props = iuser.props ? iuser.props : {};
+    this.is_current = iuser.is_current ? iuser.is_current : false;
+    return this;
   }
 
   exportEnvironmentCollects(): { [key: string]: string } {
@@ -80,7 +80,7 @@ export class UserCredential {
         collects[`${envVarSafer(key)}`] = this.props[key];
       }
     }
-    return collects
+    return collects;
   }
 
   dumpUser(format?: UserDumpFormat): string {
@@ -110,14 +110,14 @@ export class UserCredential {
         if (this.login && this.login != "" && this.login !== this.user) {
           ret = `'${this.login}' -u '${this.user}'`;
         } else {
-          ret = `-u '${this.user}'`
+          ret = `-u '${this.user}'`;
         }
         if (this.nt_hash === default_bad_nt_hash) {
           ret = `${ret} -p '${this.password}'`;
         } else {
           ret = `${ret} -H ':${this.nt_hash}'`;
         }
-        break
+        break;
       case "yaml":
         ret = yamlStringify(this);
     }
@@ -125,7 +125,7 @@ export class UserCredential {
   }
 
   setAsCurrent(): UserCredential {
-    this.is_current = true
+    this.is_current = true;
     return this;
   }
 }
@@ -137,7 +137,7 @@ export function dumpUserCredentials(users: UserCredential[], format: UserDumpFor
     return ret;
   }
   for (let u of users) {
-    let user = new UserCredential().init(u)
+    let user = new UserCredential().init(u);
     ret += `${user.dumpUser(format)}\n`;
   }
   return ret;
@@ -147,9 +147,9 @@ function test() {
   let usera = new UserCredential();
   usera.init({
     login:"github.com"
-  })
-  usera.setAsCurrent()
-  console.log(  usera.dumpUser())
+  });
+  usera.setAsCurrent();
+  console.log(  usera.dumpUser());
   let content = `
 - login: github.com
   username: usera
@@ -158,7 +158,7 @@ function test() {
   username: userax
   nt_hash: 0123456789ABCDEF0123456789ABCDEF
   is_current: true
-`
+`;
   let users = parseUserCredentialsYaml(content);
   console.log(dumpUserCredentials(users, "nxc"));
 }

@@ -7,4 +7,4 @@ export const WeaponTaskProvider = class implements vscode.TaskProvider {
   resolveTask(task: vscode.Task, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Task> {
     throw new Error('Method not implemented.');
   }
-}
+};

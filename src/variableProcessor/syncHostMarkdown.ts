@@ -143,7 +143,7 @@ const hash_collects: Collects = {
   "HASH_KRB5_AS_REP_18": "19700",
 };
 
-let default_collects: Collects = mergeCollects(hash_collects)
+let default_collects: Collects = mergeCollects(hash_collects);
 
 
 export async function ProcessWorkspaceStateToEnvironmentCollects(workspace: vscode.WorkspaceFolder) {
