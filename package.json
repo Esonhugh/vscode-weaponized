@@ -7,6 +7,8 @@
   "engines": {
     "vscode": "^1.101.0"
   },
+	"license": "MIT",
+	"icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/esonhugh/vscode-weaponized.git"
@@ -15,27 +17,28 @@
     "Other"
   ],
   "activationEvents": [
-		"workspaceContains:**/.vscode/.zshrc"
+    "workspaceContains:**/.vscode/.zshrc"
   ],
   "main": "./dist/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "weapon.run_command",
-				"title": "weapon: Run markdown command in code block"
-			},
-			{
-				"command": "weapon.dump_hosts",
-				"title": "weapon: Dump hosts as /etc/hosts format"
-			},
-			{
-				"command": "weapon.dump_users",
-				"title": "weapon: List all user credentials"
-			}
-		]
-	},
+  "contributes": {
+    "commands": [
+      {
+        "command": "weapon.run_command",
+        "title": "weapon: Run markdown command in code block"
+      },
+      {
+        "command": "weapon.dump_hosts",
+        "title": "weapon: Dump hosts as /etc/hosts format"
+      },
+      {
+        "command": "weapon.dump_users",
+        "title": "weapon: List all user credentials"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
+		"vscode:publish": "vsce package --no-dependencies",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -53,6 +56,7 @@
     "@typescript-eslint/parser": "^8.35.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.5.0",
     "eslint": "^9.29.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
