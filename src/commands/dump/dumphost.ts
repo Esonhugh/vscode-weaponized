@@ -7,8 +7,7 @@ import { title } from "process";
 type callback = (...args: any[]) => any;
 
 export const dumpetchosts:callback = async () => {
-  let store = Extension.context.workspaceState;
-  let hosts = store.get<Host[]>("hosts");
+  let hosts = Extension.HostState;
   if (!hosts) {
     return;
   }

@@ -7,8 +7,7 @@ import { title } from "process";
 type callback = (...args: any[]) => any;
 
 export const dumpalluser:callback = async () => {
-  let store = Extension.context.workspaceState;
-  let hosts = store.get<UserCredential[]>("users");
+  let hosts = Extension.UserState;
   if (!hosts) {
     return;
   }
