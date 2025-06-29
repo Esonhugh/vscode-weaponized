@@ -1,6 +1,6 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
-import { envVarSafer, setEnvironment} from "./util";
+import { Collects, envVarSafer } from "./util";
 
 const default_bad_nt_hash = "ffffffffffffffffffffffffffffffff";
 
@@ -10,7 +10,7 @@ interface innerUserCredential {
   nt_hash?: string;
   login?: string;
   is_current?: boolean;
-  props?: { [key: string]: string };
+  props?: Collects;
 }
 
 export function parseUserCredentialsYaml(content: string): UserCredential[] {
@@ -31,7 +31,7 @@ export class UserCredential {
   nt_hash: string = default_bad_nt_hash;
   login: string = "";
   is_current: boolean = false;
-  props: { [key: string]: string } = {};
+  props: Collects = {};
 
   init(iuser: innerUserCredential):UserCredential {
     this.user = iuser.user? iuser.user : "";
@@ -47,9 +47,9 @@ export class UserCredential {
     return this;
   }
 
-  exportEnvironmentCollects(): { [key: string]: string } {
+  exportEnvironmentCollects(): Collects {
     let safename = envVarSafer(this.user);
-    let collects = {} as { [key: string]: string }; 
+    let collects = {} as Collects; 
 
     collects[`USER_${safename}`] = this.user;
     if (this.login && (this.login !== "" || this.login !== this.user)) {

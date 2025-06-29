@@ -4,6 +4,7 @@ import {
   parseHostsYaml,
   parseUserCredentialsYaml,
   UserCredential,
+  Collects,
 } from "../model";
 import { logger } from "../global/log";
 import { Extension } from "../global/context";
@@ -94,7 +95,6 @@ export function mergeHostFromFile(
   return uniqueHosts(old_host_list.reverse());
 }
 
-type Collects = { [key: string]: string };
 function mergeCollects(...cs: Collects[]): Collects {
   let ret: Collects = {};
   for (let c of cs) {
