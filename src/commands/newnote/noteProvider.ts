@@ -11,6 +11,27 @@ function GenerateNoteCreationCodeLens(
   logger.debug(
     `Generating code lens for note creation with config type: ${configType}`
   );
+  try {
+    let filename = targetName + ".md";
+    if (configType === "user" ) {
+      filename = `users/${targetName}/` + filename;
+    }
+    if (configType === "host") {
+      filename = `hosts/${targetName}/` + filename;
+    }
+    logger.debug(`Checking if file exists: ${filename}`);
+    let urls = vscode.workspace.findFiles(filename);
+    if (urls && urls.then) {
+      urls.then((files) => {
+        if (files.length > 0) {
+          logger.debug(`File already exists: ${filename}`);
+          return [];
+        }
+      });
+    }
+  } catch (error) {
+    logger.error(`Error generating code lens: ${error}`);
+  }
   let codeLenses: vscode.CodeLens[] = [];
   const cmd: vscode.Command = {
     title: `Create note for ${targetName} (${configType})`, // foam command disallow args 
