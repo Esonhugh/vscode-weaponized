@@ -9,6 +9,7 @@ import { DumpProvider } from "./dump/dumpProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { targetFilePattern } from "../global/const";
 import { replacer } from "./utilcommand/replacer";
+import { NoteCreationProvider } from "./newnote/noteProvider";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -28,6 +29,10 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
       new DumpProvider()
+    ),
+    vscode.languages.registerCodeLensProvider(
+      { language: "markdown", scheme: "file", pattern: targetFilePattern },
+      new NoteCreationProvider()
     ),
     vscode.workspace.registerTextDocumentContentProvider(
       "weaponized-editor",
