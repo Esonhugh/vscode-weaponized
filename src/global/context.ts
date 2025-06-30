@@ -1,7 +1,7 @@
 import { ExtensionContext } from "vscode";
 import { UserCredential, Host } from "../model";
 
-export class Extension {
+export class Context {
   private static _extContext: ExtensionContext;
 
   public static get context(): ExtensionContext {
@@ -45,6 +45,6 @@ export class Extension {
   }
 
   public static set HostState(hs: Host[]) {
-    this.context.workspaceState.update("hosts", Host);
+    this.context.workspaceState.update("hosts", hs);
   }
 }

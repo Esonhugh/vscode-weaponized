@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { dumpUserCredentials, UserCredential } from "../../model";
 
-import { Extension } from "../../global/context";
+import { Context } from "../../global/context";
 import { title } from "process";
 
 type callback = (...args: any[]) => any;
 
 export const dumpalluser:callback = async () => {
-  let hosts = Extension.UserState;
+  let hosts = Context.UserState;
   if (!hosts) {
     return;
   }

@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { dumpHosts, Host } from "../../model";
 
-import { Extension } from "../../global/context";
+import { Context } from "../../global/context";
 import { title } from "process";
 
 type callback = (...args: any[]) => any;
 
 export const dumpetchosts:callback = async () => {
-  let hosts = Extension.HostState;
+  let hosts = Context.HostState;
   if (!hosts) {
     return;
   }

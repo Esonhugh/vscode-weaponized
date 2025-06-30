@@ -7,7 +7,7 @@ import {
   Collects,
 } from "../model";
 import { logger } from "../global/log";
-import { Extension } from "../global/context";
+import { Context } from "../global/context";
 
 export function getCodeblock(content: string, identity: string): string[] {
   let lines = content.split("\n");
@@ -148,33 +148,28 @@ let default_collects: Collects = mergeCollects(hash_collects);
 export async function ProcessWorkspaceStateToEnvironmentCollects(
   workspace: vscode.WorkspaceFolder
 ) {
-  let collection = Extension.context.environmentVariableCollection.getScoped({
+  let collection = Context.context.environmentVariableCollection.getScoped({
     workspaceFolder: workspace,
   });
   logger.info(`Processing workspaceState on workspace: ${workspace.name}`);
-  collection.forEach((value, key) => {
-    logger.debug(`Clearing environment variable: ${key} => ${value}`);
-  });
-
   collection.clear();
+  logger.trace(`Cleared environment variable collection for workspace: ${workspace.name}`);
   default_collects["PROJECT_FOLDER"] = workspace.uri.fsPath;
 
   let ul: Collects = {};
-  let old_user_list = Extension.UserState;
+  let old_user_list = Context.UserState;
   if (old_user_list) {
     for (let user of old_user_list) {
-      let u = new UserCredential().init(user);
-      var uc = u.exportEnvironmentCollects();
+      var uc = user.exportEnvironmentCollects();
       ul = mergeCollects(ul, uc);
     }
   }
 
   let hl: Collects = {};
-  let old_host_list = Extension.HostState;
+  let old_host_list = Context.HostState;
   if (old_host_list) {
     for (let host of old_host_list) {
-      let h = new Host().init(host);
-      hl = mergeCollects(hl, h.exportEnvironmentCollects());
+      hl = mergeCollects(hl, host.exportEnvironmentCollects());
     }
   }
 
@@ -190,21 +185,21 @@ export async function ProcessWorkspaceStateToEnvironmentCollects(
 export async function ProcessMarkdownFileToWorkspaceState(file: vscode.Uri) {
   const content = await vscode.workspace.fs.readFile(file);
 
-  let old_user_list = Extension.UserState;
+  let old_user_list = Context.UserState;
   if (!old_user_list) {
-    Extension.UserState = [];
+    Context.UserState = [];
   } else {
     old_user_list = mergeUserCredFromFile(content.toString(), old_user_list);
     logger.trace(`Merged user credentials from file: ${file.fsPath} `);
-    Extension.UserState = old_user_list;
+    Context.UserState = old_user_list;
   }
 
-  let old_host_list = Extension.HostState;
+  let old_host_list = Context.HostState;
   if (!old_host_list) {
-    Extension.HostState = [];
+    Context.HostState = [];
   } else {
     old_host_list = mergeHostFromFile(content.toString(), old_host_list);
     logger.trace(`Merged hosts from file: ${file.fsPath} `);
-    Extension.HostState = old_host_list;
+    Context.HostState = old_host_list;
   }
 }

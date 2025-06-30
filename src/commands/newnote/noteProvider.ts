@@ -1,10 +1,12 @@
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
+import { ConfigType } from "../../model";
+import { Context } from "../../global/context";
 
 const FoamCommand = "foam-vscode.create-note-from-template";
 
 function GenerateNoteCreationCodeLens(
-  configType: string,
+  configType: ConfigType,
   targetName: string,
   startLine: number
 ): vscode.CodeLens[] {
@@ -12,22 +14,26 @@ function GenerateNoteCreationCodeLens(
     `Generating code lens for note creation with config type: ${configType}`
   );
   try {
-    let filename = targetName + ".md";
     if (configType === "user" ) {
-      filename = `users/${targetName}/` + filename;
-    }
-    if (configType === "host") {
-      filename = `hosts/${targetName}/` + filename;
-    }
-    logger.debug(`Checking if file exists: ${filename}`);
-    let urls = vscode.workspace.findFiles(filename);
-    if (urls && urls.then) {
-      urls.then((files) => {
-        if (files.length > 0) {
-          logger.debug(`File already exists: ${filename}`);
-          return [];
+      let userState = Context.UserState
+      if (userState) {
+        if (userState.find((u => u.user === targetName))) {
+          logger.debug(`User ${targetName} already exists.`);
+          return []; // User already exists, no need to create a new note
         }
-      });
+      }
+    } else if (configType === "host") {
+      let hostState = Context.HostState
+      if (hostState) {
+        if (hostState.find((h => h.hostname === targetName))) {
+          logger.debug(`Host ${targetName} already exists.`);
+          return []; // Host already exists, no need to create a new note
+        }
+      }
+    } else {
+      throw new Error(
+        `Unknown config type: ${configType}. Expected 'user' or 'host'.`
+      );
     }
   } catch (error) {
     logger.error(`Error generating code lens: ${error}`);
@@ -49,7 +55,6 @@ function GenerateNoteCreationCodeLens(
   return codeLenses;
 }
 
-import { ConfigType } from "../../model";
 
 export class NoteCreationProvider implements vscode.CodeLensProvider {
   provideCodeLenses(
