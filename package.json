@@ -33,6 +33,10 @@
       {
         "command": "weapon.dump_users",
         "title": "weapon: List all user credentials"
+      },
+      {
+        "command": "weapon.task.msfvenom_creation",
+        "title": "weapon: Create msfvenom payload"
       }
     ],
     "configuration": {

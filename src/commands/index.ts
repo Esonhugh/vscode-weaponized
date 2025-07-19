@@ -14,6 +14,7 @@ import {
   NetcatWeaponizedTerminalProvider,
   WebDeliveryWeaponizedTerminalProvider,
 } from "./terminal";
+import { msfvenomPayloadCreation } from "./tasks";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -21,6 +22,7 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand("weapon.replace_document", replacer),
+    vscode.commands.registerCommand("weapon.task.msfvenom_creation", msfvenomPayloadCreation),
     vscode.commands.registerCommand(
       "weapon.display_virtual_content",
       displayVirtualContent
