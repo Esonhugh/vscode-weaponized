@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
 import { TextEncoder } from "util";
+import { type callback } from "./utils";
 
-export const replacer = async (args: any) => {
+export const replacer: callback = async (args: any) => {
   const { file, startLine, current, target } = args;
   if (!file || !startLine || !current || !target) {
     logger.error("Invalid arguments provided to replacer function.");

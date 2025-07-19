@@ -7,8 +7,8 @@
   "engines": {
     "vscode": "^1.101.0"
   },
-	"license": "MIT",
-	"icon": "images/icon.png",
+  "license": "MIT",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/esonhugh/vscode-weaponized.git"
@@ -34,11 +34,78 @@
         "command": "weapon.dump_users",
         "title": "weapon: List all user credentials"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "weaponized vscode Extension Settings",
+      "type": "object",
+      "properties": {
+        "weaponized.lhost": {
+          "type": "string",
+          "default": "${LHOST}",
+          "description": "This is the LHOST setting for weaponized vscode extension. it's for receive reverse shell or prompt reverse links."
+        },
+        "weaponized.lport": {
+          "type": "integer",
+          "default": 6879,
+          "format": "port",
+          "description": "This is the LPORT setting for weaponized vscode extension. it's for receive reverse shell or prompt reverse links."
+        },
+        "weaponized.listenon": {
+          "type": "integer",
+          "default": 8890,
+          "format": "port",
+          "description": "This is the listen port for weaponized vscode extension. it's for listening webserver requests."
+        },
+        "weaponized.netcat": {
+          "type": "string",
+          "default": "rlwrap -I -cAr netcat -lvvp ${config:weaponized.lport}",
+          "description": "This is the netcat command for weaponized vscode extension. it contains the netcat command with ${LPORT} as placeholder. u can replace with pwncat-cs or other shell handlering tools"
+        },
+        "weaponized.webdelivery": {
+          "type": "string",
+          "default": "simplehttpserver -listen 0.0.0.0:${config:weaponized.listenon} -verbose -upload",
+          "description": "This is the web delivery command for weaponized vscode extension. it contains the web delivery command with ${LISTEN_ON} as placeholder. u can replace with other web delivery tools like python3 http.server or php -S 0.0.0.0:${LISTEN_ON}"
+        },
+        "weaponized.msf.venom": {
+          "type": "string",
+          "default": "msfvenom",
+          "description": "Path to msfvenom"
+        },
+        "weaponized.msf.console": {
+          "type": "string",
+          "default": "msfconsole",
+          "description": "Path to msfconsole"
+        },
+        "weaponized.msf.resourcefile": {
+          "type": "string",
+          "description": "Path to msfconsole resource file. it will be created if not exists."
+        }
+      }
+    },
+    "terminal": {
+      "profiles": [
+        {
+          "title": "meterpreter handler",
+          "id": "weaponized.meterpreter-handler"
+        },
+        {
+          "title": "msfconsole",
+          "id": "weaponized.msfconsole"
+        },
+        {
+          "title": "netcat handler",
+          "id": "weaponized.netcat-handler"
+        },
+        {
+          "title": "web delivery",
+          "id": "weaponized.web-delivery"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
-		"vscode:publish": "vsce package --no-dependencies",
+    "vscode:publish": "vsce package --no-dependencies",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",

@@ -3,17 +3,20 @@ import { dumpetchosts } from "./dump/dumphost";
 import { dumpalluser } from "./dump/dumpuser";
 import { runCommand } from "./runcommand/runcommand";
 import { displayVirtualContent } from "./utilcommand/readonlyDisplay";
-import { WeaponTaskProvider } from "./tasks/task";
 import { CommandCodeLensProvider } from "./runcommand/commandCodeLensProvider";
 import { DumpProvider } from "./dump/dumpProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { targetFilePattern } from "../global/const";
 import { replacer } from "./utilcommand/replacer";
 import { NoteCreationProvider } from "./newnote/noteProvider";
+import {
+  MeterpreterWeaponizedTerminalProvider,
+  NetcatWeaponizedTerminalProvider,
+  WebDeliveryWeaponizedTerminalProvider,
+} from "./terminal";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    // vscode.tasks.registerTaskProvider("weapon", new WeaponTaskProvider()),
     vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
@@ -37,6 +40,18 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.workspace.registerTextDocumentContentProvider(
       "weaponized-editor",
       new ReadOnlyProvider()
+    ),
+    vscode.window.registerTerminalProfileProvider(
+      "weaponized.meterpreter-handler",
+      new MeterpreterWeaponizedTerminalProvider()
+    ),
+    vscode.window.registerTerminalProfileProvider(
+      "weaponized.netcat-handler",
+      new NetcatWeaponizedTerminalProvider()
+    ),
+    vscode.window.registerTerminalProfileProvider(
+      "weaponized.web-delivery",
+      new WebDeliveryWeaponizedTerminalProvider()
     )
   );
 }

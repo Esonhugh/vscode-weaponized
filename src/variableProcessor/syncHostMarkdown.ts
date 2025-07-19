@@ -143,7 +143,13 @@ const hash_collects: Collects = {
   HASH_KRB5_AS_REP_18: "19700",
 };
 
-let default_collects: Collects = mergeCollects(hash_collects);
+let weapon_config_collects: Collects = {
+  "LHOST": vscode.workspace.getConfiguration("weaponized").get("lhost", "LHOST"),
+  "LPORT": vscode.workspace.getConfiguration("weaponized").get("lport")|| "6789",
+  "LISTEN_ON": vscode.workspace.getConfiguration("weaponized").get("listenon") || "8890",
+};
+
+let default_collects: Collects = mergeCollects(hash_collects, weapon_config_collects);
 
 export async function ProcessWorkspaceStateToEnvironmentCollects(
   workspace: vscode.WorkspaceFolder
