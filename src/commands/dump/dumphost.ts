@@ -12,7 +12,7 @@ export const dumpetchosts:callback = async () => {
   }
   await vscode.commands.executeCommand("weapon.display_virtual_content", {
     title: "/etc/hosts",
-    content: dumpHosts(hosts, "file"),
+    content: dumpHosts(hosts, "file").trim(),
     copyToClipboard: true,
   });
 };

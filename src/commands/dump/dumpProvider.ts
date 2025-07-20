@@ -85,7 +85,7 @@ function GenerateUserCredCodeLens(
   const cmd: vscode.Command = {
     title: `show as ${format} param`,
     command: "weapon.display_virtual_content",
-    arguments: [{ content: dumpUserCredentials(Users, format), copyToClipboard: true, }],
+    arguments: [{ content: dumpUserCredentials(Users, format).trim(), copyToClipboard: true, }],
   };
 
   codeLenses.push(

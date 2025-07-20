@@ -22,10 +22,10 @@ export const runCommand: callback = async (args) => {
       }
 
       // a + in the state indicates a process running in foreground
-      if (!stdout.includes("+")) {
-        logger.debug("No running command in the active terminal, creating a new one.", pid);
-        term = vscode.window.createTerminal();
-      }
+      //if (!stdout.includes("+")) {
+      //  logger.debug("No running command in the active terminal, creating a new one.", pid);
+      //  term = vscode.window.createTerminal();
+      // }
       term.show();
       term.sendText(args.command);
     });
