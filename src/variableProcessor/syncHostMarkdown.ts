@@ -5,9 +5,11 @@ import {
   parseUserCredentialsYaml,
   UserCredential,
   Collects,
+  mergeCollects,
 } from "../model";
 import { logger } from "../global/log";
 import { Context } from "../global/context";
+import { defaultCollects } from "./environmentCollects";
 
 export function getCodeblock(content: string, identity: string): string[] {
   let lines = content.split("\n");
@@ -95,62 +97,6 @@ export function mergeHostFromFile(
   return uniqueHosts(old_host_list.reverse());
 }
 
-function mergeCollects(...cs: Collects[]): Collects {
-  let ret: Collects = {};
-  for (let c of cs) {
-    for (let key in c) {
-      if (ret[key]) {
-        continue;
-      }
-      ret[key] = c[key];
-    }
-  }
-  return ret;
-}
-
-const hash_collects: Collects = {
-  HASHCAT_MODE_WORDLIST: "0",
-  HASHCAT_MODE_COMBINATION: "1",
-  HASHCAT_MODE_TOGGLE_CASE: "2",
-  HASHCAT_MODE_MASK_BRUTE_FORCE: "3",
-  HASHCAT_MODE_WORDLIST_MASK: "6",
-  HASHCAT_MODE_MASK_WORDLIST: "7",
-  HASHCAT_DEVICE_CPU: "1",
-  HASHCAT_DEVICE_GPU: "2",
-  HASHCAT_DEVICE_FPGA: "3",
-  HASH_MD5: "0",
-  HASH_SHA1: "100",
-  HASH_MD5CYPT: "500",
-  HASH_MD4: "900",
-  HASH_NTLM: "1000",
-  HASH_SHA256: "1400",
-  HASH_APRMD5: "1600",
-  HASH_SHA512: "1800",
-  HASH_BCRYPT: "3200",
-  HASH_NETNTLMv2: "5600",
-  HASH_SHA256CRYPT: "7400",
-  HASH_KRB5_PA_23: "7500",
-  HASH_KRB5_PA_17: "19800",
-  HASH_KRB5_PA_18: "19900",
-  HASH_DJANGO_PBKDF2_SHA256: "10000",
-  HASH_PBKDF2_HMAC_SHA256: "10900",
-  HASH_KRB5_TGS_23: "13100",
-  HASH_KRB5_TGS_17: "19600",
-  HASH_KRB5_TGS_18: "19700",
-  HASH_JWT: "16500",
-  HASH_KRB5_AS_REP_23: "18200",
-  HASH_KRB5_AS_REP_17: "19500",
-  HASH_KRB5_AS_REP_18: "19700",
-};
-
-let weapon_config_collects: Collects = {
-  "LHOST": vscode.workspace.getConfiguration("weaponized").get("lhost", "LHOST"),
-  "LPORT": vscode.workspace.getConfiguration("weaponized").get("lport")|| "6789",
-  "LISTEN_ON": vscode.workspace.getConfiguration("weaponized").get("listenon") || "8890",
-};
-
-let default_collects: Collects = mergeCollects(hash_collects, weapon_config_collects);
-
 export async function ProcessWorkspaceStateToEnvironmentCollects(
   workspace: vscode.WorkspaceFolder
 ) {
@@ -160,7 +106,7 @@ export async function ProcessWorkspaceStateToEnvironmentCollects(
   logger.info(`Processing workspaceState on workspace: ${workspace.name}`);
   collection.clear();
   logger.trace(`Cleared environment variable collection for workspace: ${workspace.name}`);
-  default_collects["PROJECT_FOLDER"] = workspace.uri.fsPath;
+  defaultCollects["PROJECT_FOLDER"] = workspace.uri.fsPath;
 
   let ul: Collects = {};
   let old_user_list = Context.UserState;
@@ -179,7 +125,7 @@ export async function ProcessWorkspaceStateToEnvironmentCollects(
     }
   }
 
-  let collects = mergeCollects(ul, hl, default_collects);
+  let collects = mergeCollects(ul, hl, defaultCollects);
   for (let key in collects) {
     logger.trace(
       `Setting environment variable into collections: ${key} => ${collects[key]}`

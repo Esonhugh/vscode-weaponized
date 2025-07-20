@@ -1,6 +1,6 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
-import { Collects, envVarSafer, setEnvironment } from "./util";
+import { Collects, envVarSafer } from "./util";
 
 interface innerHost {
   hostname?: string;

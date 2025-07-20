@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { callback } from "../utilcommand/utils";
 import { logger } from "../../global/log";
+import { CreateTaskLikeInteractiveTerminal } from "./taskTermial";
 
 let msfpaylaodtypes = [
   "windows/x64/meterpreter/reverse_tcp",
@@ -65,19 +66,15 @@ export let msfvenomPayloadCreation: callback = async (args) => {
     return;
   }
 
-  let payload: string | undefined;
+  let payload: string | undefined = args?.payload;
   if (!args || !args.payload) {
     payload = await vscode.window.showQuickPick(msfpaylaodtypes, {
       placeHolder: "Select a payload type",
     });
-    if (!payload) {
-      vscode.window.showErrorMessage(
-        "No payload selected. Operation cancelled."
-      );
-      return;
-    }
-  } else {
-    payload = args.payload;
+  }
+  if (!payload) {
+    vscode.window.showErrorMessage("No payload selected. Operation cancelled.");
+    return;
   }
 
   let lhost = vscode.workspace
@@ -93,17 +90,11 @@ export let msfvenomPayloadCreation: callback = async (args) => {
   }
 
   // Continue with payload creation...
-  let format: string | undefined;
+  let format: string | undefined = args?.format;
   if (!args || !args.format) {
     format = await vscode.window.showQuickPick(formats, {
       placeHolder: "Select a format",
     });
-    if (!format) {
-      vscode.window.showErrorMessage(
-        "No format selected. Operation cancelled."
-      );
-      return;
-    }
   } else {
     if (typeof args.format !== "string" || !formats.includes(args.format)) {
       vscode.window.showErrorMessage(
@@ -113,20 +104,18 @@ export let msfvenomPayloadCreation: callback = async (args) => {
     }
     format = args.format;
   }
+  if (!format) {
+    vscode.window.showErrorMessage("No format selected. Operation cancelled.");
+    return;
+  }
   logger.debug("output format: " + format);
 
-  let advancedOptions: string[] | undefined;
+  let advancedOptions: string[] | undefined = args?.advanced;
   if (!args || !args.advanced) {
     advancedOptions = await vscode.window.showQuickPick(advanced, {
       placeHolder: "Select advanced options",
       canPickMany: true,
     });
-    if (!advancedOptions) {
-      vscode.window.showErrorMessage(
-        "No advanced options selected. Operation cancelled."
-      );
-      return;
-    }
   } else {
     if (typeof args.advanced === "string") {
       advancedOptions = [args.advanced];
@@ -139,20 +128,20 @@ export let msfvenomPayloadCreation: callback = async (args) => {
       return;
     }
   }
+  if (!advancedOptions) {
+    vscode.window.showErrorMessage(
+      "No advanced options selected. Operation cancelled."
+    );
+    return;
+  }
 
-  let output: string | undefined;
+  let output: string | undefined = args?.output;
   if (!args || !args.output) {
     output = await vscode.window.showInputBox({
       prompt: "Enter output file name (without extension)",
       placeHolder: "output",
       value: "./trojan",
     });
-    if (!output) {
-      vscode.window.showErrorMessage(
-        "No output file name provided. Operation cancelled."
-      );
-      return;
-    }
   } else {
     if (typeof args.output !== "string") {
       vscode.window.showErrorMessage(
@@ -162,26 +151,25 @@ export let msfvenomPayloadCreation: callback = async (args) => {
     }
     output = args.output;
   }
+  if (!output) {
+    vscode.window.showErrorMessage(
+      "No output file name provided. Operation cancelled."
+    );
+    return;
+  }
 
-  let argsArray: string =
-    [
-      msfconsolePath,
-      "-p",
-      payload!,
-      `LHOST=${lhost}`,
-      `LPORT=${lport}`,
-      ...advancedOptions!,
-      "-o",
-      output!,
-      "-f",
-      format!,
-    ].join(" ");
+  let argsArray: string[] = [
+    msfconsolePath,
+    "-p",
+    payload,
+    `LHOST=${lhost}`,
+    `LPORT=${lport}`,
+    ...advancedOptions,
+    "-o",
+    output,
+    "-f",
+    format,
+  ];
 
-  let term = vscode.window.createTerminal("msfvenom payload creation");
-  term.sendText(argsArray);
-  logger.info("msfvenom payload creation started");
-  term.processId.then((pid) => {
-    logger.info(`msfvenom terminal started with PID: ${pid}`);
-  });
-  term.show();
+  CreateTaskLikeInteractiveTerminal("msfvneom payload creation", argsArray);
 };

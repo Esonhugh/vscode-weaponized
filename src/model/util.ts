@@ -7,12 +7,15 @@ export type Collects = { [key: string]: string };
 
 export type ConfigType = "host" | "user";
 
-import * as vscode from "vscode";
-
-export function setEnvironment(collection: vscode.EnvironmentVariableCollection,variable: string, value: string): void {
-    // Set the environment variable in the collection
-    if (collection === undefined) {
-        throw new Error("Environment variable collection is undefined");
+export function mergeCollects(...cs: Collects[]): Collects {
+  let ret: Collects = {};
+  for (let c of cs) {
+    for (let key in c) {
+      if (ret[key]) {
+        continue;
+      }
+      ret[key] = c[key];
     }
-    collection.append(variable, value, { applyAtShellIntegration: true });
+  }
+  return ret;
 }

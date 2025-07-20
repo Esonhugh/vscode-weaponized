@@ -16,4 +16,4 @@ import { UserCredential } from "./user";
 import { Host } from "./host";
 
 export type Config = Host | UserCredential;
-export { Collects,envVarSafer, ConfigType } from "./util";
+export { Collects,envVarSafer, ConfigType, mergeCollects } from "./util";

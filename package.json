@@ -37,6 +37,10 @@
       {
         "command": "weapon.task.msfvenom_creation",
         "title": "weapon: Create msfvenom payload"
+      },
+      {
+        "command": "weapon.task.hashcat_cracker",
+        "title": "weapon: Crack hashes with hashcat"
       }
     ],
     "configuration": {
@@ -59,6 +63,22 @@
           "default": 8890,
           "format": "port",
           "description": "This is the listen port for weaponized vscode extension. it's for listening webserver requests."
+        },
+        "weaponized.envs": {
+          "type":"object",
+          "default": {},
+          "description": "This is the extra environment variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own environment variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands and tasks.",
+          "definitions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "weaponized.hashcat": {
+          "type": "string",
+          "default": "hashcat",
+          "description": "Path to hashcat executable. it will be used in the hashcat task."
         },
         "weaponized.netcat": {
           "type": "string",
