@@ -14,18 +14,18 @@ function GenerateNoteCreationCodeLens(
     `Generating code lens for note creation with config type: ${configType}`
   );
   try {
-    if (configType === "user" ) {
-      let userState = Context.UserState
+    if (configType === "user") {
+      let userState = Context.UserState;
       if (userState) {
-        if (userState.find((u => u.user === targetName))) {
+        if (userState.find((u) => u.user === targetName)) {
           logger.debug(`User ${targetName} already exists.`);
           return []; // User already exists, no need to create a new note
         }
       }
     } else if (configType === "host") {
-      let hostState = Context.HostState
+      let hostState = Context.HostState;
       if (hostState) {
-        if (hostState.find((h => h.hostname === targetName))) {
+        if (hostState.find((h) => h.hostname === targetName)) {
           logger.debug(`Host ${targetName} already exists.`);
           return []; // Host already exists, no need to create a new note
         }
@@ -40,7 +40,7 @@ function GenerateNoteCreationCodeLens(
   }
   let codeLenses: vscode.CodeLens[] = [];
   const cmd: vscode.Command = {
-    title: `Create note for ${targetName} (${configType})`, // foam command disallow args 
+    title: `Create note for ${targetName} (${configType})`, // foam command disallow args
     command: FoamCommand,
   };
   codeLenses.push(
@@ -54,7 +54,6 @@ function GenerateNoteCreationCodeLens(
   );
   return codeLenses;
 }
-
 
 export class NoteCreationProvider implements vscode.CodeLensProvider {
   provideCodeLenses(
@@ -90,9 +89,11 @@ export class NoteCreationProvider implements vscode.CodeLensProvider {
         continue;
       }
 
-      if (configtype && targetName){
+      if (configtype && targetName) {
         logger.debug(`Generating code lens for config type: ${configtype}`);
-        codeLenses.push(...GenerateNoteCreationCodeLens(configtype, targetName,lino));
+        codeLenses.push(
+          ...GenerateNoteCreationCodeLens(configtype, targetName, lino)
+        );
         continue;
       }
       continue;
