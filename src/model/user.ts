@@ -1,5 +1,5 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
-
+import { table } from "table";
 import { Collects, envVarSafer } from "./util";
 
 const default_bad_nt_hash = "ffffffffffffffffffffffffffffffff";
@@ -23,7 +23,7 @@ export function parseUserCredentialsYaml(content: string): UserCredential[] {
   return ret;
 }
 
-export type UserDumpFormat = "env" | "impacket" | "nxc" | "yaml";
+export type UserDumpFormat = "env" | "impacket" | "nxc" | "yaml" | "table";
 
 export class UserCredential {
   user: string = "";
@@ -33,8 +33,8 @@ export class UserCredential {
   is_current: boolean = false;
   props: Collects = {};
 
-  init(iuser: innerUserCredential):UserCredential {
-    this.user = iuser.user? iuser.user : "";
+  init(iuser: innerUserCredential): UserCredential {
+    this.user = iuser.user ? iuser.user : "";
     if (iuser.password) {
       this.password = iuser.password;
     }
@@ -49,7 +49,7 @@ export class UserCredential {
 
   exportEnvironmentCollects(): Collects {
     let safename = envVarSafer(this.user);
-    let collects = {} as Collects; 
+    let collects = {} as Collects;
 
     collects[`USER_${safename}`] = this.user;
     if (this.login && (this.login !== "" || this.login !== this.user)) {
@@ -89,14 +89,14 @@ export class UserCredential {
       default:
       case "env":
         let collects = this.exportEnvironmentCollects();
-        ret = 'export ';
-        for( let key in collects) {
+        ret = "export ";
+        for (let key in collects) {
           ret += `${key}='${collects[key]}' `;
         }
         ret = ret.trim();
         break;
       case "impacket":
-        if (this.login && this.login !== "" && this.login !== this.user ) {
+        if (this.login && this.login !== "" && this.login !== this.user) {
           // if login is empty or same as username
           ret = `'${this.login}'/`;
         }
@@ -130,11 +130,53 @@ export class UserCredential {
   }
 }
 
-export function dumpUserCredentials(users: UserCredential[], format: UserDumpFormat): string {
+export function dumpUserCredentials(
+  users: UserCredential[],
+  format: UserDumpFormat
+): string {
   let ret = "";
   if (format === "yaml") {
     ret = yamlStringify(users);
     return ret;
+  }
+  if (format === "table") {
+    let header = [
+      "Login",
+      "Username",
+      "Password",
+      "NT Hash",
+      "Is Current",
+      "Props",
+    ];
+    let data: string[][] = [header];
+    for (let user of users) {
+      let props_str = "";
+      for (let key in user.props) {
+        props_str += `${key}=${user.props[key]}\n`;
+      }
+      data.push([
+        user.login,
+        user.user,
+        user.password,
+        user.nt_hash,
+        user.is_current ? "Yes" : "No",
+        props_str,
+      ]);
+    }
+    let t: string = table(data, {
+      header: {
+        content: "User Credentials",
+      },
+      columns: {
+        0: { alignment: "left" },
+        1: { alignment: "left" },
+        2: { alignment: "left" },
+        3: { alignment: "left" },
+        4: { alignment: "center" },
+        5: { alignment: "left" },
+      },
+    });
+    return t;
   }
   for (let u of users) {
     let user = new UserCredential().init(u);
@@ -146,10 +188,10 @@ export function dumpUserCredentials(users: UserCredential[], format: UserDumpFor
 function test() {
   let usera = new UserCredential();
   usera.init({
-    login:"github.com"
+    login: "github.com",
   });
   usera.setAsCurrent();
-  console.log(  usera.dumpUser());
+  console.log(usera.dumpUser());
   let content = `
 - login: github.com
   username: usera
@@ -162,6 +204,5 @@ function test() {
   let users = parseUserCredentialsYaml(content);
   console.log(dumpUserCredentials(users, "nxc"));
 }
-
 
 // (()=> { test() })();

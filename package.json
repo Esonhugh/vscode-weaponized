@@ -65,7 +65,7 @@
           "description": "This is the listen port for weaponized vscode extension. it's for listening webserver requests."
         },
         "weaponized.envs": {
-          "type":"object",
+          "type": "object",
           "default": {},
           "description": "This is the extra environment variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own environment variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands and tasks.",
           "definitions": {
@@ -155,6 +155,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "table": "^6.9.0",
     "yaml": "^2.8.0"
   }
 }

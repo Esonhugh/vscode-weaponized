@@ -2,23 +2,28 @@ import * as vscode from "vscode";
 import { dumpUserCredentials, UserCredential } from "../../model";
 
 import { Context } from "../../global/context";
-import { title } from "process";
 
 type callback = (...args: any[]) => any;
 
 export const dumpalluser:callback = async () => {
-  let hosts = Context.UserState;
-  if (!hosts) {
+  let users = Context.UserState;
+  if (!users) {
     return;
   }
+
+  let content =   `
+## Table View
+${dumpUserCredentials(users, "table")}  
+
+### Dump User Credentials like Impacket
+${dumpUserCredentials(users, "impacket")}
+### Dump User Credentials netexec favor
+${dumpUserCredentials(users, "nxc")}
+### Dump User Credentials env format
+${dumpUserCredentials(users, "env")}
+`;
   await vscode.commands.executeCommand("weapon.display_virtual_content", {
     title: "All User Credentials",
-    content: `### Dump User Credentials like Impacket
-${dumpUserCredentials(hosts, "impacket")}
-### Dump User Credentials netexec favor
-${dumpUserCredentials(hosts, "nxc")}
-### Dump User Credentials env format
-${dumpUserCredentials(hosts, "env")}
-`,
+    content: content,
   });
 };

