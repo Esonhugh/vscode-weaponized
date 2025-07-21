@@ -9,16 +9,15 @@ import {
   hash_device_collects,
   hash_mode_collects,
 } from "../../variableProcessor/environmentCollects";
-import { hash } from "crypto";
 
 export let hashcatCracker: callback = async (args) => {
   let hashcat = vscode.workspace
     .getConfiguration("weaponized")
-    .get("hashcat", "hashcar");
+    .get("hashcat", "hashcat");
 
   let file: string | undefined = args?.file;
   if (!args || !args.file) {
-    file = await filepicker({});
+    file = await filepicker();
   }
   if (!file) {
     logger.error("No file provided for hashcat cracker.");
@@ -66,7 +65,7 @@ export let hashcatCracker: callback = async (args) => {
     });
   }
   let argsArray: string[] = [
-    "hashcat",
+    hashcat,
     "--force",
     `-a ${hashmode}`,
     `-m ${hashtype}`,
