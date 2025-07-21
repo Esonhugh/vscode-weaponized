@@ -41,6 +41,10 @@
       {
         "command": "weapon.task.hashcat_cracker",
         "title": "weapon: Crack hashes with hashcat"
+      },
+      {
+        "command": "weapon.setup",
+        "title": "weapon: Setup weaponized vscode folder in current workspace"
       }
     ],
     "configuration": {

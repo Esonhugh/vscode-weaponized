@@ -26,4 +26,4 @@ set MeterpreterPrompt [Meterpreter Beacon]
 # set payload linux/x64/meterpreter/reverse_tcp
 # set LPORT 6790
 # 
-# run -j %                              
+# run -j

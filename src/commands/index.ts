@@ -15,6 +15,7 @@ import {
   WebDeliveryWeaponizedTerminalProvider,
 } from "./terminal";
 import { hashcatCracker, msfvenomPayloadCreation } from "./tasks";
+import { setupCommand } from "./setup/setup";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -24,10 +25,7 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("weapon.replace_document", replacer),
     vscode.commands.registerCommand("weapon.task.msfvenom_creation", msfvenomPayloadCreation),
     vscode.commands.registerCommand("weapon.task.hashcat_cracker", hashcatCracker),
-    vscode.commands.registerCommand(
-      "weapon.display_virtual_content",
-      displayVirtualContent
-    ),
+    vscode.commands.registerCommand("weapon.setup", setupCommand),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
       new CommandCodeLensProvider()
