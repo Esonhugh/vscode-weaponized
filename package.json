@@ -44,7 +44,7 @@
       },
       {
         "command": "weapon.setup",
-        "title": "weapon: Setup weaponized vscode folder in current workspace"
+        "title": "weapon: Setup/Create/Init weaponized vscode folder in current workspace"
       }
     ],
     "configuration": {
