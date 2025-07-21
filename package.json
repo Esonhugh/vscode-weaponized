@@ -107,6 +107,20 @@
         "weaponized.msf.resourcefile": {
           "type": "string",
           "description": "Path to msfconsole resource file. it will be created if not exists."
+        },
+        "weaponized.scanners": {
+          "type": "object",
+          "description": "This is the scanner configurations for weaponized vscode extension. it will be used in the scanner tasks. you can add your own scanner configurations here, like {\"nmap\": \"nmap -sS -sV -O -Pn -p- -T4 --script vuln $TARGET\"}. it will be used in the scanner tasks.",
+          "definitions": {
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "rustscan":"rustscan -a $TARGET -- --script=vuln -A",
+            "wfuzz": "wfuzz -c -w $WORDLIST -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "wfuzz https": "wfuzz -c -w $WORDLIST -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404"
+          }
         }
       }
     },

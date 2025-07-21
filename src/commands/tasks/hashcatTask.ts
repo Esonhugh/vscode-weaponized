@@ -73,5 +73,5 @@ export let hashcatCracker: callback = async (args) => {
     `${file}`,
     `${wordlist_extra}`,
   ];
-  CreateTaskLikeInteractiveTerminal(`hash cracker`, argsArray);
+  CreateTaskLikeInteractiveTerminal(`hash cracker`, argsArray, vscode.TerminalLocation.Editor);
 };
