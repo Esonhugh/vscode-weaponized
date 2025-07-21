@@ -43,6 +43,10 @@
         "title": "weapon: task: Crack hashes with hashcat"
       },
       {
+        "command": "weapon.task.scan",
+        "title": "weapon: task: Run scanner over target"
+      },
+      {
         "command": "weapon.setup",
         "title": "weapon: Setup/Create/Init weaponized vscode folder in current workspace"
       }
@@ -118,8 +122,11 @@
           },
           "default": {
             "rustscan":"rustscan -a $TARGET -- --script=vuln -A",
-            "wfuzz": "wfuzz -c -w $WORDLIST -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
-            "wfuzz https": "wfuzz -c -w $WORDLIST -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404"
+            "wfuzz": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "wfuzz https": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "nuclei": "nuclei -target $TARGET",
+            "dirsearch": "dirsearch -u http://$TARGET",
+            "dirsearch https": "dirsearch -u https://$TARGET"
           }
         }
       }

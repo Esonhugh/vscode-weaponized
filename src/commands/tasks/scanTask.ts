@@ -33,7 +33,7 @@ export const scanCommand: callback = async (args: any) => {
       vscode.window.showErrorMessage("Selected target not found in host list.");
       return;
     }
-    let options: string[] = [selected.hostname, selected.ip, ...selected.alias];
+    let options: string[] = Array.from(new Set([selected.hostname, selected.ip, ...selected.alias]));
 
     target = await vscode.window.showQuickPick(options, {
       placeHolder: "Select an option to scan",
