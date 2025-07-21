@@ -16,11 +16,15 @@ import {
 } from "./terminal";
 import { hashcatCracker, msfvenomPayloadCreation, scanCommand } from "./tasks";
 import { setupCommand } from "./setup/setup";
+import { switchActiveHost } from "./switch/host";
+import { switchActiveUser } from "./switch/user";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
+    vscode.commands.registerCommand("weapon.switch_host", switchActiveHost),
+    vscode.commands.registerCommand("weapon.switch_user", switchActiveUser),
     vscode.commands.registerCommand(
       "weapon.display_virtual_content",
       displayVirtualContent

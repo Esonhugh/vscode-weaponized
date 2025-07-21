@@ -31,6 +31,14 @@
         "title": "weapon: List/Dump all hosts"
       },
       {
+        "command": "weapon.switch_host",
+        "title": "weapon: Switch/Set current host"
+      },
+      {
+        "command": "weapon.switch_user",
+        "title": "weapon: Switch/Set current user"
+      },
+      {
         "command": "weapon.dump_users",
         "title": "weapon: List/Dump all user credentials"
       },

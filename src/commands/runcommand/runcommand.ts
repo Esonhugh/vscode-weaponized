@@ -1,9 +1,7 @@
 import * as vscode from "vscode";
 import * as cp from "child_process";
 import { logger } from "../../global/log";
-
-
-type callback = (...args: any[]) => any
+import { callback } from "../utilcommand/utils";
 
 export const runCommand: callback = async (args) => {
   var term = vscode.window.activeTerminal || vscode.window.createTerminal();
