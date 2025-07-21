@@ -10,11 +10,11 @@ export const ReadOnlyProvider = class
 };
 
 export const displayVirtualContent: callback = async (args) => {
-  let content = "Here is the example content";
+  let content = "Empty Content!";
   if (args && args.content) {
     content = args.content;
   }
-  let title = "Virtual Content";
+  let title = "Virtual Document";
   if (args && args.title) {
     title = encodeURIComponent(args.title);
   }
