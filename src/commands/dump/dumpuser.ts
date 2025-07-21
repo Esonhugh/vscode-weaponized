@@ -1,9 +1,17 @@
 import * as vscode from "vscode";
-import { dumpUserCredentials, UserCredential } from "../../model";
+import { dumpUserCredentials, UserCredential, UserDumpFormat } from "../../model";
 
 import { Context } from "../../global/context";
 
 type callback = (...args: any[]) => any;
+
+let formats = [
+  "env",
+  "impacket",
+  "nxc",
+  "yaml",
+  "table",
+];
 
 export const dumpalluser:callback = async () => {
   let users = Context.UserState;
@@ -11,17 +19,15 @@ export const dumpalluser:callback = async () => {
     return;
   }
 
-  let content =   `
-## Table View
-${dumpUserCredentials(users, "table")}  
+  let format = await vscode.window.showQuickPick(formats, {
+    placeHolder: "Select a format to dump all hosts in notes",
+  });
+  if (!format) {
+    vscode.window.showErrorMessage("No format selected, aborting.");
+    return;
+  }
 
-### Dump User Credentials like Impacket
-${dumpUserCredentials(users, "impacket")}
-### Dump User Credentials netexec favor
-${dumpUserCredentials(users, "nxc")}
-### Dump User Credentials env format
-${dumpUserCredentials(users, "env")}
-`;
+  let content = dumpUserCredentials(users, format as UserDumpFormat).trim();
   await vscode.commands.executeCommand("weapon.display_virtual_content", {
     title: "All User Credentials",
     content: content,

@@ -28,19 +28,19 @@
       },
       {
         "command": "weapon.dump_hosts",
-        "title": "weapon: Dump hosts as /etc/hosts format"
+        "title": "weapon: List/Dump all hosts"
       },
       {
         "command": "weapon.dump_users",
-        "title": "weapon: List all user credentials"
+        "title": "weapon: List/Dump all user credentials"
       },
       {
         "command": "weapon.task.msfvenom_creation",
-        "title": "weapon: Create msfvenom payload"
+        "title": "weapon: task: Create msfvenom payload"
       },
       {
         "command": "weapon.task.hashcat_cracker",
-        "title": "weapon: Crack hashes with hashcat"
+        "title": "weapon: task: Crack hashes with hashcat"
       },
       {
         "command": "weapon.setup",

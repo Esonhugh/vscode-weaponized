@@ -146,7 +146,7 @@ export function dumpUserCredentials(
       "Password",
       "NT Hash",
       "Is Current",
-      "Props",
+      "Properties",
     ];
     let data: string[][] = [header];
     for (let user of users) {

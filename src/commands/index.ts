@@ -21,6 +21,10 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("weapon.dump_hosts", dumpetchosts),
     vscode.commands.registerCommand("weapon.dump_users", dumpalluser),
+    vscode.commands.registerCommand(
+      "weapon.display_virtual_content",
+      displayVirtualContent
+    ),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand("weapon.replace_document", replacer),
     vscode.commands.registerCommand("weapon.task.msfvenom_creation", msfvenomPayloadCreation),

@@ -1,5 +1,5 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
-
+import { table } from "table";
 import { Collects, envVarSafer } from "./util";
 
 interface innerHost {
@@ -22,7 +22,7 @@ export function parseHostsYaml(content: string): Host[] {
   return ret;
 }
 
-export type HostDumpFormat = "env" | "file" | "yaml";
+export type HostDumpFormat = "env" | "hosts" | "yaml" | "table";
 
 export class Host {
   hostname: string = "";
@@ -88,7 +88,7 @@ export class Host {
         }
         ret = ret.trim();
         break;
-      case "file":
+      case "hosts":
         ret = `${this.ip}\t${this.alias.join(" ")}`;
         break;
       case "yaml":
@@ -114,6 +114,48 @@ export function dumpHosts(hosts: Host[], format: HostDumpFormat): string {
   if (format === "yaml") {
     ret = yamlStringify(hosts);
     return ret;
+  }
+  if (format === "table") {
+    let header = [
+      "IP Address",
+      "Hostname",
+      "Aliases",
+      "Is DC",
+      "Is Current",
+      "Is Current DC",
+      "Properties",
+    ];
+    let data: string[][] = [header];
+    for (let host of hosts) {
+      let props_str = "";
+      for (let key in host.props) {
+        props_str += `${key}=${host.props[key]}\n`;
+      }
+      data.push([
+        host.ip,
+        host.hostname,
+        host.alias.join("\n"),
+        host.is_dc ? "Yes" : "No",
+        host.is_current ? "Yes" : "No",
+        host.is_current_dc ? "Yes" : "No",
+        props_str,
+      ]);
+    }
+    let t: string = table(data, {
+      header: {
+        content: "Host Information",
+      },
+      columns: {
+        0: { alignment: "left" }, // IP Address
+        1: { alignment: "left" }, // Hostname
+        2: { alignment: "center" }, // Aliases
+        3: { alignment: "center" }, // Is DC
+        4: { alignment: "center" }, // Is Current
+        5: { alignment: "center" }, // Is Current DC
+        6: { alignment: "left" },   // Properties
+      },
+    });
+    return t;
   }
   for (let h of hosts) {
     var host = new Host().init(h);
