@@ -55,7 +55,8 @@ A powerful VSCode extension designed for penetration testing and cybersecurity w
    pnpm install
    
    # Build the extension
-   pnpm run package
+   pnpm vscode:publish 
+   # output a .vsix file in the repo root directory
    
    # Install in VSCode
    code --install-extension ./weaponized-*.vsix
