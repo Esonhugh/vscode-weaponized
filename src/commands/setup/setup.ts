@@ -34,6 +34,8 @@ export const setupCommand: callback = async (args: any) => {
     logger.trace(`Creating file: ${fullPath}`);
     await vscode.workspace.fs.writeFile(fullPath, Buffer.from(content));
   }
+  let settings = vscode.Uri.joinPath(dir, ".vscode/settings.json")
+  vscode.window.showTextDocument(settings);
   logger.info("Setup completed successfully.");
   vscode.window.showInformationMessage("Weaponized setup completed successfully.");  
 };

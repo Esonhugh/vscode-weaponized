@@ -1,0 +1,16 @@
+{
+  "files.associations": {
+    "*.nuclei": "yaml"
+  },
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/projectdiscovery/nuclei/main/nuclei-jsonschema.json": [
+      "*.nuclei",
+      "*nuclei.yaml"
+    ]
+  },
+  "weaponized.lhost": "change-me",
+  "weaponized.lport": 6789,
+  "weaponized.listenon": 8890,
+  "weaponized.envs": {},
+  "weaponized.msf.resourcefile": ".vscode/msfconsole.rc"
+}
