@@ -24,7 +24,7 @@
     "commands": [
       {
         "command": "weapon.run_command",
-        "title": "weapon: Run markdown command in code block"
+        "title": "weapon: Run command in markdown code block"
       },
       {
         "command": "weapon.dump_hosts",
@@ -44,19 +44,23 @@
       },
       {
         "command": "weapon.task.msfvenom_creation",
-        "title": "weapon: task: Create msfvenom payload"
+        "title": "weapon Task: Create msfvenom payload"
       },
       {
         "command": "weapon.task.hashcat_cracker",
-        "title": "weapon: task: Crack hashes with hashcat"
+        "title": "weapon Task: Crack hashes with hashcat"
       },
       {
         "command": "weapon.task.scan",
-        "title": "weapon: task: Run scanner over target"
+        "title": "weapon Task: Run scanner over target"
       },
       {
         "command": "weapon.setup",
         "title": "weapon: Setup/Create/Init weaponized vscode folder in current workspace"
+      },
+      {
+        "command": "foam-vscode.create-note-from-template",
+        "title": "weapon: Create/New note (user/host/service) from template"
       }
     ],
     "configuration": {
