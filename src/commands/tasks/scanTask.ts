@@ -71,10 +71,11 @@ export const scanCommand: callback = async (args: any) => {
     vscode.window.showErrorMessage(`Scanner command for ${scanner} not found.`);
     return;
   }
-
+  let finalCommand = scannerCommand.replaceAll("$TARGET", target);
+  logger.info(`Scanner command: ${finalCommand}`);
   CreateTaskLikeInteractiveTerminal(
     `${scanner} scanning ${target}`,
-    [scannerCommand.replace("$TARGET", target)],
+    [finalCommand],
     vscode.TerminalLocation.Editor
   );
 };
