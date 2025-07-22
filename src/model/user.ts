@@ -1,6 +1,7 @@
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 import { table } from "table";
 import { Collects, envVarSafer } from "./util";
+import { logger } from "../global/log";
 
 const default_bad_nt_hash = "ffffffffffffffffffffffffffffffff";
 
@@ -60,15 +61,18 @@ export class UserCredential {
       collects["CURRENT_USER"] = this.user;
       collects["USER"] = this.user;
       collects["USERNAME"] = this.user;
+      collects["LOGIN"] = this.login;
     }
 
     if (this.nt_hash === default_bad_nt_hash || this.nt_hash === undefined) {
+      logger.trace(`Using password for user ${this.login}/${this.user}`);
       collects[`PASS_${safename}`] = this.password;
       if (this.is_current) {
         collects["PASS"] = this.password;
         collects["PASSWORD"] = this.password;
       }
     } else {
+      logger.trace(`Using NT Hash for user ${this.login}/${this.user}`);
       collects[`NT_HASH_${safename}`] = this.nt_hash;
       if (this.is_current) {
         collects["NT_HASH"] = this.nt_hash;
