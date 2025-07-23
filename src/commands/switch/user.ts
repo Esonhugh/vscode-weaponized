@@ -19,7 +19,7 @@ export const switchActiveUser: callback = async (args) => {
       return;
     }
 
-    let userOptions = userList.map((u) => `${u.login}/${u.user}`);
+    let userOptions = userList.map((u) => `${u.user} @ ${u.login}`); // let user head of the login
     var userString = await vscode.window.showQuickPick(userOptions, {
       placeHolder: "Select a user to switch",
     });
@@ -27,7 +27,7 @@ export const switchActiveUser: callback = async (args) => {
       vscode.window.showErrorMessage("No user selected. Operation cancelled.");
       return;
     }
-    user = userList.find((u) => `${u.login}/${u.user}` === userString);
+    user = userList.find((u) => `${u.user} @ ${u.login}` === userString);
     if (!user) {
       vscode.window.showErrorMessage("Selected user not found in user list.");
       return;
