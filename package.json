@@ -60,7 +60,11 @@
       },
       {
         "command": "foam-vscode.create-note-from-template",
-        "title": "weapon: Create/New note (user/host/service) from template"
+        "title": "weapon: Create/New note (user/host/service) from foam template"
+      },
+      {
+        "command": "foam-vscode.show-graph",
+        "title": "weapon: Show Foam Graph"
       }
     ],
     "configuration": {
