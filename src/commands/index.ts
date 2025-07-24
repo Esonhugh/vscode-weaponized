@@ -3,11 +3,8 @@ import { dumpetchosts } from "./dump/dumphost";
 import { dumpalluser } from "./dump/dumpuser";
 import { runCommand } from "./runcommand/runcommand";
 import { displayVirtualContent } from "./utilcommand/readonlyDisplay";
-import { CommandCodeLensProvider } from "../codelens/command/commandProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
-import { targetFilePattern } from "../global/const";
 import { replacer } from "./utilcommand/replacer";
-import { NoteCreationProvider } from "./newnote/noteProvider";
 import {
   MeterpreterWeaponizedTerminalProvider,
   NetcatWeaponizedTerminalProvider,
@@ -36,10 +33,6 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("weapon.task.hashcat_cracker", hashcatCracker),
     vscode.commands.registerCommand("weapon.task.scan", scanCommand),
     vscode.commands.registerCommand("weapon.setup", setupCommand),
-    vscode.languages.registerCodeLensProvider(
-      { language: "markdown", scheme: "file", pattern: targetFilePattern },
-      new NoteCreationProvider()
-    ),
     vscode.workspace.registerTextDocumentContentProvider(
       "weaponized-editor",
       new ReadOnlyProvider()
