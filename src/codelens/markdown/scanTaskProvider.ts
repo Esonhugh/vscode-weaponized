@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { MarkdownCodeLensGenerator } from "../utils";
+import { MarkdownCodeLensGenerator } from "./base";
 import { parseHostsYaml } from "../../model";
 import { logger } from "../../global/log";
 

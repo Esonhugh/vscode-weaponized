@@ -3,6 +3,7 @@ import { logger } from "./global/log";
 import { Context } from "./global/context";
 import { registerCommandsPackage } from "./commands";
 import { registerVariablesWatcher } from "./variableProcessor";
+import { registerCodeLensProviders } from "./codelens";
 
 export async function activate(context: vscode.ExtensionContext) {
   Context.context = context;
@@ -18,6 +19,7 @@ export async function activate(context: vscode.ExtensionContext) {
   logger.info("Activating vscode weaponized extension...");
   registerVariablesWatcher(context);
   registerCommandsPackage(context);
+  registerCodeLensProviders(context);
   logger.info("vscode weaponized extension activated successfully.");
 }
 

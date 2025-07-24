@@ -10,7 +10,7 @@ import {
 } from "../../model";
 import { logger } from "../../global/log";
 import { parse as yamlParse } from "yaml";
-import { MarkdownCodeLensGenerator } from "../utils";
+import { MarkdownCodeLensGenerator } from "./base";
 
 export const GenerateEnvExportCodeLens: MarkdownCodeLensGenerator = (
   configtype,

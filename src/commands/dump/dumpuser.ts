@@ -1,19 +1,15 @@
 import * as vscode from "vscode";
-import { dumpUserCredentials, UserCredential, UserDumpFormat } from "../../model";
+import {
+  dumpUserCredentials,
+  UserDumpFormat,
+} from "../../model";
 
 import { Context } from "../../global/context";
+import { callback } from "../utils";
 
-type callback = (...args: any[]) => any;
+let formats = ["env", "impacket", "nxc", "yaml", "table"];
 
-let formats = [
-  "env",
-  "impacket",
-  "nxc",
-  "yaml",
-  "table",
-];
-
-export const dumpalluser:callback = async () => {
+export const dumpalluser: callback = async () => {
   let users = Context.UserState;
   if (!users) {
     return;

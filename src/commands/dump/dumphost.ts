@@ -1,18 +1,11 @@
 import * as vscode from "vscode";
-import { dumpHosts, Host, HostDumpFormat } from "../../model";
-
+import { dumpHosts, HostDumpFormat } from "../../model";
+import { callback } from "../utils";
 import { Context } from "../../global/context";
 
-type callback = (...args: any[]) => any;
+let formats = ["env", "hosts", "yaml", "table"];
 
-let formats = [
-  "env",
-  "hosts",
-  "yaml",
-  "table",
-];
-
-export const dumpetchosts:callback = async () => {
+export const dumpetchosts: callback = async () => {
   let hosts = Context.HostState;
   if (!hosts) {
     return;

@@ -17,9 +17,6 @@ import { hashcatCracker, msfvenomPayloadCreation, scanCommand } from "./tasks";
 import { setupCommand } from "./setup/setup";
 import { switchActiveHost } from "./switch/host";
 import { switchActiveUser } from "./switch/user";
-import { MarkdownCodeLensProvider } from "./utils";
-import { GenerateScanTaskCodeLens } from "./tasks/scanTaskCodelens";
-import { GenerateEnvExportCodeLens, GenerateDumpUserCredCodeLens, GenerateSetAsCurrentCodeLens } from "./dump/dumpProvider";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -40,15 +37,6 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
       new CommandCodeLensProvider()
-    ),
-    vscode.languages.registerCodeLensProvider(
-      { language: "markdown", scheme: "file", pattern: targetFilePattern },
-      new MarkdownCodeLensProvider(
-        GenerateEnvExportCodeLens,
-        GenerateDumpUserCredCodeLens,
-        GenerateScanTaskCodeLens,
-        GenerateSetAsCurrentCodeLens
-      )
     ),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
