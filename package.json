@@ -91,7 +91,18 @@
         "weaponized.envs": {
           "type": "object",
           "default": {},
-          "description": "This is the extra environment variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own environment variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands and tasks.",
+          "description": "This is the extra environment variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own environment variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands/tasks/terminals.",
+          "definitions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "weaponized.user_vars": {
+          "type": "object",
+          "default": {},
+          "description": "This is the user defined variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands and tasks. refer this like ${config:weaponized.user_vars.MY_VAR} in the commands/tasks.",
           "definitions": {
             "type": "object",
             "additionalProperties": {
@@ -112,7 +123,7 @@
         "weaponized.webdelivery": {
           "type": "string",
           "default": "simplehttpserver -listen 0.0.0.0:${config:weaponized.listenon} -verbose -upload",
-          "description": "This is the web delivery command for weaponized vscode extension. it contains the web delivery command with ${LISTEN_ON} as placeholder. u can replace with other web delivery tools like python3 http.server or php -S 0.0.0.0:${LISTEN_ON}"
+          "description": "This is the web delivery command for weaponized vscode extension. it contains the web delivery command with ${LISTEN_ON} or ${config:weaponized.listenon} as placeholder. u can replace with other web delivery tools like python3 http.server or php -S 0.0.0.0:${LISTEN_ON}"
         },
         "weaponized.msf.venom": {
           "type": "string",
@@ -126,7 +137,7 @@
         },
         "weaponized.msf.resourcefile": {
           "type": "string",
-          "description": "Path to msfconsole resource file. it will be created if not exists."
+          "description": "Path to msfconsole resource file. if it doesn't exist, it will be ignored in msfconsole."
         },
         "weaponized.scanners": {
           "type": "object",
