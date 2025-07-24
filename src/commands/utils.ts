@@ -2,8 +2,9 @@ export type callback = (...args: any[]) => any;
 
 import * as vscode from "vscode";
 import { ConfigType } from "../model";
+import { logger } from "../global/log";
 
-export type MarkdownCodeLensGenerator = (type: ConfigType, config: string, startLine: number, document?: vscode.TextDocument) => vscode.CodeLens[];
+export type MarkdownCodeLensGenerator = (type: ConfigType, config: string, startLine: number, document: vscode.TextDocument) => vscode.CodeLens[];
 
 export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
   private generators: MarkdownCodeLensGenerator[];
@@ -27,7 +28,11 @@ export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
       if (inYaml && configType) {
         if (line === "```") {
           for (const generator of this.generators) {
-            codeLenses.push(...generator(configType, currentYaml, yamlStartLine, document));
+            try {
+              codeLenses.push(...generator(configType, currentYaml, yamlStartLine, document));
+            } catch (error) {
+              logger.error("Error generating code lenses: ", error);
+            }
           }
           inYaml = false;
           configType = undefined;
