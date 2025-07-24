@@ -22,46 +22,55 @@ export const GenerateEnvExportCodeLens: MarkdownCodeLensGenerator = (
   );
   let codeLenses: vscode.CodeLens[] = [];
 
-  let configs: string = "";
-  try {
-    if (configtype === "user") {
-      let users = parseUserCredentialsYaml(config);
-      users.forEach((v) => {
-        return v.setAsCurrent();
-      });
+  for (let active of [false, true]) {
+    let title = active ? "export as current" : "export to terminal";
+    let configs: string = "";
+    try {
+      if (configtype === "user") {
+        let users = parseUserCredentialsYaml(config);
+        users.forEach((v) => {
+          if (active) {
+            return v.setAsCurrent();
+          }
+          return v;
+        });
 
-      configs = dumpUserCredentials(users, "env");
-    } else if (configtype === "host") {
-      let hosts = parseHostsYaml(config);
-      hosts.forEach((v) => {
-        return v.setAsCurrent();
-      });
-      configs = dumpHosts(hosts, "env");
-    } else {
-      new Error(
-        `Unknown config type: ${configtype}. Expected 'user' or 'host'.`
-      );
+        configs = dumpUserCredentials(users, "env");
+      } else if (configtype === "host") {
+        let hosts = parseHostsYaml(config);
+        hosts.forEach((v) => {
+          if (active) {
+            return v.setAsCurrent();
+          }
+          return v;
+        });
+        configs = dumpHosts(hosts, "env");
+      } else {
+        new Error(
+          `Unknown config type: ${configtype}. Expected 'user' or 'host'.`
+        );
+      }
+    } catch (error) {
+      logger.error(`Error parsing config: ${error}`);
+      return codeLenses;
     }
-  } catch (error) {
-    logger.error(`Error parsing config: ${error}`);
-    return codeLenses;
+
+    const cmd: vscode.Command = {
+      title: title,
+      command: "weapon.run_command",
+      arguments: [{ command: `${configs}` }],
+    };
+    
+    codeLenses.push(
+      new vscode.CodeLens(
+        new vscode.Range(
+          new vscode.Position(startLine, 0),
+          new vscode.Position(startLine + 1, 0)
+        ),
+        cmd
+      )
+    );
   }
-
-  const cmd: vscode.Command = {
-    title: `export ${configtype} in terminal`,
-    command: "weapon.run_command",
-    arguments: [{ command: `${configs}` }],
-  };
-
-  codeLenses.push(
-    new vscode.CodeLens(
-      new vscode.Range(
-        new vscode.Position(startLine, 0),
-        new vscode.Position(startLine + 1, 0)
-      ),
-      cmd
-    )
-  );
 
   return codeLenses;
 };
