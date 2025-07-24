@@ -43,6 +43,10 @@
         "title": "weapon: List/Dump all user credentials"
       },
       {
+        "command": "weapon.magic_decoder",
+        "title": "weapon: Decode selected text"
+      },
+      {
         "command": "weapon.task.msfvenom_creation",
         "title": "weapon Task: Create msfvenom payload"
       },

@@ -3,7 +3,7 @@ import { dumpetchosts } from "./dump/dumphost";
 import { dumpalluser } from "./dump/dumpuser";
 import { runCommand } from "./runcommand/runcommand";
 import { displayVirtualContent } from "./utilcommand/readonlyDisplay";
-import { CommandCodeLensProvider } from "./runcommand/commandCodeLensProvider";
+import { CommandCodeLensProvider } from "../codelens/command/commandProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { targetFilePattern } from "../global/const";
 import { replacer } from "./utilcommand/replacer";
@@ -17,6 +17,7 @@ import { hashcatCracker, msfvenomPayloadCreation, scanCommand } from "./tasks";
 import { setupCommand } from "./setup/setup";
 import { switchActiveHost } from "./switch/host";
 import { switchActiveUser } from "./switch/user";
+import { cyberChefMagicDecoder } from "./decoder/cyberchef";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -28,16 +29,13 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
       "weapon.display_virtual_content",
       displayVirtualContent
     ),
+    vscode.commands.registerCommand("weapon.magic_decoder", cyberChefMagicDecoder),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand("weapon.replace_document", replacer),
     vscode.commands.registerCommand("weapon.task.msfvenom_creation", msfvenomPayloadCreation),
     vscode.commands.registerCommand("weapon.task.hashcat_cracker", hashcatCracker),
     vscode.commands.registerCommand("weapon.task.scan", scanCommand),
     vscode.commands.registerCommand("weapon.setup", setupCommand),
-    vscode.languages.registerCodeLensProvider(
-      { language: "markdown", scheme: "file", pattern: targetFilePattern },
-      new CommandCodeLensProvider()
-    ),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
       new NoteCreationProvider()
