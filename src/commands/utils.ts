@@ -3,7 +3,7 @@ export type callback = (...args: any[]) => any;
 import * as vscode from "vscode";
 import { ConfigType } from "../model";
 
-export type MarkdownCodeLensGenerator = (type: ConfigType, config: string, startLine: number) => vscode.CodeLens[]; 
+export type MarkdownCodeLensGenerator = (type: ConfigType, config: string, startLine: number, document?: vscode.TextDocument) => vscode.CodeLens[];
 
 export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
   private generators: MarkdownCodeLensGenerator[];
@@ -27,7 +27,7 @@ export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
       if (inYaml && configType) {
         if (line === "```") {
           for (const generator of this.generators) {
-            codeLenses.push(...generator(configType, currentYaml, yamlStartLine));
+            codeLenses.push(...generator(configType, currentYaml, yamlStartLine, document));
           }
           inYaml = false;
           configType = undefined;
@@ -44,7 +44,7 @@ export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
         } else {
           configType = undefined; // Unknown type, skip
         }
-        yamlStartLine = i + 1;
+        yamlStartLine = i;
       }
     }
 
