@@ -18,6 +18,7 @@ export const GenerateScanTaskCodeLens: MarkdownCodeLensGenerator = (
   let lns = config.split("\n"); // Ensure config is a string
   let currentSubConfig: string[] = [];
   let old_startLine = startLine;
+  // process each line if line first character is "-", it is a new sub-config begin signifier
   for (var i = 0; i < lns.length; i++) {
     if (lns[i].length !== 0 && lns[i][0] === "-") {
       if (currentSubConfig.length > 0) {
@@ -40,13 +41,15 @@ export const GenerateScanTaskCodeLens: MarkdownCodeLensGenerator = (
       }
       old_startLine = startLine + i; // Update the start line for the new sub-config
       currentSubConfig = []; // Reset for the next sub-config
-      logger.trace(`New sub-config detected at line ${old_startLine}: ${lns[i]}`);
+      logger.trace(
+        `New sub-config detected at line ${old_startLine}: ${lns[i]}`
+      );
     }
     logger.trace(`Adding line to current sub-config: ${lns[i]}`);
     currentSubConfig.push(lns[i]); // Start a new sub-config
   }
+  // Process the last sub-config if exists
   if (currentSubConfig.length > 0) {
-    // Process the last sub-config if exists
     let Hosts = parseHostsYaml(currentSubConfig.join("\n")); // Join the last sub-config lines
     logger.debug(`Parsed hosts: ${JSON.stringify(Hosts)}`);
     const cmd: vscode.Command = {
@@ -57,14 +60,8 @@ export const GenerateScanTaskCodeLens: MarkdownCodeLensGenerator = (
     codeLenses.push(
       new vscode.CodeLens(
         new vscode.Range(
-          new vscode.Position(
-            old_startLine,
-            0
-          ),
-          new vscode.Position(
-            old_startLine,
-            0
-          )
+          new vscode.Position(old_startLine, 0),
+          new vscode.Position(old_startLine, 0)
         ),
         cmd
       )
