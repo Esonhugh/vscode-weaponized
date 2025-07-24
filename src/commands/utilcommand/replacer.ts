@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
 import { TextEncoder } from "util";
-import { type callback } from "./utils";
+import { type callback } from "../utils";
 
 export const replacer: callback = async (args: any) => {
   const { file, startLine, current, target } = args;

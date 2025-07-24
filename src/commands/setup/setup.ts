@@ -1,4 +1,4 @@
-import { type callback } from "../utilcommand/utils";
+import { type callback } from "../utils";
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
 import { fs } from "./assets";

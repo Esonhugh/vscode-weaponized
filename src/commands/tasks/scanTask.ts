@@ -1,34 +1,44 @@
 import * as vscode from "vscode";
-import { callback } from "../utilcommand/utils";
+import { callback } from "../utils";
 import { logger } from "../../global/log";
 import { CreateTaskLikeInteractiveTerminal } from "./taskTermial";
 import { Context } from "../../global/context";
-import { Collects } from "../../model";
+import { Collects, Host } from "../../model";
 
 export const scanCommand: callback = async (args: any) => {
+  let selectTargets = Context.HostState;
+  if (args?.hosts) {
+    selectTargets = args.hosts;
+  }
+
   let target: string | undefined = args?.target;
   if (!target) {
-    let selectTargets = Context.HostState;
     if (!selectTargets || selectTargets.length === 0) {
       vscode.window.showErrorMessage("No hosts found to scan.");
       return;
     }
-    let list: string[] = [];
-    selectTargets.forEach((host) => {
-      list.push(`${host.hostname} (${host.ip})`);
-    });
-    target = await vscode.window.showQuickPick(list, {
-      placeHolder: "Select a host to scan",
-    });
-    if (!target) {
-      vscode.window.showErrorMessage(
-        "No target selected. Operation cancelled."
+    let selected: Host | undefined = undefined;
+    if (selectTargets.length !== 1) {
+      let list: string[] = [];
+      selectTargets.forEach((host) => {
+        list.push(`${host.hostname} (${host.ip})`);
+      });
+      target = await vscode.window.showQuickPick(list, {
+        placeHolder: "Select a host to scan",
+      });
+      if (!target) {
+        vscode.window.showErrorMessage(
+          "No target selected. Operation cancelled."
+        );
+        return;
+      }
+      selected = selectTargets.find(
+        (host) => `${host.hostname} (${host.ip})` === target
       );
-      return;
+    } else {
+      selected = selectTargets[0];
     }
-    let selected = selectTargets.find(
-      (host) => `${host.hostname} (${host.ip})` === target
-    );
+    
     if (!selected) {
       vscode.window.showErrorMessage("Selected target not found in host list.");
       return;

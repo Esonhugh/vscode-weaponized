@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { type callback } from "./utils";
+import { type callback } from "../utils";
 
 export const ReadOnlyProvider = class
   implements vscode.TextDocumentContentProvider

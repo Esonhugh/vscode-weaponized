@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
-import { callback } from "../utilcommand/utils";
+import { callback } from "../utils";
 import { Context } from "../../global/context";
 import { dumpHosts, parseHostsYaml, Host } from "../../model";
 import { getCodeblock } from "../../variableProcessor/syncHostMarkdown";

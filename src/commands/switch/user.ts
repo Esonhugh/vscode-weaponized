@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as cp from "child_process";
 import { logger } from "../../global/log";
-import { callback } from "../utilcommand/utils";
+import { callback } from "../utils";
 import { Context } from "../../global/context";
 import {
   dumpUserCredentials,

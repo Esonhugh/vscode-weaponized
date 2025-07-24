@@ -4,7 +4,6 @@ import { dumpalluser } from "./dump/dumpuser";
 import { runCommand } from "./runcommand/runcommand";
 import { displayVirtualContent } from "./utilcommand/readonlyDisplay";
 import { CommandCodeLensProvider } from "./runcommand/commandCodeLensProvider";
-import { DumpProvider } from "./dump/dumpProvider";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { targetFilePattern } from "../global/const";
 import { replacer } from "./utilcommand/replacer";
@@ -18,6 +17,9 @@ import { hashcatCracker, msfvenomPayloadCreation, scanCommand } from "./tasks";
 import { setupCommand } from "./setup/setup";
 import { switchActiveHost } from "./switch/host";
 import { switchActiveUser } from "./switch/user";
+import { MarkdownCodeLensProvider } from "./utils";
+import { GenerateScanTaskCodeLens } from "./tasks/scanTaskCodelens";
+import { GenerateEnvExportCodeLens, GenerateDumpUserCredCodeLens, GenerateSetAsCurrentCodeLens } from "./dump/dumpProvider";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -41,7 +43,12 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     ),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
-      new DumpProvider()
+      new MarkdownCodeLensProvider(
+        GenerateEnvExportCodeLens,
+        GenerateDumpUserCredCodeLens,
+        GenerateScanTaskCodeLens,
+        GenerateSetAsCurrentCodeLens
+      )
     ),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
