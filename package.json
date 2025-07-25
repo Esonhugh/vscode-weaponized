@@ -23,52 +23,69 @@
   "contributes": {
     "commands": [
       {
-        "command": "weapon.run_command",
-        "title": "weapon: Run command in markdown code block"
+        "command": "weapon.setup",
+        "title": "Setup/Create/Init weaponized vscode folder in current workspace",
+        "category": "weapon management"
       },
       {
         "command": "weapon.dump_hosts",
-        "title": "weapon: List/Dump all hosts"
-      },
-      {
-        "command": "weapon.switch_host",
-        "title": "weapon: Switch/Set current host"
-      },
-      {
-        "command": "weapon.switch_user",
-        "title": "weapon: Switch/Set current user"
+        "title": "List/Dump all hosts",
+        "category": "weapon management"
       },
       {
         "command": "weapon.dump_users",
-        "title": "weapon: List/Dump all user credentials"
+        "title": "List/Dump all user credentials",
+        "category": "weapon management"
       },
       {
-        "command": "weapon.magic_decoder",
-        "title": "weapon: Decode selected text"
+        "command": "weapon.switch_host",
+        "title": "Switch/Set current host",
+        "category": "weapon management"
+      },
+      {
+        "command": "weapon.switch_user",
+        "title": "Switch/Set current user",
+        "category": "weapon management"
       },
       {
         "command": "weapon.task.msfvenom_creation",
-        "title": "weapon Task: Create msfvenom payload"
+        "title": "Create msfvenom payload",
+        "category": "weapon task"
       },
       {
         "command": "weapon.task.hashcat_cracker",
-        "title": "weapon Task: Crack hashes with hashcat"
+        "title": "Crack hashes with hashcat",
+        "category": "weapon task"
       },
       {
         "command": "weapon.task.scan",
-        "title": "weapon Task: Run scanner over target"
+        "title": "Run scanner over target",
+        "category": "weapon task"
       },
       {
-        "command": "weapon.setup",
-        "title": "weapon: Setup/Create/Init weaponized vscode folder in current workspace"
+        "command": "weapon.magic_decoder",
+        "title": "Decode selected text",
+        "category": "weapon feature"
+      },
+      {
+        "command": "weaponized.terminal-logger.unregister",
+        "title": "Stop all terminal logger",
+        "category": "weapon recorder"
+      },
+      {
+        "command": "weaponized.terminal-logger.register",
+        "title": "Start/Register terminal logger",
+        "category": "weapon recorder"
       },
       {
         "command": "foam-vscode.create-note-from-template",
-        "title": "weapon: Create/New note (user/host/service) from foam template"
+        "title": "Create/New note (user/host/service) from foam template",
+        "category": "weapon foam"
       },
       {
         "command": "foam-vscode.show-graph",
-        "title": "weapon: Show Foam Graph"
+        "title": "Show Foam Graph",
+        "category": "weapon foam"
       }
     ],
     "configuration": {

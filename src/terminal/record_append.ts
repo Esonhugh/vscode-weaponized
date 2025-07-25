@@ -2,6 +2,9 @@ import * as vscode from "vscode";
 import { logger } from "../global/log";
 import "fs";
 import { appendFileSync } from "fs";
+import { callback } from "../commands/utils";
+
+export let tempEnabled = true;
 
 async function ForceFileExist(file: vscode.Uri) {
   try {
@@ -16,33 +19,77 @@ async function ForceFileExist(file: vscode.Uri) {
   }
 }
 
-export function registerTerminalForCapture() {
+export const startTempTerminalRecord: callback = async (args: any) => {
   if (!vscode.workspace.workspaceFolders) {
     logger.error(
-      "No workspace folders found. Cannot register terminal for capture."
+      "No workspace folders found. Cannot start temporary terminal record."
+    );
+    vscode.window.showErrorMessage(
+      "No workspace folders found. Cannot start temporary terminal record."
     );
     return;
   }
-  let fp = vscode.workspace
-    .getConfiguration("weaponized")
-    .get<string>("terminal-log.path", "<default_logfile>");
-  if (fp === "<default_logfile>") {
-    let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    fp = `${workspaceFolder}/.vscode/.terminal.log`;
+  let fp = args?.file;
+  if (!fp) {
+    fp = await vscode.window.showInputBox({
+      prompt: "Enter the file path to save terminal log",
+      value: "${workspaceFolder}/.vscode/.terminal.log",
+    });
+    if (!fp) {
+      logger.error("No file path provided for terminal log.");
+      vscode.window.showErrorMessage("No file path provided for terminal log.");
+      return;
+    }
   }
   if (fp.includes("${workspaceFolder}")) {
     let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
     fp = fp.replace("${workspaceFolder}", workspaceFolder);
   }
-  let logFile = vscode.Uri.parse(fp);
+  let loglevel = args?.loglevel;
+  if (!loglevel) {
+    loglevel = await vscode.window.showQuickPick(
+      ["command-only", "command-and-output"],
+      {
+        placeHolder: "Select log level for terminal capture",
+      }
+    );
+  }
+  if (!loglevel) {
+    logger.error("No log level provided for terminal capture.");
+    vscode.window.showErrorMessage(
+      "No log level provided for terminal capture."
+    );
+    return;
+  }
+  tempEnabled = true; // Enable temporary terminal logging
+  registerTerminalForCapture(fp, loglevel);
+  logger.info(`Starting terminal logging at ${fp} with log level: ${loglevel}`);
+  vscode.window.showInformationMessage(
+    `Terminal logging started. Logs will be saved to ${fp} with log level: ${loglevel}`
+  );
+};
 
-  const loglevel = vscode.workspace
-    .getConfiguration("weaponized")
-    .get<string>("terminal-log.level", "command-only");
-  logger.info("Registering terminal for capture with log level: " + loglevel);
+export const unregisterTerminalForCapture: callback = () => {
+  // empty the listener
+  tempEnabled = false; // Disable temporary terminal logging
+  logger.info("Unregistering terminal for capture.");
+  vscode.window.showInformationMessage(
+    "Terminal logging has been unregistered. No further logs will be captured."
+  );
+};
+
+export function registerTerminalForCapture(fp: string, loglevel: string) {
+  logger.info(
+    `Registering terminal for capture at ${fp}, with log level: ${loglevel}`
+  );
+  let logFile = vscode.Uri.parse(fp);
 
   vscode.window.onDidStartTerminalShellExecution(
     async (event: vscode.TerminalShellExecutionStartEvent) => {
+      if (!tempEnabled) {
+        logger.info("Temporary terminal logging is disabled.");
+        return; // If temporary logging is disabled, do not proceed
+      }
       await ForceFileExist(logFile);
       const terminal = event.terminal;
       logger.debug(`Terminal started: ${terminal.name}`);
@@ -54,9 +101,6 @@ export function registerTerminalForCapture() {
       logger.debug(logMessage);
       appendFileSync(logFile.fsPath, logMessage);
 
-      const loglevel = vscode.workspace
-        .getConfiguration("weaponized")
-        .get<string>("terminal-log.level", "command-only");
       if (loglevel === "command-only") {
         return; // Only log the command, no further action needed
       }
