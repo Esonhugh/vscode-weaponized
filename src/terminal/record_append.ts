@@ -46,15 +46,13 @@ export function registerTerminalForCapture() {
       await ForceFileExist(logFile);
       const terminal = event.terminal;
       logger.debug(`Terminal started: ${terminal.name}`);
-      let startTime = Date.now();
+      let startTime = new Date();
       let cmd = event.execution.commandLine.value;
       let cwd =
         event.execution.cwd?.fsPath || event.shellIntegration?.cwd || "unknown";
-      logger.debug(`user@${cwd} [${startTime.toString()}] > ${cmd}\n`);
-      appendFileSync(
-        logFile.fsPath,
-        `weaponized-terminal-logging: @${cwd} [${startTime.toString()}] $ ${cmd}\n`
-      );
+      let logMessage = `weaponized-terminal-logging:[${startTime.getTime()}][${startTime.toJSON()}] user@${cwd}$ ${cmd}\n`;
+      logger.debug(logMessage);
+      appendFileSync(logFile.fsPath, logMessage);
 
       const loglevel = vscode.workspace
         .getConfiguration("weaponized")
