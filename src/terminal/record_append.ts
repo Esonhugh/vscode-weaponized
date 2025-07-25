@@ -36,6 +36,11 @@ export function registerTerminalForCapture() {
   }
   let logFile = vscode.Uri.parse(fp);
 
+  const loglevel = vscode.workspace
+    .getConfiguration("weaponized")
+    .get<string>("terminal-log.level", "command-only");
+  logger.info("Registering terminal for capture with log level: " + loglevel);
+
   vscode.window.onDidStartTerminalShellExecution(
     async (event: vscode.TerminalShellExecutionStartEvent) => {
       await ForceFileExist(logFile);
@@ -48,7 +53,7 @@ export function registerTerminalForCapture() {
       logger.debug(`user@${cwd} [${startTime.toString()}] > ${cmd}\n`);
       appendFileSync(
         logFile.fsPath,
-        `user@${cwd} [${startTime.toString()}] > ${cmd}\n`
+        `weaponized-terminal-logging: @${cwd} [${startTime.toString()}] $ ${cmd}\n`
       );
 
       const loglevel = vscode.workspace
@@ -59,10 +64,8 @@ export function registerTerminalForCapture() {
       }
 
       let stream = await event.execution.read();
-      let old: string = "";
       for await (const streamPart of stream) {
-        appendFileSync(logFile.fsPath, `${old}\n`);
-        old = streamPart;
+        appendFileSync(logFile.fsPath, `${streamPart}\n`);
       }
     }
   );

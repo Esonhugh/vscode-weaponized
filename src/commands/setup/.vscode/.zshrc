@@ -40,19 +40,6 @@ fi
 # change hist file location in project.
 HISTSIZE=100000000
 SAVEHIST=100000000
-OLD_HISTFILE=$HISTFILE
-if [[ -z "${HISTFILE}" ]]; then
-    OLD_HISTFILE=~/.zsh_history
-fi
-## set new history
-HISTFILE=${PROJECT_FOLDER}/.vscode/.command_history
-setopt inc_append_history
-setopt share_history
-setopt hist_save_no_dups
-setopt histignorealldups
-setopt EXTENDED_HISTORY  # with timestamp
-fc -R -I ${OLD_HISTFILE} # loading the old histfile
-
 if [[ "$HIST_COMMAND_INDEXER" != "" ]]; then
     if [[ ! -f ${HIST_COMMAND_INDEXER} ]]; then
         echo "HIST_COMMAND_INDEXER file not found: ${HIST_COMMAND_INDEXER}"
