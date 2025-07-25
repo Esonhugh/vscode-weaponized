@@ -4,6 +4,7 @@ import { Context } from "./global/context";
 import { registerCommandsPackage } from "./commands";
 import { registerVariablesWatcher } from "./variableProcessor";
 import { registerCodeLensProviders } from "./codelens";
+import { registerTerminal } from "./terminal";
 
 export async function activate(context: vscode.ExtensionContext) {
   Context.context = context;
@@ -20,6 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
   registerVariablesWatcher(context);
   registerCommandsPackage(context);
   registerCodeLensProviders(context);
+  registerTerminal(context);
   logger.info("vscode weaponized extension activated successfully.");
 }
 
