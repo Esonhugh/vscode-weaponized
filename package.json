@@ -159,6 +159,25 @@
             "dirsearch": "dirsearch -u http://$TARGET",
             "dirsearch https": "dirsearch -u https://$TARGET"
           }
+        },
+        "weaponized.terminal-log.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable terminal logging for weaponized vscode extension. it will log the terminal output to the ${config:weaponized.terminal-log.path} file."
+        },
+        "weaponized.terminal-log.path": {
+          "type": "string",
+          "default": "${workspaceFolder}/.vscode/.terminal.log",
+          "description": "Path to the terminal log file for weaponized vscode extension. it will be used to log the terminal output."
+        },
+        "weaponized.terminal-log.level": {
+          "type": "string",
+          "default": "command-only",
+          "description": "Terminal log level for weaponized vscode extension. it can be 'command-only', 'command-and-output'. 'command-only' will only log the command, 'command-and-output' will log the command and the its output.",
+          "enum": [
+            "command-only",
+            "command-and-output"
+          ]
         }
       }
     },
