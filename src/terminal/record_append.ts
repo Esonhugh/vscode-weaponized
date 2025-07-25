@@ -30,6 +30,10 @@ export function registerTerminalForCapture() {
     let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
     fp = `${workspaceFolder}/.vscode/.terminal.log`;
   }
+  if (fp.includes("${workspaceFolder}")) {
+    let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    fp = fp.replace("${workspaceFolder}", workspaceFolder);
+  }
   let logFile = vscode.Uri.parse(fp);
 
   vscode.window.onDidStartTerminalShellExecution(
