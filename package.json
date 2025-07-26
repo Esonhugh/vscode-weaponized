@@ -69,7 +69,7 @@
       },
       {
         "command": "weaponized.terminal-logger.unregister",
-        "title": "Stop all terminal logger",
+        "title": "Stop/Unregister terminal logger",
         "category": "weapon recorder"
       },
       {
