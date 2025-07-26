@@ -41,6 +41,27 @@ A powerful VSCode extension designed for penetration testing and cybersecurity w
 - **Status Management**: Toggle current/active status for hosts and credentials
 - **Command Integration**: Execute related commands directly from documentation
 
+### 🔄 Target Switching & Management
+- **Host Switching**: Quick switching between different target hosts across all markdown files
+- **User Switching**: Easy credential switching for different authentication contexts
+- **Global State Management**: Centralized management of current active targets
+
+### 🧮 Text Decoding & Analysis
+- **CyberChef Integration**: One-click decoding of selected text using CyberChef's Magic recipe
+- **Automatic Encoding Detection**: Smart detection and decoding of common encoding formats
+- **Browser Integration**: Seamless integration with VSCode's simple browser
+
+### 📝 Terminal Logging & Recording
+- **Command Logging**: Automatic recording of terminal commands and outputs
+- **Configurable Log Levels**: Choose between command-only or command-and-output logging
+- **Session Tracking**: Track terminal sessions with timestamps and working directories
+- **Log Management**: Start/stop logging as needed for different phases of testing
+
+### 📋 Enhanced Note Management
+- **Foam Integration**: Create structured notes for hosts, users, and services
+- **Template-based Creation**: Automated note creation from predefined templates
+- **Graph Visualization**: Visual representation of relationships between targets and credentials
+
 ## Usage
 
 ### Installation & Setup
@@ -55,7 +76,7 @@ A powerful VSCode extension designed for penetration testing and cybersecurity w
    pnpm install
    
    # Build the extension
-   pnpm vscode:publish 
+   pnpm run vscode:publish 
    # output a .vsix file in the repo root directory
    
    # Install in VSCode
@@ -70,7 +91,7 @@ A powerful VSCode extension designed for penetration testing and cybersecurity w
 ### Basic Operations
 
 #### Host Management
-Create markdown files in `hosts/*/` directories with YAML blocks:
+Create markdown files in `hosts/*.md` `hosts/*/*.md` directories with YAML blocks:
 
 ```markdown
 ## Target Hosts
@@ -83,20 +104,23 @@ Create markdown files in `hosts/*/` directories with YAML blocks:
     - www.example.com
   is_dc: false
   is_current: true
+  is_current_dc: false
+  props: {}
 ```
 
 #### Credential Management
-Create markdown files in `users/*/` directories:
+Create markdown files in `users/*.md` `users/*/*.md` directories:
 
 ```markdown
 ## Credentials
 
 ```yaml credentials
-- username: admin
+- user: admin
   password: password123
   domain: EXAMPLE
-  hash: aad3b435b51404eeaad3b435b51404ee:5fbc3d5fec8206a30f4b6c473d68ae76
+  nt_hash: 5fbc3d5fec8206a30f4b6c473d68ae76
   is_current: true
+  props: {}
 ```
 
 #### Command Execution
@@ -119,6 +143,33 @@ nmap -sS -sV $TARGET
 2. Select target from discovered hosts
 3. Choose scanner type (rustscan, nuclei, dirsearch, etc.)
 4. Scanner executes in dedicated terminal
+
+#### Target Switching
+1. **Switch Active Host**: Run `weapon: Switch/Set current host`
+   - Select from available hosts across all markdown files
+   - Automatically updates `is_current` status in all related files
+2. **Switch Active User**: Run `weapon: Switch/Set current user`
+   - Choose from discovered credentials
+   - Updates authentication context globally
+
+#### Text Decoding
+1. Select encoded text in any file
+2. Run: `weapon: Decode selected text`
+3. CyberChef opens with Magic recipe applied to decode the text
+4. Results appear in VSCode's simple browser
+
+#### Terminal Logging
+1. **Start Logging**: Run `weaponized: Start/Register terminal logger`
+   - Choose log file location (defaults to `.vscode/.terminal.log`)
+   - Select log level (command-only or command-and-output)
+2. **Stop Logging**: Run `weaponized: Stop all terminal logger`
+   - Disables terminal capture for current session
+
+#### Note Creation
+1. Run: `Create/New note (user/host/service) from foam template`
+2. Choose note type and provide required information
+3. Structured markdown files are created with proper linking
+4. Use `Show Foam Graph` to visualize relationships
 
 ## Requirements
 
