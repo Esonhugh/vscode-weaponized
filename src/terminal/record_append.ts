@@ -130,7 +130,7 @@ function registerTerminalForCapture(fp: string, loglevel: string) {
       let cmd = event.execution.commandLine.value;
       let cwd =
         event.execution.cwd?.fsPath || event.shellIntegration?.cwd || "unknown";
-      let logMessage = `weaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}] user@${cwd}$ ${cmd}\n`;
+      let logMessage = `\n\nweaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}] user@${cwd}$ ${cmd}\n`;
       logger.debug(logMessage);
       appendFileSync(logFile.fsPath, logMessage);
 
@@ -140,7 +140,7 @@ function registerTerminalForCapture(fp: string, loglevel: string) {
 
       let stream = await event.execution.read();
       for await (const streamPart of stream) {
-        appendFileSync(logFile.fsPath, `${streamPart}\n`);
+        appendFileSync(logFile.fsPath, `${streamPart}`);
       }
     },
   };
