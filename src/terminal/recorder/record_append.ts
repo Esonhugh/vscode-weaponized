@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { logger } from "../global/log";
+import { logger } from "../../global/log";
 import "fs";
 import { appendFileSync } from "fs";
-import { callback } from "../commands/utils";
+import { callback } from "../../commands/utils";
 import { basename, dirname } from "path";
 
 type EventListener = (

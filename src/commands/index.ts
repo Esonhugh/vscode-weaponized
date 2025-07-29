@@ -5,11 +5,6 @@ import { runCommand } from "./runcommand/runcommand";
 import { displayVirtualContent } from "./utilcommand/readonlyDisplay";
 import { ReadOnlyProvider } from "./utilcommand/readonlyDisplay";
 import { replacer } from "./utilcommand/replacer";
-import {
-  MeterpreterWeaponizedTerminalProvider,
-  NetcatWeaponizedTerminalProvider,
-  WebDeliveryWeaponizedTerminalProvider,
-} from "./terminal";
 import { hashcatCracker, msfvenomPayloadCreation, scanCommand } from "./tasks";
 import { setupCommand } from "./setup/setup";
 import { switchActiveHost } from "./switch/host";
@@ -26,28 +21,25 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
       "weapon.display_virtual_content",
       displayVirtualContent
     ),
-    vscode.commands.registerCommand("weapon.magic_decoder", cyberChefMagicDecoder),
+    vscode.commands.registerCommand(
+      "weapon.magic_decoder",
+      cyberChefMagicDecoder
+    ),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
     vscode.commands.registerCommand("weapon.replace_document", replacer),
-    vscode.commands.registerCommand("weapon.task.msfvenom_creation", msfvenomPayloadCreation),
-    vscode.commands.registerCommand("weapon.task.hashcat_cracker", hashcatCracker),
+    vscode.commands.registerCommand(
+      "weapon.task.msfvenom_creation",
+      msfvenomPayloadCreation
+    ),
+    vscode.commands.registerCommand(
+      "weapon.task.hashcat_cracker",
+      hashcatCracker
+    ),
     vscode.commands.registerCommand("weapon.task.scan", scanCommand),
     vscode.commands.registerCommand("weapon.setup", setupCommand),
     vscode.workspace.registerTextDocumentContentProvider(
       "weaponized-editor",
       new ReadOnlyProvider()
-    ),
-    vscode.window.registerTerminalProfileProvider(
-      "weaponized.meterpreter-handler",
-      new MeterpreterWeaponizedTerminalProvider()
-    ),
-    vscode.window.registerTerminalProfileProvider(
-      "weaponized.netcat-handler",
-      new NetcatWeaponizedTerminalProvider()
-    ),
-    vscode.window.registerTerminalProfileProvider(
-      "weaponized.web-delivery",
-      new WebDeliveryWeaponizedTerminalProvider()
     )
   );
 }

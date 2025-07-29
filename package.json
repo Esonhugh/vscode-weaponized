@@ -13,6 +13,9 @@
     "type": "git",
     "url": "https://github.com/esonhugh/vscode-weaponized.git"
   },
+  "extensionKind": [
+    "workspace"
+  ],
   "categories": [
     "Other"
   ],
