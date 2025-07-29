@@ -1,0 +1,10 @@
+{
+	"suid find command": {
+		"prefix": "find",
+		"body": [
+			"find . -type f -exec $0 \\;"
+		],
+		"description": "exploit suid find command"
+	},
+	
+}

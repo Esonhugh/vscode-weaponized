@@ -17,7 +17,8 @@
     "workspace"
   ],
   "categories": [
-    "Other"
+    "Other",
+    "Snippets"
   ],
   "activationEvents": [
     "workspaceContains:**/.vscode/.zshrc"
@@ -220,7 +221,13 @@
           "id": "weaponized.web-delivery"
         }
       ]
-    }
+    },
+    "snippets": [
+      {
+        "language": "markdown",
+        "path": "./src/snippets/markdown.code-snippets"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",

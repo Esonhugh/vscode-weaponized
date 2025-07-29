@@ -8,6 +8,12 @@
       "*nuclei.yaml"
     ]
   },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "other": "on"
+    }
+  },
   "weaponized.lhost": "change-me",
   "weaponized.lport": 6789,
   "weaponized.listenon": 8890,
