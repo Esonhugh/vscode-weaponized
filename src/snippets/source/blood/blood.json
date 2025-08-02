@@ -1,4 +1,4 @@
-
+{
     "AZMGDirectory_ReadWrite_All": {
         "prefix": "AZMGDirectory_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the Directory.ReadWrite.All edge.",
