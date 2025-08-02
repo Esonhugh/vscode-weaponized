@@ -178,7 +178,10 @@ def main():
             output_data[technique] = {
                 "prefix": technique,
                 "description": description[1: -1],
-                "body": final_content
+                "body": [ 
+                    f"Abuse Edge {technique} is {description[1: -1]}", 
+                    *final_content
+                ]
             }
                 
     print("Converting to vscode snippets format...")

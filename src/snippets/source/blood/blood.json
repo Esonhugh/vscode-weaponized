@@ -3,6 +3,7 @@
         "prefix": "AZMGDirectory_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the Directory.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGDirectory_ReadWrite_All is This edge is created when a Service Principal has been granted the Directory.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -10,6 +11,7 @@
         "prefix": "AZGlobalAdmin",
         "description": "This edge indicates the principal has the Global Admin role active against the target tenant. In other words, the principal is a Global Admin. Global Admins can do almost anything against almost every object type in the tenant, this is the highest privilege role in Azure.",
         "body": [
+            "Abuse Edge AZGlobalAdmin is This edge indicates the principal has the Global Admin role active against the target tenant. In other words, the principal is a Global Admin. Global Admins can do almost anything against almost every object type in the tenant, this is the highest privilege role in Azure.",
             "As a Global Admin, you can change passwords, run commands on VMs, read key vault secrets, activate roles for other users, etc.",
             "For Global Admin to be able to abuse Azure resources, you must first grant yourself the ‘User Access Administrator’ role in Azure RBAC. This is done through a toggle button in the portal, or via the PowerZure function Set-AzureElevatedPrivileges.",
             "Once that role is applied to account, you can then add yourself as an Owner to all subscriptions in the tenant"
@@ -19,6 +21,7 @@
         "prefix": "GetChangesInFilteredSet",
         "description": "he principal is allowed to synchronize (DCSync) the Filtered Attribute Set (FAS), which are the attributes not replicated to RODCs",
         "body": [
+            "Abuse Edge GetChangesInFilteredSet is he principal is allowed to synchronize (DCSync) the Filtered Attribute Set (FAS), which are the attributes not replicated to RODCs",
             "This edge is not abuseable by itself. When combined with [GetChanges](/resources/edges/get-changes), BloodHound will create the abuseable edge [SyncLAPSPassword](/resources/edges/sync-laps-password)."
         ]
     },
@@ -26,6 +29,7 @@
         "prefix": "AZManagedIdentity",
         "description": "Azure resources like Virtual Machines, Logic Apps, and Automation Accounts can be assigned to either System- or User-Assigned Managed Identities.",
         "body": [
+            "Abuse Edge AZManagedIdentity is Azure resources like Virtual Machines, Logic Apps, and Automation Accounts can be assigned to either System- or User-Assigned Managed Identities.",
             "You can modify the Azure RM resource to execute actions against Azure with the privileges of the Managed Identity Service Principal.",
             "It is also possible to extract a JSON Web Token (JWT) for the Service Principal, then use that JWT to authenticate as the Service Principal outside the scope of the Azure RM resource. Here is how you extract the JWT using PowerShell:",
             "```bash",
@@ -40,6 +44,7 @@
         "prefix": "DumpSMSAPassword",
         "description": "A computer with this indicates that a Standalone Managed Service Account (sMSA) is installed on it.",
         "body": [
+            "Abuse Edge DumpSMSAPassword is A computer with this indicates that a Standalone Managed Service Account (sMSA) is installed on it.",
             "From an elevated command prompt on the computer where the sMSA resides, run mimikatz then execute the following commands:",
             "```bash",
             "privilege::debug",
@@ -75,6 +80,7 @@
         "prefix": "AZOwns",
         "description": "The principal is granted owner rights on the principal.",
         "body": [
+            "Abuse Edge AZOwns is The principal is granted owner rights on the principal.",
             "Object ownership means almost all abuses are possible against the target object."
         ]
     },
@@ -82,6 +88,7 @@
         "prefix": "AllExtendedRights",
         "description": "Extended rights are special rights granted on objects which allow reading of privileged attributes, as well as performing special actions.",
         "body": [
+            "Abuse Edge AllExtendedRights is Extended rights are special rights granted on objects which allow reading of privileged attributes, as well as performing special actions.",
             "### **User**",
             "Having this privilege over a user grants the ability to reset the user’s password. For more information about that, see the ForceChangePassword edge section",
             "### **Computer**",
@@ -108,6 +115,7 @@
         "prefix": "AZAddMembers",
         "description": "The ability to add other principals to an Azure security group",
         "body": [
+            "Abuse Edge AZAddMembers is The ability to add other principals to an Azure security group",
             "Via the Azure portal:",
             "1.  Find the group in your tenant (Microsoft Entra ID -> Manage -> Groups -> Find Group in list)",
             "2.  Click the group from the list",
@@ -123,6 +131,7 @@
         "prefix": "GPLink",
         "description": " linked GPO applies its settings to objects in the linked container",
         "body": [
+            "Abuse Edge GPLink is  linked GPO applies its settings to objects in the linked container",
             "Control over the GPO can be abused to compromise the AD accounts the GPO applies to by modifying the GPO policy settings.",
             "Refer to [A Red Teamer's Guide to GPOs and OUs](https://wald0.com/?p=179) for details about the abuse technique, and check out the following tools for practical exploitation:",
             " - **Windows**: [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse)",
@@ -133,6 +142,7 @@
         "prefix": "AZKeyVaultContributor",
         "description": "The Key Vault Contributor role grants full control of the target Key Vault. This includes the ability to read all secrets stored on the Key Vault.",
         "body": [
+            "Abuse Edge AZKeyVaultContributor is The Key Vault Contributor role grants full control of the target Key Vault. This includes the ability to read all secrets stored on the Key Vault.",
             "You can read secrets and alter access policies (grant yourself access to read secrets)",
             "Via PowerZure:",
             "* [Get-AzureKeyVaultContent](https://powerzure.readthedocs.io/en/latest/Functions/operational.html#get-azurekeyvaultcontent)",
@@ -143,6 +153,7 @@
         "prefix": "DCSync",
         "description": "This edge represents the combination of GetChanges and GetChangesAll. The combination of both these privileges grants a principal the ability to perform the DCSync attack.",
         "body": [
+            "Abuse Edge DCSync is This edge represents the combination of GetChanges and GetChangesAll. The combination of both these privileges grants a principal the ability to perform the DCSync attack.",
             "With both GetChanges and GetChangesAll privileges in BloodHound, you may perform a dcsync attack to get the password hash of an arbitrary principal using mimikatz:",
             "lsadump::dcsync /domain:testlab.local /user:Administrator",
             "You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this see the blog post by harmj0y in the references tab."
@@ -152,6 +163,7 @@
         "prefix": "DCFor",
         "description": "This edge indicates that the computer is a domain controller for the domain. This edge is not created for read-only domain controllers.",
         "body": [
+            "Abuse Edge DCFor is This edge indicates that the computer is a domain controller for the domain. This edge is not created for read-only domain controllers.",
             "Domain Controllers store all Active Directory credentials and configurations for all principals in the domain. If an adversary gains administrative access to a Domain Controller, there are several options at their disposal for compromising domain identities and domain-managed systems. Please see the references section for more information."
         ]
     },
@@ -159,6 +171,7 @@
         "prefix": "AZMGAppRoleAssignment_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the AppRoleAssignment.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGAppRoleAssignment_ReadWrite_All is This edge is created when a Service Principal has been granted the AppRoleAssignment.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -166,6 +179,7 @@
         "prefix": "AZMGGrantAppRoles",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZMGGrantAppRoles is This edge is created during post-processing.",
             "With the ability to grant arbitrary app roles, you can grant the RoleManagement.ReadWrite.Directory app role to a Service Principal you already control, and then promote it or another principal to Global Administrator.",
             "These functions require you to supply an MS Graph-scoped JWT associated with the Service Principal that has the privilege to grant app roles. There are several ways to acquire a JWT. For example, you may use BARK’s Get-MSGraphTokenWithClientCredentials to acquire an MS Graph-scoped JWT by supplying a Service Principal Client ID and secret:",
             "```bash",
@@ -204,6 +218,7 @@
         "prefix": "AZGetSecrets",
         "description": "The ability to read secrets from key vaults.",
         "body": [
+            "Abuse Edge AZGetSecrets is The ability to read secrets from key vaults.",
             "Use PowerShell or PowerZure to fetch the certificate from the key vault.",
             "Via PowerZure:",
             "* Get-AzureKeyVaultContent",
@@ -214,6 +229,7 @@
         "prefix": "AZMGGroupMember_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the GroupMember.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGGroupMember_ReadWrite_All is This edge is created when a Service Principal has been granted the GroupMember.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -221,6 +237,7 @@
         "prefix": "CoerceToTGT",
         "description": "The computer/user account is configured with Kerberos unconstrained delegation.",
         "body": [
+            "Abuse Edge CoerceToTGT is The computer/user account is configured with Kerberos unconstrained delegation.",
             "A common way for attackers to abuse unconstrained delegation is for the attacker to coerce a DC using the printspooler.",
             "The attack will fail if the target is a member of Protected Users or marked as sensitive, as the TGT of those principals will not be sent to the principal with unconstrained delegation. You can find all the protected principals with this Cypher query:",
             "```bash",
@@ -286,6 +303,7 @@
         "prefix": "AZGetKeys",
         "description": "The ability to read keys from key vaults.",
         "body": [
+            "Abuse Edge AZGetKeys is The ability to read keys from key vaults.",
             "Use PowerShell or PowerZure to fetch the certificate from the key vault.",
             "Via PowerZure:",
             "* Get-AzureKeyVaultContent",
@@ -296,6 +314,7 @@
         "prefix": "AZAKSContributor",
         "description": "The Azure Kubernetes Service Contributor role grants full control of the target Azure Kubernetes Service Managed Cluster.",
         "body": [
+            "Abuse Edge AZAKSContributor is The Azure Kubernetes Service Contributor role grants full control of the target Azure Kubernetes Service Managed Cluster.",
             "You can use BARK’s Invoke-AzureRMAKSRunCommand function to execute commands on compute nodes associated with the target AKS Managed Cluster.",
             "This function requires you to supply an Azure Resource Manager scoped JWT associated with the principal that has the privilege to execute commands on the cluster. There are several ways to acquire a JWT. For example, you may use BARK’s Get-ARMTokenWithRefreshToken to acquire an Azure RM-scoped JWT by supplying a refresh token:",
             "```bash",
@@ -324,6 +343,7 @@
         "prefix": "AZAvereContributor",
         "description": "ny principal granted the Avere Contributor role, scoped to the affected VM, can reset the built-in administrator password on the VM",
         "body": [
+            "Abuse Edge AZAvereContributor is ny principal granted the Avere Contributor role, scoped to the affected VM, can reset the built-in administrator password on the VM",
             "The Avere Contributor role allows you to run SYSTEM commands on the VM",
             "Via PowerZure:",
             "* [Invoke-AzureRunCommand](https://powerzure.readthedocs.io/en/latest/Functions/operational.html#invoke-azureruncommand)",
@@ -335,6 +355,7 @@
         "prefix": "AZUserAccessAdministrator",
         "description": "The User Access Admin role can edit roles against many other objects.",
         "body": [
+            "Abuse Edge AZUserAccessAdministrator is The User Access Admin role can edit roles against many other objects.",
             "This role can be used to grant yourself or another principal any privilege you want against Automation Accounts, VMs, Key Vaults, and Resource Groups. For example, you can make yourself an administrator of an Azure Subscription by assigning the Owner role at the Subscription scope.",
             "The simplest way to execute this attack is to use the Azure portal to add a new, abusable role assignment against the target object for yourself.",
             "If this role is assigned to a Service Principal, you won't be able to authenticate directly to the Azure portal. In this case:",
@@ -346,6 +367,7 @@
         "prefix": "AZRunsAs",
         "description": "The Azure App runs as the Service Principal when it needs to authenticate to the tenant.",
         "body": [
+            "Abuse Edge AZRunsAs is The Azure App runs as the Service Principal when it needs to authenticate to the tenant.",
             "This edge should be taken into consideration when abusing control of an app. Apps authenticate with service principals to the tenant, so if you have control of an app, what you are abusing is that control plus the fact that the app runs as a privileged service principal."
         ]
     },
@@ -353,6 +375,7 @@
         "prefix": "AZContains",
         "description": "This indicates that the parent object contains the child object, such as a resource group containing a virtual machine, or a tenant “containing” a subscription.",
         "body": [
+            "Abuse Edge AZContains is This indicates that the parent object contains the child object, such as a resource group containing a virtual machine, or a tenant “containing” a subscription.",
             "Control of the parent object also gives control of the child object."
         ]
     },
@@ -360,6 +383,7 @@
         "prefix": "AZScopedTo",
         "description": "Is used to distinguish whether an EntraID (AzureAD) admin role such as Application Administrator or Cloud Application Administrator is scoped to the tenant or to a particular app registration or service principal.",
         "body": [
+            "Abuse Edge AZScopedTo is Is used to distinguish whether an EntraID (AzureAD) admin role such as Application Administrator or Cloud Application Administrator is scoped to the tenant or to a particular app registration or service principal.",
             "When a principal has such a role scoped to the tenant, they gain control of all app registrations and service principals in the tenant. If a principal has the same role scoped to individual objects, they only gain control of those particular objects. This is unique to just a handful of roles, but custom roles can also work this way."
         ]
     },
@@ -367,6 +391,7 @@
         "prefix": "ADCSESC9b",
         "description": "The principal has control over a victim computer with permission to enroll on one or more certificate templates, configured to: 1) enable certificate authentication, 2) require the `dNSHostName`  of the enrollee included in the Subject Alternative Name (SAN), and 3) not have the security extension enabled.",
         "body": [
+            "Abuse Edge ADCSESC9b is The principal has control over a victim computer with permission to enroll on one or more certificate templates, configured to: 1) enable certificate authentication, 2) require the `dNSHostName`  of the enrollee included in the Subject Alternative Name (SAN), and 3) not have the security extension enabled.",
             "### Windows",
             "Step 1: Remove SPNs including `dNSHostName` on victim.",
             "The SPNs of the victim will be automatically updated when you change the `dNSHostName`. AD will not allow the same SPN entry to be set on two accounts. Therefore, you must remove any SPN on the victim account that includes the victim's `dNSHostName`.",
@@ -475,6 +500,7 @@
         "prefix": "AZNodeResourceGroup",
         "description": "This edge is created to link Azure Kubernetes Service Managed Clusters to the Virtual Machine Scale Sets they use to execute commands on.",
         "body": [
+            "Abuse Edge AZNodeResourceGroup is This edge is created to link Azure Kubernetes Service Managed Clusters to the Virtual Machine Scale Sets they use to execute commands on.",
             "You will abuse this relationship by executing a command against the AKS Managed Cluster the edge is emitting from. You can target any managed identity assignment scoped to the Virtual Machine Scale Sets under the target Resource Group."
         ]
     },
@@ -482,6 +508,7 @@
         "prefix": "AZMGServicePrincipalEndpoint_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the ServicePrincipalEndpoint.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGServicePrincipalEndpoint_ReadWrite_All is This edge is created when a Service Principal has been granted the ServicePrincipalEndpoint.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -489,6 +516,7 @@
         "prefix": "ADCSESC4",
         "description": "The ADCSESC4 edge indicates that the principal has the privileges to perform the ADCS ESC4 abuse against the target AD domain.",
         "body": [
+            "Abuse Edge ADCSESC4 is The ADCSESC4 edge indicates that the principal has the privileges to perform the ADCS ESC4 abuse against the target AD domain.",
             "An attacker may perform this attack in the following steps:",
             "### Step 0.1: Obtain ownership (WriteOwner only)",
             "If you only have WriteOwner on the affected certificate template, then you need to grant your principal ownership over the template.",
@@ -964,6 +992,7 @@
         "prefix": "AZMGAddSecret",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZMGAddSecret is This edge is created during post-processing.",
             "There are several ways to perform this abuse, depending on what sort of access you have to the credentials of the object that holds this privilege against the target object. If you have an interactive web browser session for the Azure portal, it is as simple as finding the target App in the portal and adding a new secret to the object using the “Certificates & secrets” tab. Service Principals do not have this tab in the Azure portal but you can add secrets to them with the MS Graph API. No matter what kind of control you have, you will be able to perform this abuse by using BARK’s New-EntraAppSecret or New-ServicePrincipalSecret functions.",
             "These functions require you to supply an MS Graph-scoped JWT associated with the Service Principal that has the privilege to add secrets to the target object. There are several ways to acquire a JWT. For example, you may use BARK’s Get-MSGraphTokenWithClientCredentials to acquire an MS Graph-scoped JWT by supplying a Service Principal Client ID and secret:",
             "```bash",
@@ -1003,6 +1032,7 @@
         "prefix": "AZPrivilegedRoleAdmin",
         "description": "The Privileged Role Admin role can grant any other admin role to another principal at the tenant level.",
         "body": [
+            "Abuse Edge AZPrivilegedRoleAdmin is The Privileged Role Admin role can grant any other admin role to another principal at the tenant level.",
             "Activate the Global Admin role for yourself or for another user using PowerZure or PowerShell."
         ]
     },
@@ -1010,6 +1040,7 @@
         "prefix": "ADCSESC9a",
         "description": "The principal has control over a victim principal with permission to enroll on one or more certificate templates, configured to: 1) enable certificate authentication, 2) require the `userPrincipalName` (UPN) of the enrollee included in the Subject Alternative Name (SAN), and 3) do not have the security extension enabled.",
         "body": [
+            "Abuse Edge ADCSESC9a is The principal has control over a victim principal with permission to enroll on one or more certificate templates, configured to: 1) enable certificate authentication, 2) require the `userPrincipalName` (UPN) of the enrollee included in the Subject Alternative Name (SAN), and 3) do not have the security extension enabled.",
             "### Windows",
             "Step 1: Set UPN of victim to targeted principal's `sAMAccountName`. Set the UPN of the victim principal using PowerView:",
             "```bash",
@@ -1110,6 +1141,7 @@
         "prefix": "AZAppAdmin",
         "description": "Principals with the Application Admin role can control tenant-resident apps.",
         "body": [
+            "Abuse Edge AZAppAdmin is Principals with the Application Admin role can control tenant-resident apps.",
             "Create a new credential for the app, then authenticate to the tenant as the app's service principal, then",
             "abuse whatever privilege it is that the service principal has."
         ]
@@ -1118,6 +1150,7 @@
         "prefix": "ADCSESC1",
         "description": "This edge indicates that the principal has permission to enroll on one or more certificate templates, allowing them to specify an alternate subject name and use the certificate for authentication. They also have enrollment permission for an enterprise CA with the necessary templates published.",
         "body": [
+            "Abuse Edge ADCSESC1 is This edge indicates that the principal has permission to enroll on one or more certificate templates, allowing them to specify an alternate subject name and use the certificate for authentication. They also have enrollment permission for an enterprise CA with the necessary templates published.",
             "### Windows",
             "Step 1: Use Certify to request enrollment in the affected template, specifying the affected",
             "certification authority and target principal to impersonate:",
@@ -1154,6 +1187,7 @@
         "prefix": "AZMGApplication_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the Application.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGApplication_ReadWrite_All is This edge is created when a Service Principal has been granted the Application.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -1161,6 +1195,7 @@
         "prefix": "ContainsIdentity",
         "description": "",
         "body": [
+            "Abuse Edge ContainsIdentity is ",
             "Control over the domain object enables an attacker to compromise all accounts of the domain. For example, DCSync, AllExtendedRights, or GenericAll permission on the domain object enables the attacker to perform a DCSync attack and obtain the credentials of any account of the domain.",
             "Refer to the inbound edges on the domain node for more details."
         ]
@@ -1169,6 +1204,7 @@
         "prefix": "AZAddSecret",
         "description": "zure provides several systems and mechanisms for granting control of securable objects within Entra ID, including tenant-scoped admin roles, object-scoped admin roles, explicit object ownership, and API permissions",
         "body": [
+            "Abuse Edge AZAddSecret is zure provides several systems and mechanisms for granting control of securable objects within Entra ID, including tenant-scoped admin roles, object-scoped admin roles, explicit object ownership, and API permissions",
             "There are several ways to perform this abuse, depending on what sort of access you have to the credentials of the object that holds this privilege against the target object. If you have an interactive web browser session for the Azure portal, it is as simple as finding the target App in the portal and adding a new secret to the object using the “Certificates & secrets” tab. Service Principals do not have this tab in the Azure portal but you can add secrets to them with the MS Graph API. No matter what kind of control you have, you will be able to perform this abuse by using BARK’s New-AppRegSecret or New-ServicePrincipalSecret functions.",
             "These functions require you to supply an MS Graph-scoped JWT associated with the principal that has the privilege to add a new secret to your target application. There are several ways to acquire a JWT. For example, you may use BARK’s Get-GraphTokenWithRefreshToken to acquire an MS Graph-scoped JWT by supplying a refresh token:",
             "```bash",
@@ -1203,6 +1239,7 @@
         "prefix": "AZMGRoleManagement_ReadWrite_Directory",
         "description": "This edge is created when a Service Principal has been granted the RoleManagement.ReadWrite.Directory edge.",
         "body": [
+            "Abuse Edge AZMGRoleManagement_ReadWrite_Directory is This edge is created when a Service Principal has been granted the RoleManagement.ReadWrite.Directory edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -1210,6 +1247,7 @@
         "prefix": "AZVMAdminLogin",
         "description": "When a virtual machine is configured to allow logon with Azure credentials, the VM automatically has certain principals added to its local administrators group, including any principal granted the Virtual Machine Administrator Login (or “VMAL”) admin role.",
         "body": [
+            "Abuse Edge AZVMAdminLogin is When a virtual machine is configured to allow logon with Azure credentials, the VM automatically has certain principals added to its local administrators group, including any principal granted the Virtual Machine Administrator Login (or “VMAL”) admin role.",
             "Connect to the VM via RDP and you will be granted local admin rights on the VM."
         ]
     },
@@ -1217,6 +1255,7 @@
         "prefix": "AZAutomationContributor",
         "description": "he Azure Automation Contributor role grants full control of the target Azure Automation Account. This includes the ability to execute arbitrary commands on the Automation Account",
         "body": [
+            "Abuse Edge AZAutomationContributor is he Azure Automation Contributor role grants full control of the target Azure Automation Account. This includes the ability to execute arbitrary commands on the Automation Account",
             "You can use BARK’s New-AzureAutomationAccountRunBook and Get-AzureAutomationAccountRunBookOutput functions to execute arbitrary commands against the target Automation Account.",
             "These functions require you to supply an Azure Resource Manager scoped JWT associated with the principal that has the privilege to add or modify and run Automation Account run books. There are several ways to acquire a JWT. For example, you may use BARK’s Get-ARMTokenWithRefreshToken to acquire an Azure RM-scoped JWT by supplying a refresh token:",
             "```bash",
@@ -1252,6 +1291,7 @@
         "prefix": "AddKeyCredentialLink",
         "description": "The ability to write to the “msds-KeyCredentialLink” property on a user or computer. Writing to this property allows an attacker to create “Shadow Credentials” on the object and authenticate as the principal using kerberos PKINIT.",
         "body": [
+            "Abuse Edge AddKeyCredentialLink is The ability to write to the “msds-KeyCredentialLink” property on a user or computer. Writing to this property allows an attacker to create “Shadow Credentials” on the object and authenticate as the principal using kerberos PKINIT.",
             "To abuse this privilege, use Whisker:",
             "```bash",
             "Whisker.exe add /target:<TargetPrincipal>",
@@ -1263,6 +1303,7 @@
         "prefix": "CanPSRemote",
         "description": "PS Session access allows you to enter an interactive session with the target computer. If authenticating as a low privilege user, a privilege escalation may allow you to gain high privileges on the system.",
         "body": [
+            "Abuse Edge CanPSRemote is PS Session access allows you to enter an interactive session with the target computer. If authenticating as a low privilege user, a privilege escalation may allow you to gain high privileges on the system.",
             "Abuse of this privilege will require you to have interactive access with a system on the network.",
             "A remote session can be opened using the New-PSSession powershell command.",
             "You may need to authenticate to the Domain Controller as the user with the PSRemote rights on the target computer if you are not running as that user. To do this in conjunction with New-PSSession, first create a PSCredential object (these examples comes from the PowerView help documentation):",
@@ -1296,6 +1337,7 @@
         "prefix": "AddAllowedToAct",
         "description": "This edge means it's possible to modify the msDS-AllowedToActOnBehalfOfOtherIdentity property of a target.",
         "body": [
+            "Abuse Edge AddAllowedToAct is This edge means it's possible to modify the msDS-AllowedToActOnBehalfOfOtherIdentity property of a target.",
             "See the AllowedToAct edge section for abuse info"
         ]
     },
@@ -1303,6 +1345,7 @@
         "prefix": "ADCSESC3",
         "description": "The principal has permission to enroll on a certificate allowing them to obtain an enrollment agen",
         "body": [
+            "Abuse Edge ADCSESC3 is The principal has permission to enroll on a certificate allowing them to obtain an enrollment agen",
             "### Windows",
             "Step 1: Use Certify to request an enrollment agent certificate.",
             "```bash",
@@ -1347,6 +1390,7 @@
         "prefix": "AZMGAddOwner",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZMGAddOwner is This edge is created during post-processing.",
             "You can use BARK to add a new owner to the target object. The BARK function you use will depend on the target object type, but all of the functions follow a similar syntax.",
             "These functions require you to supply an MS Graph-scoped JWT associated with the Service Principal that has the privilege to add a new owner to the target object. There are several ways to acquire a JWT. For example, you may use BARK’s Get-MSGraphTokenWithClientCredentials to acquire an MS Graph-scoped JWT by supplying a Service Principal Client ID and secret:",
             "```bash",
@@ -1382,6 +1426,7 @@
         "prefix": "GPOAppliesTo",
         "description": "",
         "body": [
+            "Abuse Edge GPOAppliesTo is ",
             "Control over the GPO can be abused to compromise the AD account by modifying the GPO policy settings.",
             "Refer to the inbound edges on the GPO node for more details."
         ]
@@ -1390,6 +1435,7 @@
         "prefix": "GenericWrite",
         "description": "eneric Write access grants you the ability to write to any non-protected attribute on the target object, including \"members\" for a group, and \"servicePrincipalNames\" for a user",
         "body": [
+            "Abuse Edge GenericWrite is eneric Write access grants you the ability to write to any non-protected attribute on the target object, including \"members\" for a group, and \"servicePrincipalNames\" for a user",
             "**Users**",
             "With GenericWrite over a user, you can write to the \"msds-KeyCredentialLink\" attribute. Writing to this property allows an attacker to create \"Shadow Credentials\" on the object and authenticate as the principal using Kerberos PKINIT. See more information under the AddKeyCredentialLink edge.",
             "Alternatively, you can write to the \"servicePrincipalNames\" attribute and perform a targeted kerberoasting attack. See the abuse section under the WriteSPN edge for more information.",
@@ -1424,6 +1470,7 @@
         "prefix": "CanRDP",
         "description": "Remote Desktop access allows you to enter an interactive session with the target computer. If authenticating as a low privilege user, a privilege escalation may allow you to gain high privileges on the system.",
         "body": [
+            "Abuse Edge CanRDP is Remote Desktop access allows you to enter an interactive session with the target computer. If authenticating as a low privilege user, a privilege escalation may allow you to gain high privileges on the system.",
             "Abuse of this privilege will depend heavily on the type of access you have.",
             "### PlainText Credentials with Interactive Access",
             "With plaintext credentials, the easiest way to exploit this privilege is using the built-in Windows Remote Desktop Client (mstsc.exe). Open mstsc.exe and input the target computer name. When prompted for credentials, input the credentials for the user with RDP rights to initiate the remote desktop connection.",
@@ -1452,6 +1499,7 @@
         "prefix": "AZAddOwner",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZAddOwner is This edge is created during post-processing.",
             "You can use BARK to add a new owner to the target object. The BARK function you use will depend on the target object type, but all of the functions follow a similar syntax.",
             "These functions require you to supply an MS Graph-scoped JWT associated with the principal that has the privilege to add a new owner to your target object. There are several ways to acquire a JWT. For example, you may use BARK’s Get-GraphTokenWithRefreshToken to acquire an MS Graph-scoped JWT by supplying a refresh token:",
             "```bash",
@@ -1479,6 +1527,7 @@
         "prefix": "AddSelf",
         "description": "This edge indicates the principal has the ability to add itself to the target security group. Because of security group delegation, the members of a security group have the same privileges as that group.",
         "body": [
+            "Abuse Edge AddSelf is This edge indicates the principal has the ability to add itself to the target security group. Because of security group delegation, the members of a security group have the same privileges as that group.",
             "There are at least two ways to execute this attack. The first and most obvious is by using the built-in net.exe binary in Windows (e.g.: net group “Domain Admins” dfm.a /add /domain). See the opsec considerations tab for why this may be a bad idea. The second, and highly recommended method, is by using the Add-DomainGroupMember function in PowerView. This function is superior to using the net.exe binary in several ways. For instance, you can supply alternate credentials, instead of needing to run a process as or logon as the user with the AddSelf privilege. Additionally, you have much safer execution options than you do with spawning net.exe (see the opsec tab).",
             "To abuse this privilege with PowerView’s Add-DomainGroupMember, first import PowerView into your agent session or into a PowerShell instance at the console.",
             "You may need to authenticate to the Domain Controller as the user with the AddSelf right if you are not running a process as that user. To do this in conjunction with Add-DomainGroupMember, first create a PSCredential object (these examples comes from the PowerView help documentation):",
@@ -1500,6 +1549,7 @@
         "prefix": "AZExecuteCommand",
         "description": "Principals with the Intune Administrators role are able to execute arbitrary PowerShell scripts on devices that are joined to the Azure tenant.",
         "body": [
+            "Abuse Edge AZExecuteCommand is Principals with the Intune Administrators role are able to execute arbitrary PowerShell scripts on devices that are joined to the Azure tenant.",
             "First, have your PowerShell script ready to go and save it somewhere as a PS1 file. Take all the necessary operational security (opsec) and AMSI-bypass steps you want at this point, keeping in mind the script will run as the SYSTEM user unless you specify otherwise. Also keep in mind that the script will be written to disk, so take whatever AV bypass measures you need as well.",
             "Next, log into the Azure web portal as the user with the “Intune Administrator” role activated. After authenticating, access Endpoint Manager at [https://endpoint.microsoft.com](https://endpoint.microsoft.com/).",
             "Click on “Devices” on the left, which takes you, unsurprisingly, to the devices overview. Click on “Scripts” under the “Policy” section to go to the scripts management page. Click “Add,” then click “Windows 10”.",
@@ -1512,6 +1562,7 @@
         "prefix": "AZLogicAppContributor",
         "description": "he Logic Contributor role grants full control of the target Logic App. This includes the ability to execute arbitrary commands on the Logic App",
         "body": [
+            "Abuse Edge AZLogicAppContributor is he Logic Contributor role grants full control of the target Logic App. This includes the ability to execute arbitrary commands on the Logic App",
             "Currently you need access to the portal GUI to execute this abuse. The abuse involves adding or modifying an existing logic app to coerce the logic app into sending a JWT for its managed identity service principal to a web server you control.",
             "You can see a full walkthrough for executing that abuse in this blog post: [Andy Robbins - Managed Identity Attack Paths, Part 2: Logic Apps](https://medium.com/p/52b29354fc54)"
         ]
@@ -1520,6 +1571,7 @@
         "prefix": "Contains",
         "description": "GPOs linked to a container apply to all objects that are contained by the container. Additionally, ACEs set on a parent OU may inherit down to child objects.",
         "body": [
+            "Abuse Edge Contains is GPOs linked to a container apply to all objects that are contained by the container. Additionally, ACEs set on a parent OU may inherit down to child objects.",
             "Permissions on the parent of a child object may enable compromise of the child object through inherited ACEs or linked GPOs.",
             "See the inbound edges on the parent object for details.",
             "```"
@@ -1529,6 +1581,7 @@
         "prefix": "PropagatesACEsTo",
         "description": "",
         "body": [
+            "Abuse Edge PropagatesACEsTo is ",
             "Control over the container node DACL enables an attacker to compromise the child node by creating ACEs, such as GenericAll, with inheritance enabled, allowing those permissions to apply to the child node.",
             "Refer to the inbound edges on the container node for more details."
         ]
@@ -1537,6 +1590,7 @@
         "prefix": "GenericAll",
         "description": "his is also known as full control. This privilege allows the trustee to manipulate the target object however they wish",
         "body": [
+            "Abuse Edge GenericAll is his is also known as full control. This privilege allows the trustee to manipulate the target object however they wish",
             "### With GenericAll Over a Group",
             "Full control of a group allows you to directly modify group membership of the group. For full abuse info in that scenario, see the Abuse Info section under the AddMembers edge.",
             "### With GenericAll Over a User",
@@ -1616,6 +1670,7 @@
         "prefix": "ADCSESC6b",
         "description": "he principal has permission to enroll on one or more certificate templates allowing for authentication",
         "body": [
+            "Abuse Edge ADCSESC6b is he principal has permission to enroll on one or more certificate templates allowing for authentication",
             "### Windows",
             "Step 1: Use Certify to request enrollment in the affected template, specifying the affected certification authority and target principal to impersonate:",
             "```bash",
@@ -1652,6 +1707,7 @@
         "prefix": "EnrollOnBehalfOf",
         "description": "The certificate template \"A\" is configured to be used as an enrollment agent.",
         "body": [
+            "Abuse Edge EnrollOnBehalfOf is The certificate template \"A\" is configured to be used as an enrollment agent.",
             "An attacker may perform an ADCS ESC3 attack that relies on this EnrollOnBehalfOf relationship. This relationship alone is not enough to escalate rights or impersonate other principals."
         ]
     },
@@ -1659,6 +1715,7 @@
         "prefix": "ADCSESC6a",
         "description": "he principal has permission to enroll on one or more certificate templates allowing for authentication",
         "body": [
+            "Abuse Edge ADCSESC6a is he principal has permission to enroll on one or more certificate templates allowing for authentication",
             "### Windows",
             "Step 1: Use Certify to request enrollment in the affected template, specifying the affected",
             "certification authority and target principal to impersonate:",
@@ -1699,6 +1756,7 @@
         "prefix": "AZContributor",
         "description": "The contributor role grants almost all abusable privileges in all circumstances, with some exceptions. Those exceptions are not collected by AzureHound.",
         "body": [
+            "Abuse Edge AZContributor is The contributor role grants almost all abusable privileges in all circumstances, with some exceptions. Those exceptions are not collected by AzureHound.",
             "This depends on what the target object is:",
             "* **Key Vault:**",
             "    You can read secrets and alter access policies (grant yourself access to read secrets)",
@@ -1712,6 +1770,7 @@
         "prefix": "AllowedToDelegate",
         "description": "The constrained delegation primitive allows a principal to authenticate as any user to specific services (found in the msds-AllowedToDelegateTo LDAP property in the source node tab) on the target computer.",
         "body": [
+            "Abuse Edge AllowedToDelegate is The constrained delegation primitive allows a principal to authenticate as any user to specific services (found in the msds-AllowedToDelegateTo LDAP property in the source node tab) on the target computer.",
             "Abusing this privilege can utilize Benjamin Delpy’s Kekeo project, proxying in traffic generated from the Impacket library, or using the Rubeus project’s s4u abuse.",
             "In the following example, _victim_ is the attacker-controlled account (i.e. the hash is known) that is configured for constrained delegation. That is, _victim_ has the “HTTP/PRIMARY.testlab.local” service principal name (SPN) set in its msds-AllowedToDelegateTo property. The command first requests a TGT for the _victim_ user and executes the S4U2self/S4U2proxy process to impersonate the “admin” user to the “HTTP/PRIMARY.testlab.local” SPN. The alternative sname “cifs” is substituted in to the final service ticket and the ticket is submitted to the current logon session. This grants the attacker the ability to access the file system of PRIMARY.testlab.local as the “admin” user.",
             "```bash",
@@ -1723,6 +1782,7 @@
         "prefix": "GetChanges",
         "description": "The principal is granted the GetChanges right on the domain.",
         "body": [
+            "Abuse Edge GetChanges is The principal is granted the GetChanges right on the domain.",
             "This edge is not abuseable by itself.",
             "When combined with [GetChangesAll](/resources/edges/get-changes-all), BloodHound will create the abuseable edge [DCSync](/resources/edges/dc-sync).",
             "When combined with [GetChangesInFilteredSet](/resources/edges/get-changes-in-filtered-set), BloodHound will create the abuseable edge [SyncLAPSPassword](/resources/edges/sync-laps-password)."
@@ -1732,6 +1792,7 @@
         "prefix": "AZMemberOf",
         "description": "The given asset is a member of the group.",
         "body": [
+            "Abuse Edge AZMemberOf is The given asset is a member of the group.",
             "No abuse is necessary. This edge indicates that a principal belongs to a security group."
         ]
     },
@@ -1739,6 +1800,7 @@
         "prefix": "AZGetCertificates",
         "description": "The ability to read certificates from key vaults.",
         "body": [
+            "Abuse Edge AZGetCertificates is The ability to read certificates from key vaults.",
             "Use PowerShell or PowerZure to fetch the certificate from the key vault.",
             "Via PowerZure:",
             "* Get-AzureKeyVaultContent",
@@ -1749,6 +1811,7 @@
         "prefix": "CanApplyGPO",
         "description": "",
         "body": [
+            "Abuse Edge CanApplyGPO is ",
             "An attacker with permission to modify the gPLink attribute can link GPOs to the object, affecting all contained users and computers. The GPO can be weaponized by injecting a malicious configuration, such as a scheduled task executing a malicious script.",
             "The GPO can be linked as enforced to bypass blocked GPO inheritance. WMI or security filtering can be used to limit the impact to specific accounts, which is important in environments with many users or computers under the affected scope.",
             "Refer to [A Red Teamer's Guide to GPOs and OUs](https://wald0.com/?p=179) for details about the abuse technique, and check out the following tools for practical exploitation:",
@@ -1764,6 +1827,7 @@
         "prefix": "EnterpriseCAFor",
         "description": "he Enterprise Certification Authority node is the enrollment service LDAP object for the target Root Certification Authority node",
         "body": [
+            "Abuse Edge EnterpriseCAFor is he Enterprise Certification Authority node is the enrollment service LDAP object for the target Root Certification Authority node",
             "An attacker may perform several attacks that rely on this relationship. This relationship alone is not enough to escalate rights or impersonate other principals. This relationship may contribute to other relationships and attributes, from which an escalation opportunity may emerge."
         ]
     },
@@ -1771,6 +1835,7 @@
         "prefix": "ForceChangePassword",
         "description": "This edge indicates that the principal can reset the password of the target user without knowing the current password of that user.",
         "body": [
+            "Abuse Edge ForceChangePassword is This edge indicates that the principal can reset the password of the target user without knowing the current password of that user.",
             "There are at least two ways to execute this attack. The first and most obvious is by using the built-in net.exe binary in Windows (e.g.: net user dfm.a Password123! /domain). See the opsec considerations section for why this may be a bad idea. The second, and highly recommended method, is by using the Set-DomainUserPassword function in PowerView. This function is superior to using the net.exe binary in several ways. For instance, you can supply alternate credentials, instead of needing to run a process as or logon as the user with the ForceChangePassword privilege. Additionally, you have much safer execution options than you do with spawning net.exe (see the opsec info below).",
             "To abuse this privilege with PowerView’s Set-DomainUserPassword, first import PowerView into your agent session or into a PowerShell instance at the console. You may need to authenticate to the Domain Controller as the user with the password reset privilege if you are not running a process as that user.",
             "To do this in conjunction with Set-DomainUserPassword, first create a PSCredential object (these examples comes from the PowerView help documentation):",
@@ -1793,6 +1858,7 @@
         "prefix": "AZVMContributor",
         "description": "The Virtual Machine contributor role grants almost all abusable privileges against Virtual Machines.",
         "body": [
+            "Abuse Edge AZVMContributor is The Virtual Machine contributor role grants almost all abusable privileges against Virtual Machines.",
             "The Virtual Machine Contributor role allows you to run SYSTEM commands on the VM",
             "Via PowerZure:",
             "* [Invoke-AzureRunCommand](https://powerzure.readthedocs.io/en/latest/Functions/operational.html#invoke-azureruncommand)",
@@ -1804,6 +1870,7 @@
         "prefix": "AddMember",
         "description": "This edge indicates the principal has the ability to add arbitrary principlas to the target security group. Because of security group delegation, the members of a security group have the same privileges as that group.",
         "body": [
+            "Abuse Edge AddMember is This edge indicates the principal has the ability to add arbitrary principlas to the target security group. Because of security group delegation, the members of a security group have the same privileges as that group.",
             "There are at least two ways to execute this attack. The first and most obvious is by using the built-in net.exe binary in Windows (e.g.: net group “Domain Admins” dfm.a /add /domain). See the opsec considerations tab for why this may be a bad idea. The second, and highly recommended method, is by using the Add-DomainGroupMember function in PowerView. This function is superior to using the net.exe binary in several ways. For instance, you can supply alternate credentials, instead of needing to run a process as or logon as the user with the AddMember privilege. Additionally, you have much safer execution options than you do with spawning net.exe (see the opsec tab).",
             "To abuse this privilege with PowerView’s Add-DomainGroupMember, first import PowerView into your agent session or into a PowerShell instance at the console.",
             "You may need to authenticate to the Domain Controller as the user with the AddMember right if you are not running a process as that user. To do this in conjunction with Add-DomainGroupMember, first create a PSCredential object (these examples comes from the PowerView help documentation):",
@@ -1825,6 +1892,7 @@
         "prefix": "AZCloudAppAdmin",
         "description": "Principals with the Cloud App Admin role can control tenant-resident apps.",
         "body": [
+            "Abuse Edge AZCloudAppAdmin is Principals with the Cloud App Admin role can control tenant-resident apps.",
             "Create a new credential for the app, then authenticate to the tenant as the app’s service principal, then abuse whatever privilege it is that the service principal has."
         ]
     },
@@ -1832,6 +1900,7 @@
         "prefix": "Enroll",
         "description": "The target node may be a Certificate Template or an Enterprise Certification Authority.",
         "body": [
+            "Abuse Edge Enroll is The target node may be a Certificate Template or an Enterprise Certification Authority.",
             "The Enroll permission grants enrollment rights on the certificate template.",
             "The following additional requirements must be met for a principal to be able to enroll a certificate:",
             "1.  The certificate template is published on an enterprise CA",
@@ -1851,6 +1920,7 @@
         "prefix": "AZMGGrantRole",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZMGGrantRole is This edge is created during post-processing.",
             "To abuse this privilege, you can promote a principal you control to Global Administrator using BARK’s New-EntraRoleAssignment. This function requires you to supply an MS Graph-scoped JWT associated with the Service Principal that has the privilege to grant Entra ID admin roles. There are several ways to acquire a JWT. For example, you may use BARK’s Get-MSGraphTokenWithClientCredentials to acquire an MS Graph-scoped JWT by supplying a Service Principal Client ID and secret:",
             "```bash",
             "$MGToken = Get-MSGraphTokenWithClientCredentials `",
@@ -1872,6 +1942,7 @@
         "prefix": "AZMGGroup_ReadWrite_All",
         "description": "This edge is created when a Service Principal has been granted the Group.ReadWrite.All edge.",
         "body": [
+            "Abuse Edge AZMGGroup_ReadWrite_All is This edge is created when a Service Principal has been granted the Group.ReadWrite.All edge.",
             "The edge is not abusable, but is used during post-processing to create abusable edges."
         ]
     },
@@ -1879,6 +1950,7 @@
         "prefix": "AZPrivilegedAuthAdmin",
         "description": "This edge indicates the principal has the Privileged Authentication Administrator role active against the target tenant.",
         "body": [
+            "Abuse Edge AZPrivilegedAuthAdmin is This edge indicates the principal has the Privileged Authentication Administrator role active against the target tenant.",
             "See the abuse info under AZAddSecret or AZResetPassword."
         ]
     },
@@ -1886,6 +1958,7 @@
         "prefix": "ExecuteDCOM",
         "description": "his can allow code execution under certain conditions by instantiating a COM object on a remote machine and invoking its methods",
         "body": [
+            "Abuse Edge ExecuteDCOM is his can allow code execution under certain conditions by instantiating a COM object on a remote machine and invoking its methods",
             "The PowerShell script Invoke-DCOM implements lateral movement using a variety of different COM objects (ProgIds: MMC20.Application, ShellWindows, ShellBrowserWindow, ShellBrowserWindow, and ExcelDDE). LethalHTA implements lateral movement using the HTA COM object (ProgId: htafile).",
             "One can manually instantiate and manipulate COM objects on a remote machine using the following PowerShell code. If specifying a COM object by its CLSID:",
             "```bash",
@@ -1907,6 +1980,7 @@
         "prefix": "AdminTo",
         "description": "This edge indicates that principal is a local administrator on the target computer.",
         "body": [
+            "Abuse Edge AdminTo is This edge indicates that principal is a local administrator on the target computer.",
             "There are several ways to pivot to a Windows system. If using Cobalt Strike’s beacon, check the help info for the commands “psexec”, “psexec_psh”, “wmi”, and “winrm”. With Empire, consider the modules for Invoke-PsExec, Invoke-DCOM, and Invoke-SMBExec.",
             "With Metasploit, consider the modules “exploit/windows/smb/psexec”, “exploit/windows/winrm/winrm\\_script\\_exec”, and “exploit/windows/local/ps\\_wmi\\_exec”.",
             "Additionally, there are several manual methods for remotely executing code on the machine, including via RDP, with the service control binary and interaction with the remote machine’s service control manager, and remotely instantiating DCOM objects. For more information about these lateral movement techniques, see the References section below.",
@@ -1923,6 +1997,7 @@
         "prefix": "AZResetPassword",
         "description": "The ability to change another user’s password without knowing their current password.",
         "body": [
+            "Abuse Edge AZResetPassword is The ability to change another user’s password without knowing their current password.",
             "Find the user in the Azure portal, then click “Reset Password”, or use PowerZure’s Set-AzureUserPassword cmdlet. If password write-back is enabled, this password will also be set for a synced on-prem user."
         ]
     },
@@ -1930,6 +2005,7 @@
         "prefix": "ExtendedByPolicy",
         "description": "The edge indicates that a certificate template includes an issuance policy as a certificate extension.",
         "body": [
+            "Abuse Edge ExtendedByPolicy is The edge indicates that a certificate template includes an issuance policy as a certificate extension.",
             "An attacker may perform the ADCS ESC13 abuse which relies on an issuance policy included in a certificate. This relationship alone is not enough to escalate rights or impersonate other principals."
         ]
     },
@@ -1937,6 +2013,7 @@
         "prefix": "ADCSESC10b",
         "description": "The principal has control over a victim computer with permission to enroll on one or more certificate templates, configured to enable certificate authentication, and require the `dNSHostName` of the enrollee included in the Subject Alternative Name (SAN).",
         "body": [
+            "Abuse Edge ADCSESC10b is The principal has control over a victim computer with permission to enroll on one or more certificate templates, configured to enable certificate authentication, and require the `dNSHostName` of the enrollee included in the Subject Alternative Name (SAN).",
             "### Windows",
             "Step 1: Remove SPNs including `dNSHostName` on victim.",
             "The SPNs of the victim will be automatically updated when you change the `dNSHostName`. AD will not allow the same SPN entry to be set on two accounts. Therefore, you must remove any SPN on the victim account that includes the victim's `dNSHostName`.",
@@ -2047,6 +2124,7 @@
         "prefix": "AZHasRole",
         "description": "his edge indicates that a principal has been granted a particular AzureAD admin role",
         "body": [
+            "Abuse Edge AZHasRole is his edge indicates that a principal has been granted a particular AzureAD admin role",
             "No abuse is necessary. This edge only indicates that the principal has been granted a particular AzureAD admin role."
         ]
     },
@@ -2054,6 +2132,7 @@
         "prefix": "ADCSESC13",
         "description": "The ADCSESC13 edge indicates that the principal has the privileges to perform the ADCS ESC13 abuse against the target AD group. The principal has enrollment rights on a certificate template configured with an issuance policy extension.",
         "body": [
+            "Abuse Edge ADCSESC13 is The ADCSESC13 edge indicates that the principal has the privileges to perform the ADCS ESC13 abuse against the target AD group. The principal has enrollment rights on a certificate template configured with an issuance policy extension.",
             "An attacker may perform this attack in the following steps:",
             "### Step 1: Request enrollment in the affected template",
             "On Windows, use Certify to request enrollment in the affected template, specifying the affected certification authority:",
@@ -2086,6 +2165,7 @@
         "prefix": "ADCSESC10a",
         "description": "This edge indicates that the principal has control over a victim principal with permission to enroll on one or more certificate templates, configured to enable certificate authentication and require the userPrincipalName (UPN) of the enrollee included in the Subject Alternative Name (SAN).",
         "body": [
+            "Abuse Edge ADCSESC10a is This edge indicates that the principal has control over a victim principal with permission to enroll on one or more certificate templates, configured to enable certificate authentication and require the userPrincipalName (UPN) of the enrollee included in the Subject Alternative Name (SAN).",
             "### Windows",
             "Step 1: Create .exe version of Certipy.",
             "Install PyInstaller on a host with python installed, clone down Certipy from GitHub, and run this cmdlet from the root of the GitHub repo to bundle the python project into an .exe binary which can be used on Windows computer where Python is not installed:",
@@ -2190,6 +2270,7 @@
         "prefix": "AZWebsiteContributor",
         "description": "The Website Contributor role grants full control of the target Function App or Web App. Full control of either of those types of resources allows for arbitrary command execution against the target resoruce.",
         "body": [
+            "Abuse Edge AZWebsiteContributor is The Website Contributor role grants full control of the target Function App or Web App. Full control of either of those types of resources allows for arbitrary command execution against the target resoruce.",
             "You can use BARK’s Invoke-AzureRMWebAppShellCommand function to execute commands on a target Web App. You can use BARK’s New-PowerShellFunctionAppFunction, Get-AzureFunctionAppMasterKeys, and Get-AzureFunctionOutput functions to execute arbitrary commands against a target Function App.",
             "These functions require you to supply an Azure Resource Manager scoped JWT associated with the principal that has the privilege to execute commands on the web app or function app. There are several ways to acquire a JWT. For example, you may use BARK’s Get-ARMTokenWithRefreshToken to acquire an Azure RM-scoped JWT by supplying a refresh token:",
             "```bash",
@@ -2224,6 +2305,7 @@
         "prefix": "AZOwner",
         "description": "The principal is granted the Owner role on the resource.",
         "body": [
+            "Abuse Edge AZOwner is The principal is granted the Owner role on the resource.",
             "Everything a Contributor can do, with the addition of assigning rights to resources. Object ownership means almost all abuses are possible against the target object."
         ]
     },
@@ -2231,6 +2313,7 @@
         "prefix": "GoldenCert",
         "description": "he victim principal has a certificate private key that can be abused to sign \"golden\" certificates for authentication of any enabled principal in the AD forest of the domain",
         "body": [
+            "Abuse Edge GoldenCert is he victim principal has a certificate private key that can be abused to sign \"golden\" certificates for authentication of any enabled principal in the AD forest of the domain",
             "### Windows",
             "#### Step 1",
             "Obtain CA certificate incl. private key - using built-in GUI (certsrv.msc)",
@@ -2283,6 +2366,7 @@
         "prefix": "DelegatedEnrollmentAgent",
         "description": "The certificate template is published to an enterprise CA where the enrollment agent restrictions are configured to allow this principal to enroll certificates against this template as an enrollment agent.",
         "body": [
+            "Abuse Edge DelegatedEnrollmentAgent is The certificate template is published to an enterprise CA where the enrollment agent restrictions are configured to allow this principal to enroll certificates against this template as an enrollment agent.",
             "An attacker may perform an ADCS ESC3 attack that relies on this DelegatedEnrollmentAgent relationship. This relationship alone is not enough to escalate rights or impersonate other principals."
         ]
     },
@@ -2290,6 +2374,7 @@
         "prefix": "AZMGAddMember",
         "description": "This edge is created during post-processing.",
         "body": [
+            "Abuse Edge AZMGAddMember is This edge is created during post-processing.",
             "You can abuse this privilege using BARK’s Add-AZMemberToGroup function.",
             "This function requires you to supply an MS Graph-scoped JWT associated with the Service Principal that has the privilege to add principal to the target group. There are several ways to acquire a JWT. For example, you may use BARK’s Get-MSGraphTokenWithClientCredentials to acquire an MS Graph-scoped JWT by supplying a Service Principal Client ID and secret:",
             "```bash",
@@ -2312,6 +2397,7 @@
         "prefix": "GetChangesAll",
         "description": "he principal is granted the GetChangesAll right on the domain",
         "body": [
+            "Abuse Edge GetChangesAll is he principal is granted the GetChangesAll right on the domain",
             "This edge is not abuseable by itself. When combined with [GetChanges](/resources/edges/get-changes), BloodHound will create the abuseable edge [DCSync](/resources/edges/dc-sync)."
         ]
     }
