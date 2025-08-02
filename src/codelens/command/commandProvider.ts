@@ -19,8 +19,14 @@ export class CommandCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'weapon.run_command',
                         arguments: [{ command: currentCommand }]
                     };
+                    const copy: vscode.Command = {
+                        title: "Copy commands",
+                        command: 'weapon.copy',
+                        arguments: [{ command: currentCommand }]
+                    };
                     codeLenses.push(
-                        new vscode.CodeLens(new vscode.Range(new vscode.Position(commandStartLine, 0), new vscode.Position(commandStartLine + 1, 0)), cmd)
+                        new vscode.CodeLens(new vscode.Range(new vscode.Position(commandStartLine, 0), new vscode.Position(commandStartLine + 1, 0)), cmd),
+                        new vscode.CodeLens(new vscode.Range(new vscode.Position(commandStartLine, 0), new vscode.Position(commandStartLine + 1, 0)), copy)
                     );
                     inCommand = false;
                     currentCommand = '';

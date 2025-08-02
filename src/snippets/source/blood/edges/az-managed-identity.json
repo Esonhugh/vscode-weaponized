@@ -1,0 +1,85 @@
+{
+    "AZManagedIdentity": {
+        "meaning": "Azure resources like Virtual Machines, Logic Apps, and Automation Accounts can be assigned to either System- or User-Assigned Managed Identities. This assignment allows the Azure resource to authenticate to Azure services as the Managed Identity without needing to know the credential for that Managed Identity. You can modify the Azure RM resource to execute actions against Azure with the privileges of the Managed Identity Service Principal.",
+        "common": "",
+        "windows": {
+            "PowerShell_Token_Extraction": [
+                {
+                    "order": 1,
+                    "command": "$tokenAuthURI = $env:MSI_ENDPOINT + \"?resource=https://graph.microsoft.com/&api-version=2017-09-01\"",
+                    "description": "Construct the managed identity metadata service URI for token extraction"
+                },
+                {
+                    "order": 2,
+                    "command": "$tokenResponse = Invoke-RestMethod -Method Get -Headers @{\"Secret\"=\"$env:MSI_SECRET\"} -Uri $tokenAuthURI",
+                    "description": "Extract JWT token from managed identity metadata service"
+                },
+                {
+                    "order": 3,
+                    "command": "$tokenResponse.access_token",
+                    "description": "Display the extracted JWT access token for the managed identity"
+                }
+            ],
+            "BARK_Token_Usage": [
+                {
+                    "order": 1,
+                    "command": "# Extract token using above PowerShell method",
+                    "description": "Use PowerShell to extract managed identity JWT token"
+                },
+                {
+                    "order": 2,
+                    "command": "# Use extracted JWT with BARK to authenticate as Service Principal",
+                    "description": "Authenticate to Microsoft Graph APIs using extracted JWT token via BARK"
+                },
+                {
+                    "order": 3,
+                    "command": "# Execute privileged operations with managed identity permissions",
+                    "description": "Perform actions against Azure services with managed identity privileges"
+                }
+            ]
+        },
+        "linux": {
+            "Curl_Token_Extraction": [
+                {
+                    "order": 1,
+                    "command": "curl -H \"Metadata: true\" \"http://169.254.169.254/metadata/identity/oauth2/token?resource=https://graph.microsoft.com/&api-version=2018-02-01\"",
+                    "description": "Extract managed identity JWT token using metadata service on Linux"
+                },
+                {
+                    "order": 2,
+                    "command": "curl -H \"Metadata: true\" \"http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com/&api-version=2018-02-01\"",
+                    "description": "Extract Azure Resource Manager scoped token for management operations"
+                }
+            ],
+            "Azure_CLI_Identity": [
+                {
+                    "order": 1,
+                    "command": "az account get-access-token --resource https://graph.microsoft.com/",
+                    "description": "Get access token for Microsoft Graph using managed identity via Azure CLI"
+                },
+                {
+                    "order": 2,
+                    "command": "az account get-access-token --resource https://management.azure.com/",
+                    "description": "Get access token for Azure Resource Manager using managed identity"
+                },
+                {
+                    "order": 3,
+                    "command": "# Use extracted tokens for API calls to Azure services",
+                    "description": "Utilize extracted tokens to authenticate to various Azure services"
+                }
+            ],
+            "Python_Token_Extraction": [
+                {
+                    "order": 1,
+                    "command": "import requests; headers = {'Metadata': 'true'}; response = requests.get('http://169.254.169.254/metadata/identity/oauth2/token?resource=https://graph.microsoft.com/&api-version=2018-02-01', headers=headers); print(response.json()['access_token'])",
+                    "description": "Extract managed identity token using Python requests library"
+                },
+                {
+                    "order": 2,
+                    "command": "# Use extracted token in Authorization header for Graph API calls",
+                    "description": "Authenticate to Microsoft Graph API using extracted managed identity token"
+                }
+            ]
+        }
+    }
+}

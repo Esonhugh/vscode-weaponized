@@ -1,0 +1,112 @@
+{
+    "AZAddMembers": {
+        "meaning": "The ability to add other principals to an Azure security group. This allows an attacker to grant additional privileges to controlled accounts by adding them to privileged Azure groups, potentially escalating their access within the Azure environment.",
+        "common": "",
+        "windows": {
+            "PowerZure": [
+                {
+                    "order": 1,
+                    "command": "Add-AzureADGroup -User [UPN] -Group [Group name]",
+                    "description": "Add user to Azure AD group using PowerZure"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-AzureADGroupMember -ObjectId [Group ObjectId]",
+                    "description": "Verify user was successfully added to the group"
+                }
+            ],
+            "AzureAD_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzureAD -Credential $Creds",
+                    "description": "Connect to Azure AD with privileged credentials"
+                },
+                {
+                    "order": 2,
+                    "command": "$Group = Get-AzureADGroup -Filter \"DisplayName eq 'TARGET_GROUP'\"",
+                    "description": "Get target Azure AD group object"
+                },
+                {
+                    "order": 3,
+                    "command": "$User = Get-AzureADUser -Filter \"UserPrincipalName eq 'user@domain.com'\"",
+                    "description": "Get user object to add to group"
+                },
+                {
+                    "order": 4,
+                    "command": "Add-AzureADGroupMember -ObjectId $Group.ObjectId -RefObjectId $User.ObjectId",
+                    "description": "Add user to Azure AD group"
+                }
+            ],
+            "Azure_Portal": [
+                {
+                    "order": 1,
+                    "command": "# Navigate to Microsoft Entra ID -> Manage -> Groups",
+                    "description": "Access Azure AD groups management in Azure portal"
+                },
+                {
+                    "order": 2,
+                    "command": "# Find target group in list and click it",
+                    "description": "Locate and select the target security group"
+                },
+                {
+                    "order": 3,
+                    "command": "# In overview, click 'View group memberships' then 'Add memberships'",
+                    "description": "Access group membership management interface"
+                },
+                {
+                    "order": 4,
+                    "command": "# Select principals to add and click 'select'",
+                    "description": "Add target principals to the security group"
+                }
+            ]
+        },
+        "linux": {
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az login --username user@domain.com --password password",
+                    "description": "Authenticate to Azure using privileged account"
+                },
+                {
+                    "order": 2,
+                    "command": "az ad group member add --group TARGET_GROUP --member-id USER_OBJECT_ID",
+                    "description": "Add user to Azure AD group using Azure CLI"
+                },
+                {
+                    "order": 3,
+                    "command": "az ad group member list --group TARGET_GROUP",
+                    "description": "Verify user was successfully added to the group"
+                }
+            ],
+            "Microsoft_Graph_API": [
+                {
+                    "order": 1,
+                    "command": "curl -X POST 'https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref' -H 'Authorization: Bearer $ACCESS_TOKEN' -H 'Content-Type: application/json' -d '{\"@odata.id\": \"https://graph.microsoft.com/v1.0/users/{user-id}\"}'",
+                    "description": "Add user to group using Microsoft Graph API"
+                },
+                {
+                    "order": 2,
+                    "command": "curl -X GET 'https://graph.microsoft.com/v1.0/groups/{group-id}/members' -H 'Authorization: Bearer $ACCESS_TOKEN'",
+                    "description": "Verify group membership using Graph API"
+                }
+            ],
+            "ROADtools": [
+                {
+                    "order": 1,
+                    "command": "roadrecon auth -u user@domain.com -p password",
+                    "description": "Authenticate to Azure AD using ROADtools"
+                },
+                {
+                    "order": 2,
+                    "command": "roadrecon gather",
+                    "description": "Gather Azure AD information including groups"
+                },
+                {
+                    "order": 3,
+                    "command": "# Use ROADtools to identify group object IDs and membership modification capabilities",
+                    "description": "Analyze Azure AD structure for privilege escalation opportunities"
+                }
+            ]
+        }
+    }
+}

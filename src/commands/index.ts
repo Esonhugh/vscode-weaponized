@@ -10,6 +10,7 @@ import { setupCommand } from "./setup/setup";
 import { switchActiveHost } from "./switch/host";
 import { switchActiveUser } from "./switch/user";
 import { cyberChefMagicDecoder } from "./decoder/cyberchef";
+import { copyCommand } from "./copy/copy";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -26,6 +27,7 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
       cyberChefMagicDecoder
     ),
     vscode.commands.registerCommand("weapon.run_command", runCommand),
+    vscode.commands.registerCommand("weapon.copy", copyCommand), // Reusing runCommand for copy functionality
     vscode.commands.registerCommand("weapon.replace_document", replacer),
     vscode.commands.registerCommand(
       "weapon.task.msfvenom_creation",

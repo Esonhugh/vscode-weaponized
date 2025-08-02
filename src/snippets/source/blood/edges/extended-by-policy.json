@@ -1,0 +1,6 @@
+{
+    "ExtendedByPolicy": {
+        "meaning": "The edge indicates that a certificate template includes an issuance policy as a certificate extension. An attacker may perform the ADCS ESC13 abuse which relies on an issuance policy included in a certificate. This relationship alone is not enough to escalate rights or impersonate other principals.",
+        "common": "不可直接利用 - 此关系本身不足以提升权限或冒充其他主体，需要结合 ADCS ESC13 攻击技术来利用证书模板中的颁发策略扩展"
+    }
+}

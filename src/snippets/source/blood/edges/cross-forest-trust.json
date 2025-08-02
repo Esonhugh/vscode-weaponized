@@ -1,0 +1,112 @@
+{
+    "CrossForestTrust": {
+        "meaning": "The CrossForestTrust edge represents a trust relationship between two domains/forests. In this relationship, the source node domain has a cross-forest (interforest) trust to the destination node domain, allowing principals (users and computers) from the destination domain to access resources in the source domain. The cross-forest trust does not enable a compromise of any of the domains by default, but BloodHound creates separate traversable edges between the domains if the configuration of the trust enables abuse.",
+        "common": "",
+        "windows": {
+            "Trust_Enumeration": [
+                {
+                    "order": 1,
+                    "command": "Get-DomainTrust",
+                    "description": "Enumerate all domain trusts using PowerView"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-ForestTrust",
+                    "description": "Enumerate forest-level trust relationships"
+                },
+                {
+                    "order": 3,
+                    "command": "nltest /domain_trusts",
+                    "description": "Use nltest to display domain trust information"
+                }
+            ],
+            "Trust_Analysis": [
+                {
+                    "order": 1,
+                    "command": "Get-DomainTrust -Domain source.domain.com",
+                    "description": "Analyze trust relationships from source domain perspective"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-DomainUser -Domain target.forest.com -LDAPFilter \"(userAccountControl:1.2.840.113556.1.4.803:=8192)\"",
+                    "description": "Check for users with server trust accounts in trusted forest"
+                },
+                {
+                    "order": 3,
+                    "command": "Get-DomainTrustMapping",
+                    "description": "Map all trust relationships across the forest environment"
+                }
+            ],
+            "Cross_Forest_Access": [
+                {
+                    "order": 1,
+                    "command": "# Verify cross-forest access using trusted domain credentials",
+                    "description": "Test cross-forest authentication and resource access"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-DomainComputer -Domain trusted.forest.com -Properties dnshostname",
+                    "description": "Enumerate computers in trusted forest for potential access"
+                },
+                {
+                    "order": 3,
+                    "command": "Invoke-UserHunter -Domain trusted.forest.com",
+                    "description": "Hunt for user sessions across trusted forest domains"
+                }
+            ]
+        },
+        "linux": {
+            "Trust_Discovery": [
+                {
+                    "order": 1,
+                    "command": "ldapsearch -x -D 'CN=user,CN=Users,DC=source,DC=com' -w password -h dc.source.com -b 'CN=System,DC=source,DC=com' '(objectClass=trustedDomain)' trustPartner",
+                    "description": "Query LDAP for trusted domain objects and trust partners"
+                },
+                {
+                    "order": 2,
+                    "command": "rpcclient -U 'source/user%password' dc.source.com -c 'enumtrust'",
+                    "description": "Enumerate trust relationships using rpcclient"
+                },
+                {
+                    "order": 3,
+                    "command": "# Parse trust information to identify cross-forest relationships",
+                    "description": "Analyze trust data to map forest-level trust topology"
+                }
+            ],
+            "BloodHound_Trust_Analysis": [
+                {
+                    "order": 1,
+                    "command": "python3 bloodhound.py -u user@source.com -p password -d source.com -dc dc.source.com -c Trusts",
+                    "description": "Collect trust relationship data for BloodHound analysis"
+                },
+                {
+                    "order": 2,
+                    "command": "# Cypher: MATCH (d1:Domain)-[:CrossForestTrust]->(d2:Domain) RETURN d1.name, d2.name",
+                    "description": "Query BloodHound for cross-forest trust relationships"
+                },
+                {
+                    "order": 3,
+                    "command": "# Cypher: MATCH (d1:Domain)-[:CrossForestTrust]->(d2:Domain) MATCH (u:User)-[:MemberOf*1..]->(g:Group) WHERE g.domain = d2.name RETURN u,g,d1,d2",
+                    "description": "Find users in trusted forests with potential cross-forest access"
+                }
+            ],
+            "Manual_Trust_Verification": [
+                {
+                    "order": 1,
+                    "command": "dig -t TXT _kerberos.trusted.forest.com",
+                    "description": "DNS lookup to verify Kerberos realm information for trusted forest"
+                },
+                {
+                    "order": 2,
+                    "command": "kinit user@TRUSTED.FOREST.COM",
+                    "description": "Test Kerberos authentication against trusted forest"
+                },
+                {
+                    "order": 3,
+                    "command": "ldapsearch -x -D 'CN=user,CN=Users,DC=trusted,DC=forest,DC=com' -w password -h dc.trusted.forest.com -b 'DC=trusted,DC=forest,DC=com' '(objectClass=user)' sAMAccountName",
+                    "description": "Enumerate users in trusted forest to assess potential access paths"
+                }
+            ]
+        }
+    }
+}

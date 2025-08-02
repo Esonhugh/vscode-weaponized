@@ -1,0 +1,41 @@
+{
+    "AZGetKeys": {
+        "meaning": "The ability to read keys from key vaults.",
+        "common": "",
+        "windows": {
+            "PowerZure": [
+                {
+                    "order": 1,
+                    "command": "Get-AzureKeyVaultContent",
+                    "description": "Use PowerZure to fetch the certificate from the key vault"
+                },
+                {
+                    "order": 2,
+                    "command": "Export-AzureKeyVaultcontent",
+                    "description": "Use PowerZure to export content from the key vault"
+                }
+            ],
+            "Azure_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "# Use PowerShell to fetch the certificate from the key vault",
+                    "description": "Use PowerShell or PowerZure to fetch the certificate from the key vault"
+                }
+            ]
+        },
+        "linux": {
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az keyvault key show --vault-name <vault-name> --name <key-name>",
+                    "description": "Use Azure CLI to retrieve keys from key vault"
+                },
+                {
+                    "order": 2,
+                    "command": "az keyvault key list --vault-name <vault-name>",
+                    "description": "List all keys in the key vault using Azure CLI"
+                }
+            ]
+        }
+    }
+}

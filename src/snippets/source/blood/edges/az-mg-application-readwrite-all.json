@@ -1,0 +1,44 @@
+{
+    "AZMGApplication_ReadWrite_All": {
+        "meaning": "This edge is created when a Service Principal has been granted the Application.ReadWrite.All permission. The edge is not directly abusable, but is used during post-processing to create abusable edges for privilege escalation via service principal abuse.",
+        "common": "This permission is typically used in automated attack chains and privilege escalation scenarios.",
+        "windows": {
+            "MSGraph_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Connect-MgGraph -Scopes 'Application.ReadWrite.All'",
+                    "description": "Connect to Microsoft Graph with Application.ReadWrite.All permissions"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-MgApplication | Where-Object {$_.DisplayName -eq 'TargetApp'}",
+                    "description": "Enumerate target applications for potential abuse"
+                },
+                {
+                    "order": 3,
+                    "command": "# This permission enables creation of abusable edges during post-processing",
+                    "description": "Permission serves as foundation for other attack vectors"
+                }
+            ]
+        },
+        "linux": {
+            "MSGraph_API": [
+                {
+                    "order": 1,
+                    "command": "# Obtain access token with Application.ReadWrite.All scope",
+                    "description": "Authenticate with required Microsoft Graph permissions"
+                },
+                {
+                    "order": 2,
+                    "command": "curl -X GET 'https://graph.microsoft.com/v1.0/applications' -H 'Authorization: Bearer $TOKEN'",
+                    "description": "Enumerate applications using Graph API"
+                },
+                {
+                    "order": 3,
+                    "command": "# Permission enables post-processing for privilege escalation paths",
+                    "description": "Foundation permission for automated attack chain discovery"
+                }
+            ]
+        }
+    }
+}

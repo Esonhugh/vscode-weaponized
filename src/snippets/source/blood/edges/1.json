@@ -1,0 +1,46 @@
+{
+    "techniqueName": {
+        "meaning": "",
+        "common": "",
+        "windows": {
+            "methodNameA": [
+                {
+                    "order": 1,
+                    "command": "",
+                    "description": ""
+                },
+                {
+                    "order": 2,
+                    "command": "",
+                    "description": ""
+                }
+            ],
+            "methodNameB": [
+                {
+                    "order": 1,
+                    "command": "",
+                    "description": ""
+                },
+                {
+                    "order": 2,
+                    "command": "",
+                    "description": ""
+                }
+            ]
+        },
+        "linux": {
+            "methodName": [
+                {
+                    "order": 1,
+                    "command": "",
+                    "description": ""
+                },
+                {
+                    "order": 1,
+                    "command": "",
+                    "description": ""
+                }
+            ]
+        }
+    }
+}

