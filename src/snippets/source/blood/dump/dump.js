@@ -1,56 +1,66 @@
 // export EdgeInfoComponents  to window
+// replace all 'const classes = useHelpTextStyles();'
+const classes = {
+    containsCodeEl: {
+        '& code': {
+            backgroundColor: "white",
+            padding: '2px .5ch',
+            fontWeight: 'normal',
+            fontSize: '.875em',
+            borderRadius: '3px',
+            display: 'inline',
 
-// dump in frontend console: 
-console.clear()
-let technique_json = []
-for (const technique of Object.keys(EdgeInfoComponents)) {
-    let tech = EdgeInfoComponents[technique];
-    // console.info(tech)
-    let win = {};
-    try {
-        win = tech["windowsAbuse"]();
-        // console.log("winabuse props",win)
-    } catch (e) {
-        // console.debug(`${technique} has no windows abuse`);
-        if(tech["windowsAbuse"]) {
-            console.debug(`${technique} has paramed windows abuse`)
-        }
-    }
-    let linux = {};
-    try {
-        linux = tech["linuxAbuse"]();
-    } catch(e) {
-        if(tech["linuxAbuse"]) {
-            console.debug(`${technique} has paramed linux abuse`)
-        }
-        // console.debug(`${technique} has no linux abuse`);
-    }
-    let abuse = {};
-    try {
-        abuse = tech["abuse"]();
-    } catch(e) {
-        if(tech["abuse"]) {
-            console.debug(`${technique} has paramed abuse`)
-        }
-        // console.debug(`${technique} has no abuse`);
-    }
-    let gen = {};
-    try {
-        gen = tech["general"]({
-            "sourceType": "$CONTROLLED_OBJECT_TYPE",
-            "sourceName": "$CONTROLLED",
-            "targetName": "$TARGET",
-            "targetType": "$TARGET_OBJECT_TYPE"
+            overflowWrap: 'break-word',
+            whiteSpace: 'pre-wrap',
+        },
+    },
+};
+// export EdgeInfoComponents to window
+console.log('EdgeInfoComponents loaded successfully');
+(window as any).EdgeInfoComponents = EdgeInfoComponents; // Expose for debugging in browser console
+
+
+// and open devtools in chrome dump in frontend console:
+console.clear();
+let technique_json = [];
+function attrbuteCheck(technique, tech, name) {
+    if(!tech) {
+        // console.error("tech undefined");
+        return {}
+    };
+    if(!tech[name]) {
+        // console.error(`${technique}[${name}] undefined`);
+        return {}
+    };
+  let func = tech[name];
+  let gen = {};
+  try {
+    if(name == "general") {
+        gen = func({
+          sourceType: "$SOURCE_TYPE",
+          sourceName: "$CONTROLLED",
+          targetName: "$TARGET",
+          //targetType: "",
         });
-        // console.log(gen);
-    } catch(e) {
-        // console.debug(`${technique} no general`);
+    } else {
+        gen = func();   
     }
-    technique_json.push({
-        "technique": technique,
-        "windows": win,
-        "linux": linux,
-        "abuse": abuse,
-    });
+    return gen;
+  } catch (e) {
+    var func_str = func.toString().split("\n")
+    console.debug(`${technique}'s ${name} func has params ${func_str[0]} ${func_str[1]} ${func_str[2]}`);
+    console.debug(e);
+    return {};
+  }
+}
+for (const technique of Object.keys(EdgeInfoComponents)) {
+  let tech = EdgeInfoComponents[technique];
+  technique_json.push({
+    technique: technique,
+    windows: attrbuteCheck(technique, tech, "windowAbuse"),
+    linux: attrbuteCheck(technique, tech, "linuxAbuse"),
+    abuse: attrbuteCheck(technique, tech, "abuse"),
+    general: attrbuteCheck(technique, tech, "general"),
+  });
 }
 console.log(JSON.stringify(technique_json));

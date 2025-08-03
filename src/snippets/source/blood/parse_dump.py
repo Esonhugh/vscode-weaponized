@@ -126,6 +126,9 @@ def deep_process_props(props):
 
 def process_dict_to_string(data):
     # 将递归数组转换为字符串列表
+    if data is None:
+        print("None detected")
+        return ""
     if isinstance(data, str):
         return data
     elif isinstance(data, list):
@@ -143,7 +146,10 @@ def parse_abuse(name, platform, technique_props, desc):
     print(f"detecting {platform} abuse for {name}...")
     print(json.dumps(technique_props, indent=4, ensure_ascii=False))
     data = deep_process_props(technique_props)
-    body = [f"To Abuse '{name}' over {platform}: "]
+    if platform == "common":
+        body = [desc,f"To Abuse '{name}' commonly: "]
+    else:
+        body = [desc,f"To Abuse '{name}' on {platform}: "]
     print(f"data: {data}")
     # parse data to string list body
     if isinstance(data, str):
@@ -156,6 +162,9 @@ def parse_abuse(name, platform, technique_props, desc):
                 if line.strip() != "":
                     body.append(line.strip())
     print(f"body: {body}")
+    for i in range(len(body)):
+        if "No abuse information available for this node type." in body[i]:
+            body[i] = "Too much abuse techniques, please refer to the original document for details"
     return {
         f"{name} {platform} abuse (bloodhound)": {
             "description": desc.replace("$controlled_object_type", "").replace("$CONTROLLED", "controlled object").replace("$target_object_type", "").replace("$TARGET", "target object"),
@@ -173,7 +182,9 @@ def parse_technique(technique):
     print(f"Parsing {technique_name}...")
     snippets = {}
     
-    desc = process_dict_to_string(deep_process_props(technique.get("general", {})))
+    general = technique.get("general", {})
+    print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
+    desc = process_dict_to_string(deep_process_props(general))
     print(f"Technique description: {desc}")
     
     if linux_abuse != {}:
