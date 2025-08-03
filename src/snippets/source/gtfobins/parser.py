@@ -40,13 +40,14 @@ def snippet_generate(suid_command ,command, type, description):
         '12345'
         ]:
         if key in command:
-            command = command.replace(key, f'${{{count}:{key}}}')
+            command = command.replace(key, f'${{{count}:{ key}}}')
             count += 1    
     commands = []
     pre_commands = command.split('\n')
     for cmd in pre_commands:
         if cmd == "":
             continue
+        cmd = cmd.replace('$', '\$').replace('\${', '${')
         commands.append(cmd)
     commands[-1] = commands[-1] + '${0}'
     
@@ -99,7 +100,9 @@ def main():
                     output_json |= snippet_generate(
                         command, code, type, description
                     )
-    output.write(json.dumps(output_json, indent=4, ensure_ascii=False))
+    data = json.dumps(output_json, indent=4, ensure_ascii=False)
+    # data = data.replace("\\\\$", '\\$')
+    output.write(data)
     output.close()
     print(f"Finished processing {command}, output written to gtfobins.json")
 

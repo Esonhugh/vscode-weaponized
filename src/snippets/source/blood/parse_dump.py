@@ -151,6 +151,7 @@ def parse_abuse(name, platform, technique_props, desc):
     elif isinstance(data, list):
         for item in data:
             curent_str = process_dict_to_string(item)
+            curent_str = curent_str.replace("$", "$$")
             for line in curent_str.split("\n"):
                 if line.strip() != "":
                     body.append(line.strip())

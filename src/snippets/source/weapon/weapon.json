@@ -16,7 +16,7 @@
 	"psql login": {
 		"prefix": "psql",
 		"body": [
-			"psql -h ${1:$$RHOST} -U \"${2:$$USER}\" ${3:$$DATABASE} ${0}"
+			"psql -h ${1:\\$RHOST} -U \"${2:\\$USER}\" ${3:\\$DATABASE} ${0}"
 		],
 		"description": "login to psql as postgres user"
 	},

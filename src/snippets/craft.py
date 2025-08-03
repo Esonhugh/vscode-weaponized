@@ -12,7 +12,7 @@ def main():
     output = open('./markdown.code-snippets', 'w')
     output_json = {}
     for dir in os.listdir('./source'):
-        if dir == '.gitignore' or dir == 'README.md':
+        if dir == '.gitignore' or dir == 'README.md' :
             continue
         file = os.path.join('./source', dir, dir + ".json")
         print(f"Processing file: {file}")
