@@ -58,21 +58,12 @@ def snippet_generate(suid_command ,command, type, description):
         other_desc = f"{other_desc} - {description}"
     return {
         f"{suid_command} {type} (gtfobins)": {
-            "prefix": suid_command,
+            "prefix": suid_command + f" {type}",
             "body": [
                 body_desc,
                 "",
                 f"```sh",
             ]+ commands + ["```"],
-            "description": other_desc
-        },
-        f"gtfobins {suid_command} {type}": {
-            "prefix": "gtfobins " + suid_command,
-            "body": [
-                body_desc,
-                "",
-                f"```sh",
-            ] + commands + ["```"],
             "description": other_desc
         }
     }
