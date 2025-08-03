@@ -1,6 +1,0 @@
-{
-    "AZMemberOf": {
-        "meaning": "The given asset is a member of the group. Groups in Entra ID grant their direct members any privileges the group itself has. If a group has an Entra admin role, its direct members inherit those permissions. No abuse is necessary. This edge indicates that a principal belongs to a security group.",
-        "common": "不需要滥用 - 此边表示主体属于安全组，直接成员继承组的权限，但本身不是攻击技术"
-    }
-}

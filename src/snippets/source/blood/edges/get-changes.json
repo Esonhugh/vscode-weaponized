@@ -1,6 +1,0 @@
-{
-    "GetChanges": {
-        "meaning": "The principal is granted the GetChanges right on the domain. This edge is not abuseable by itself. When combined with GetChangesAll, BloodHound will create the abuseable edge DCSync. When combined with GetChangesInFilteredSet, BloodHound will create the abuseable edge SyncLAPSPassword.",
-        "common": "不可直接利用 - 此权限本身不可滥用，需要与其他权限（GetChangesAll 或 GetChangesInFilteredSet）结合才能形成可利用的攻击路径"
-    }
-}

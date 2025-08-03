@@ -1,6 +1,0 @@
-{
-    "GetChangesInFilteredSet": {
-        "meaning": "The principal is allowed to synchronize (DCSync) the Filtered Attribute Set (FAS), which are the attributes not replicated to RODCs. This edge is not abuseable by itself. When combined with GetChanges, BloodHound will create the abuseable edge SyncLAPSPassword.",
-        "common": "不可直接利用 - 此权限本身不可滥用，需要与 GetChanges 权限结合才能形成可利用的 SyncLAPSPassword 攻击路径"
-    }
-}

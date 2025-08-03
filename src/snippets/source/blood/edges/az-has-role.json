@@ -1,6 +1,0 @@
-{
-    "AZHasRole": {
-        "meaning": "This edge indicates that a principal has been granted a particular AzureAD admin role. No abuse is necessary. This edge only indicates that the principal has been granted a particular AzureAD admin role.",
-        "common": "不需要滥用 - 此边仅表示主体已被授予特定的Azure AD管理员角色，具体的滥用方式取决于所授予的具体角色权限"
-    }
-}

@@ -173,7 +173,7 @@
             }
           },
           "default": {
-            "rustscan":"rustscan -a $TARGET -- --script=vuln -A",
+            "rustscan": "rustscan -a $TARGET -- --script=vuln -A",
             "wfuzz": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
             "wfuzz https": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
             "nuclei": "nuclei -target $TARGET",
@@ -230,6 +230,7 @@
     ]
   },
   "scripts": {
+    "gen-blood": "ts-node ./src/snippets/source/blood/gen.ts",
     "vscode:prepublish": "pnpm run package",
     "vscode:publish": "vsce package --no-dependencies",
     "compile": "webpack",
@@ -252,6 +253,7 @@
     "@vscode/vsce": "^3.5.0",
     "eslint": "^9.29.0",
     "ts-loader": "^9.5.2",
+    "ts-morph": "^26.0.0",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1"
