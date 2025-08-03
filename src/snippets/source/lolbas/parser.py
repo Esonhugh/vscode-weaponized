@@ -22,18 +22,7 @@ def generate_snippet(command, script, usecase, description):
     
     return {
         f"{command} {usecase} (lolbas)": {
-            "prefix": command,
-            "body": [
-                *note_desc,
-                "",
-                "```sh",
-                f"{script}${{0}}",
-                "```"
-            ],
-            "description": description,
-        },
-        f"lolbas {command} {usecase}": {
-            "prefix": f"lolbas {command}",
+            "prefix": command + " " + usecase,
             "body": [
                 *note_desc,
                 "",
