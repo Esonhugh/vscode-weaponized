@@ -1,0 +1,35 @@
+GenericAll has paramed windows abuse
+GenericAll has paramed linux abuse
+AllExtendedRights has paramed windows abuse
+AllExtendedRights has paramed linux abuse
+AddMember has paramed windows abuse
+ForceChangePassword has paramed windows abuse
+GenericWrite has paramed windows abuse
+GenericWrite has paramed linux abuse
+Owns has paramed windows abuse
+Owns has paramed linux abuse
+WriteDacl has paramed windows abuse
+WriteDacl has paramed linux abuse
+WriteOwner has paramed windows abuse
+WriteOwner has paramed linux abuse
+CanRDP has paramed abuse
+ExecuteDCOM has paramed abuse
+CoerceToTGT has paramed windows abuse
+CoerceToTGT has paramed linux abuse
+AllowedToAct has paramed windows abuse
+CanPSRemote has paramed abuse
+WriteSPN has paramed windows abuse
+AddSelf has paramed windows abuse
+AddKeyCredentialLink has paramed windows abuse
+SyncLAPSPassword has paramed abuse
+DumpSMSAPassword has paramed abuse
+ADCSESC4 has paramed windows abuse
+ADCSESC4 has paramed linux abuse
+ADCSESC9a has paramed windows abuse
+ADCSESC9a has paramed linux abuse
+ADCSESC9b has paramed windows abuse
+ADCSESC9b has paramed linux abuse
+ADCSESC10a has paramed windows abuse
+ADCSESC10a has paramed linux abuse
+ADCSESC10b has paramed windows abuse
+ADCSESC10b has paramed linux abuse

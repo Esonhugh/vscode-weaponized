@@ -91,14 +91,17 @@ def deep_process_props(props):
     # 将内容转换为 markdown 格式
     if isinstance(props, dict):
         if "props" in props:
+            # operating all kinds of elements
             if "type" in props.keys() and props["type"] == "a":
+                return f"[{props['props']['children']}]({props['props']['href']})"
+            if "href" in props["props"].keys() and props["props"]["href"] != "":
                 return f"[{props['props']['children']}]({props['props']['href']})"
             if "type" in props.keys() and props["type"] == "b":
                 return f"- {props['props']['children']}"
             if "type" in props.keys() and props["type"] == "br":
                 return "\n"
             if "component" in props["props"].keys() and props["props"]["component"] == "pre":
-                return f"```bash\n{props['props']['children']}\n```"
+                return f"\n```sh\n{props['props']['children']}\n```"
             if "component" in props["props"].keys() and props["props"]["component"] == "code":
                 return f"`{props['props']['children']}`"
             if "component" in props["props"].keys() and props["props"]["component"] == "span":
@@ -133,16 +136,14 @@ def process_dict_to_string(data):
         return string
     elif isinstance(data, dict):
         print("dict detected", data)
-        
-        exit(1)
         return ""
 
 
-def parse_abuse(name, platform, technique_props):
+def parse_abuse(name, platform, technique_props, desc):
     print(f"detecting {platform} abuse for {name}...")
     print(json.dumps(technique_props, indent=4, ensure_ascii=False))
     data = deep_process_props(technique_props)
-    body = []
+    body = [f"To Abuse '{name}' over {platform}: "]
     print(f"data: {data}")
     # parse data to string list body
     if isinstance(data, str):
@@ -155,8 +156,8 @@ def parse_abuse(name, platform, technique_props):
                     body.append(line.strip())
     print(f"body: {body}")
     return {
-        f"{name} {platform}": {
-            "description": "",
+        f"{name} {platform} abuse (bloodhound)": {
+            "description": desc.replace("$controlled_object_type", "").replace("$CONTROLLED", "controlled object").replace("$target_object_type", "").replace("$TARGET", "target object"),
             "prefix": f"{name}",
             "body": body,
         }
@@ -167,19 +168,23 @@ def parse_technique(technique):
     technique_name = technique["technique"]
     linux_abuse = technique.get("linux", {})
     windows_abuse = technique.get("windows", {})
-    common = technique.get("common", {})
+    common = technique.get("abuse", {})
     print(f"Parsing {technique_name}...")
     snippets = {}
+    
+    desc = process_dict_to_string(deep_process_props(technique.get("general", {})))
+    print(f"Technique description: {desc}")
+    
     if linux_abuse != {}:
-        snippets.update(parse_abuse(technique_name, "linux", linux_abuse))
+        snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
     else:
         print(f"Skipping {technique_name} due to missing linux abuse info")
     if windows_abuse != {}:
-        snippets.update(parse_abuse(technique_name, "windows", windows_abuse))
+        snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
     else:
         print(f"Skipping {technique_name} due to missing windows abuse info")
     if common != {}:
-        snippets.update(parse_abuse(technique_name, "common", common))
+        snippets.update(parse_abuse(technique_name, "common", common, desc))
         print("Common",common)
     else:
         print(f"Skipping {technique_name} due to missing common abuse info")
