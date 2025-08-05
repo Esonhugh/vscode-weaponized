@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import bloodSnippet from '../snippets/source/blood/blood_desc.json';
 import { BaseDefinitionProvider } from './baseProvider';
+import { logger } from '../global/log';
 
 
 
@@ -10,11 +11,8 @@ export let BloodhoundDefinitionProvider = new BaseDefinitionProvider(
         if (!word) {
             return undefined;
         }
-        for (const snippet of Object.keys(bloodSnippet)) {
-            if (snippet.startsWith(word)) {
-                const description = (bloodSnippet as any)[snippet].description || '';
-                return description;
-            }
-        }
+        logger.debug(`request keyword ${word}`);
+        const description = (bloodSnippet as any)[word] || '';
+        return description;
     }
 );

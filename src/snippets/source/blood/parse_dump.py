@@ -1,6 +1,8 @@
 # /// script
 # requires-python = ">=3.10"
-# dependencies = []
+# dependencies = [
+#   "googletrans==4.0.0rc1",
+# ]
 # ///
 
 import json
@@ -218,14 +220,26 @@ def parse_technique(technique):
         print(f"Skipping {technique_name} due to missing common abuse info")
     return snippets
 
+
+from googletrans import Translator
+def translate_text(text, dest='zh-CN'): # en
+    translator = Translator()
+    translation = translator.translate(text, dest)
+    return translation.text
+
 def get_technique_description(technique):
     technique_name = technique["technique"]
     general = technique.get("general", {})
     print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
     desc = convert_array_in_tree_to_single_string(recursive_process_react_element_json(general))
     print(f"Technique description: {desc}")
+    desc = desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object")
+    print(desc)
+    trans_desc = translate_text(desc)
+    final_desc = f"{desc}\n\n{trans_desc}"
+    print("finally result of descriptions: \n",final_desc)
     return {
-        f"{technique_name}" : desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object"),
+        f"{technique_name}" : final_desc,
     }
 
 
