@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import { logger } from '../global/log';
-import bloodSnippet from '../snippets/source/blood/blood.json';
+import bloodSnippet from '../snippets/source/blood/blood_desc.json';
 import { BaseDefinitionProvider } from './baseProvider';
 
 

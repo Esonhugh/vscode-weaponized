@@ -86,7 +86,7 @@ Example of technique_props structure:
 
 
 
-def deep_process_props(props):
+def recursive_process_react_element_json(props):
     # 递归处理 props 以及其中的 props children 
     # 将内容转换为 markdown 格式
     if isinstance(props, dict):
@@ -106,25 +106,25 @@ def deep_process_props(props):
                 return f"`{props['props']['children']}`"
             if "component" in props["props"].keys() and props["props"]["component"] == "span":
                 return f"- {props['props']['children']}"
-            return deep_process_props(props["props"])
+            return recursive_process_react_element_json(props["props"])
         if "children" in props:
             if isinstance(props["children"], str):
                 # 处理字符串类型的 children
                 return props["children"]
             elif isinstance(props["children"], list):
-                return [deep_process_props(child) for child in props["children"]]
+                return [recursive_process_react_element_json(child) for child in props["children"]]
             elif isinstance(props["children"], dict):
                 print("dict detected", json.dumps(props["children"], ensure_ascii=False))
-                return deep_process_props(props["children"])
+                return recursive_process_react_element_json(props["children"])
         else:
             return props
     elif isinstance(props, str):
         return f"{props}"
     elif isinstance(props, list):
-        return [deep_process_props(item) for item in props]
+        return [recursive_process_react_element_json(item) for item in props]
     
 
-def process_dict_to_string(data):
+def convert_array_in_tree_to_single_string(data):
     # 将递归数组转换为字符串列表
     if data is None:
         print("None detected")
@@ -135,7 +135,7 @@ def process_dict_to_string(data):
         print("list detected", data)
         string = ""
         for i in data:
-            string += process_dict_to_string(i)
+            string += convert_array_in_tree_to_single_string(i)
         return string
     elif isinstance(data, dict):
         print("dict detected", data)
@@ -147,7 +147,7 @@ def process_dict_to_string(data):
 def parse_abuse(name, platform, technique_props, desc):
     print(f"detecting {platform} abuse for {name}...")
     print(json.dumps(technique_props, indent=4, ensure_ascii=False))
-    data = deep_process_props(technique_props)
+    data = recursive_process_react_element_json(technique_props)
     if platform == "common":
         body = [f"To Abuse '{name}' commonly: "]
     else:
@@ -158,8 +158,8 @@ def parse_abuse(name, platform, technique_props, desc):
         body.append(data)
     elif isinstance(data, list):
         for item in data:
-            curent_str = process_dict_to_string(item)
-            curent_str = curent_str.replace("$", "$$")
+            curent_str = convert_array_in_tree_to_single_string(item)
+            curent_str = curent_str.replace("$", "\$")
             for line in curent_str.split("\n"):
                 if line.strip() != "":
                     body.append(line.strip())
@@ -169,7 +169,7 @@ def parse_abuse(name, platform, technique_props, desc):
             body[i] = "Too much abuse techniques, please refer to the original document for details"
     return {
         f"{name} {platform} abuse (bloodhound)": {
-            "description": desc.replace("$controlled_object_type", "").replace("$CONTROLLED", "controlled object").replace("$target_object_type", "").replace("$TARGET", "target object"),
+            "description": desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object"),
             "prefix": f"{name}",
             "body": body,
         }
@@ -186,15 +186,29 @@ def parse_technique(technique):
     
     general = technique.get("general", {})
     print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
-    desc = process_dict_to_string(deep_process_props(general))
+    desc = convert_array_in_tree_to_single_string(recursive_process_react_element_json(general))
     print(f"Technique description: {desc}")
     
     if linux_abuse != {}:
-        snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
+        if isinstance(linux_abuse, list):
+            for item in linux_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in linux")
+                snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "linux", react_element, desc))
+        else:
+            snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
     else:
         print(f"Skipping {technique_name} due to missing linux abuse info")
     if windows_abuse != {}:
-        snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
+        if isinstance(windows_abuse, list):
+            for item in windows_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in windows")
+                snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc))
+        else:
+            snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
     else:
         print(f"Skipping {technique_name} due to missing windows abuse info")
     if common != {}:
@@ -203,6 +217,16 @@ def parse_technique(technique):
     else:
         print(f"Skipping {technique_name} due to missing common abuse info")
     return snippets
+
+def get_technique_description(technique):
+    technique_name = technique["technique"]
+    general = technique.get("general", {})
+    print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
+    desc = convert_array_in_tree_to_single_string(recursive_process_react_element_json(general))
+    print(f"Technique description: {desc}")
+    return {
+        f"{technique_name}" : desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object"),
+    }
 
 
 def main():
@@ -215,6 +239,16 @@ def main():
     for technique in input_data:
         output_data |= parse_technique(technique)
 
+    json.dump(output_data, output, ensure_ascii=False, indent=4)
+    output.close()
+    input_file.close()
+    
+    input_file = open("./dump/result.json", "r", encoding="utf-8")
+    input_data = json.load(input_file)
+    output = open("blood_desc.json", "w", encoding="utf-8")
+    output_data = {} # clean up
+    for technique in input_data:
+        output_data |= get_technique_description(technique)
     json.dump(output_data, output, ensure_ascii=False, indent=4)
     output.close()
     input_file.close()
