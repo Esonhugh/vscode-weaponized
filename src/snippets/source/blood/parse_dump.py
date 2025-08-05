@@ -139,6 +139,8 @@ def process_dict_to_string(data):
         return string
     elif isinstance(data, dict):
         print("dict detected", data)
+        if data != {}:
+            print("dict not empty")
         return ""
 
 
@@ -147,9 +149,9 @@ def parse_abuse(name, platform, technique_props, desc):
     print(json.dumps(technique_props, indent=4, ensure_ascii=False))
     data = deep_process_props(technique_props)
     if platform == "common":
-        body = [desc,f"To Abuse '{name}' commonly: "]
+        body = [f"To Abuse '{name}' commonly: "]
     else:
-        body = [desc,f"To Abuse '{name}' on {platform}: "]
+        body = [f"To Abuse '{name}' on {platform}: "]
     print(f"data: {data}")
     # parse data to string list body
     if isinstance(data, str):

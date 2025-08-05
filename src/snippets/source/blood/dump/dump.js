@@ -35,11 +35,10 @@ function attrbuteCheck(technique, tech, name) {
   let func = tech[name];
   let gen = {};
   try {
-    if(name == "general") {
+    if(name === "general") {
         gen = func({
-          sourceType: "$SOURCE_TYPE",
-          sourceName: "$CONTROLLED",
-          targetName: "$TARGET",
+          sourceName: "WE_CONTROLLED",
+          targetName: "OUR_TARGET",
           //targetType: "",
         });
     } else {

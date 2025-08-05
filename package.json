@@ -225,7 +225,19 @@
     "snippets": [
       {
         "language": "markdown",
-        "path": "./src/snippets/markdown.code-snippets"
+        "path": "src/snippets/source/blood/blood.json"
+      },
+      {
+        "language": "markdown",
+        "path": "src/snippets/source/gtfobins/gtfobins.json"
+      },
+      {
+        "language": "markdown",
+        "path": "src/snippets/source/lolbas/lolbas.json"
+      },
+      {
+        "language": "markdown",
+        "path": "src/snippets/source/weapon/weapon.json"
       }
     ]
   },
