@@ -108,6 +108,8 @@ def recursive_process_react_element_json(props):
                 return f"`{props['props']['children']}`"
             if "component" in props["props"].keys() and props["props"]["component"] == "span":
                 return f"- {props['props']['children']}"
+            if "variant" in props["props"].keys() and props["props"]["variant"] == "body1":
+                return f"**{props['props']['children']}**"
             return recursive_process_react_element_json(props["props"])
         if "children" in props:
             if isinstance(props["children"], str):
@@ -124,7 +126,6 @@ def recursive_process_react_element_json(props):
         return f"{props}"
     elif isinstance(props, list):
         return [recursive_process_react_element_json(item) for item in props]
-    
 
 def convert_array_in_tree_to_single_string(data):
     # 将递归数组转换为字符串列表
@@ -163,12 +164,16 @@ def parse_abuse(name, platform, technique_props, desc):
             curent_str = convert_array_in_tree_to_single_string(item)
             curent_str = curent_str.replace("$", "\$")
             for line in curent_str.split("\n"):
-                if line.strip() != "":
-                    body.append(line.strip())
-    print(f"body: {body}")
+                if line != "":
+                    body.append(line)
+            print(f"current string: {curent_str} to {body}")
+    
     for i in range(len(body)):
         if "No abuse information available for this node type." in body[i]:
             body[i] = "Too much abuse techniques, please refer to the original document for details"
+        body[i] = body[i].replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object")
+        body[i] = body[i].replace("``` ", "```\n")
+    print(f"body: {body}")
     return {
         f"{name} {platform} abuse (bloodhound)": {
             "description": desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object"),
@@ -238,8 +243,90 @@ def get_technique_description(technique):
     trans_desc = translate_text(desc)
     final_desc = f"{desc}\n\n{trans_desc}"
     print("finally result of descriptions: \n",final_desc)
+    
+    linux_abuse = technique.get("linux", {})
+    windows_abuse = technique.get("windows", {})
+    common = technique.get("abuse", {}) 
+    
+    body = [
+        f"# {technique_name}",
+        ""
+        f"## Description",
+        ""
+        f"{final_desc}",
+        "",
+        "## Abuse Info",
+        ""
+    ]
+    
+    if linux_abuse != {}:
+        body.append(f"")
+        if isinstance(linux_abuse, list):
+            for item in linux_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in linux")
+                obj = parse_abuse(f"{technique_name} over {overTarget}", "linux", react_element, desc)
+                for key in obj:
+                    data = obj[key]["body"]
+                    title = data[0]
+                    body.append(f"### {title}")
+                    body += data[1:]
+                    body.append(f"")
+        else:
+            obj = parse_abuse(f"{technique_name}", "linux", linux_abuse, desc)
+            for key in obj:
+                data = obj[key]["body"]
+                title = data[0]
+                body.append(f"### {title}")
+                body += data[1:]
+                body.append(f"")
+            # snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
+    else:
+        print(f"Skipping {technique_name} due to missing linux abuse info")
+    if windows_abuse != {}:
+        body.append(f"")
+        if isinstance(windows_abuse, list):
+            for item in windows_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in windows")
+                # snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc))
+                obj = parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc)
+                for key in obj:
+                    data = obj[key]["body"]
+                    title = data[0]
+                    body.append(f"### {title}")
+                    body += data[1:]
+                    body.append(f"")
+        else:
+            # snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
+            obj = parse_abuse(technique_name, "windows", windows_abuse, desc)
+            for key in obj:
+                data = obj[key]["body"]
+                title = data[0]
+                body.append(f"### {title}")
+                body += data[1:]
+                body.append(f"")
+    else:
+        print(f"Skipping {technique_name} due to missing windows abuse info")
+    if common != {}:
+        # snippets.update(parse_abuse(technique_name, "common", common, desc))
+        obj = parse_abuse(technique_name, "common", common, desc)
+        for key in obj:
+            data = obj[key]["body"]
+            title = data[0]
+            body.append(f"### {title}")
+            body += data[1:]
+            body.append(f"")
+        print("Common",common)
+    else:
+        print(f"Skipping {technique_name} due to missing common abuse info")
     return {
-        f"{technique_name}" : final_desc,
+        f"{technique_name}" : {
+            "description": final_desc,
+            "extra": body,
+        },
     }
 
 

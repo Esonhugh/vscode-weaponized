@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import bloodSnippet from '../snippets/source/blood/blood_desc.json';
-import { BaseDefinitionProvider } from './baseProvider';
+import { BaseDefinitionProvider, BigDefinition } from './baseProvider';
 import { logger } from '../global/log';
 
 
 
 export let BloodhoundDefinitionProvider = new BaseDefinitionProvider(
-    (params: { document: vscode.TextDocument, position: vscode.Position }): string | undefined => {
+    (params: { document: vscode.TextDocument, position: vscode.Position }): BigDefinition | undefined => {
         const word = BaseDefinitionProvider.getWord(params.document, params.position) ;
         if (!word) {
             return undefined;
