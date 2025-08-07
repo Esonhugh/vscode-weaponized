@@ -272,6 +272,7 @@
   },
   "dependencies": {
     "table": "^6.9.0",
+    "vscode-variables": "^1.0.1",
     "yaml": "^2.8.0"
   }
 }

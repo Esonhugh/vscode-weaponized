@@ -21,17 +21,18 @@ export function registerTerminalUtils(context: vscode.ExtensionContext) {
       "weaponized.terminal-logger.unregister",
       stopTempTerminalForCapture
     ),
+    
     vscode.window.registerTerminalProfileProvider(
       "weaponized.meterpreter-handler",
-      new MeterpreterWeaponizedTerminalProvider()
+      MeterpreterWeaponizedTerminalProvider
     ),
     vscode.window.registerTerminalProfileProvider(
       "weaponized.netcat-handler",
-      new NetcatWeaponizedTerminalProvider()
+      NetcatWeaponizedTerminalProvider
     ),
     vscode.window.registerTerminalProfileProvider(
       "weaponized.web-delivery",
-      new WebDeliveryWeaponizedTerminalProvider()
+      WebDeliveryWeaponizedTerminalProvider
     )
   );
 }
