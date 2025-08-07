@@ -109,7 +109,7 @@ def recursive_process_react_element_json(props):
             if "component" in props["props"].keys() and props["props"]["component"] == "span":
                 return f"- {props['props']['children']}"
             if "variant" in props["props"].keys() and props["props"]["variant"] == "body1":
-                return f"**{props['props']['children']}**"
+                return f" \n**{props['props']['children'].strip()}**\n "
             return recursive_process_react_element_json(props["props"])
         if "children" in props:
             if isinstance(props["children"], str):
