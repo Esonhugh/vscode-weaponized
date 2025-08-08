@@ -37,7 +37,7 @@ export class CommandCodeLensProvider implements vscode.CodeLensProvider {
                 continue;
             }
 
-            if (line.startsWith('```zsh') || line.startsWith('```bash') || line.startsWith('```sh')) {
+            if (line.startsWith('```zsh') || line.startsWith('```bash') || line.startsWith('```sh') || line.startsWith('```powershell')) {
                 inCommand = true;
                 commandStartLine = i;
                 continue;

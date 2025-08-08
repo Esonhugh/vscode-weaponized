@@ -2,6 +2,62 @@ import { type callback } from "../utils";
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
 import { fs } from "./assets";
+import process from "process";
+
+const checkShellProfile = async (): Promise<boolean> => {
+  let stats = await vscode.workspace.fs.stat(
+    vscode.Uri.file(process.env.HOME + "/.bashrc")
+  );
+  if (stats.type === vscode.FileType.File) {
+    const bashrc = (
+      await vscode.workspace.fs.readFile(
+        vscode.Uri.file(process.env.HOME + "/.bashrc")
+      )
+    ).toString();
+    if (bashrc.includes("createhackenv.sh")) {
+      return true;
+    }
+    if (bashrc.includes("weapon_vscode_launch_helper")) {
+      return true;
+    }
+  }
+  stats = await vscode.workspace.fs.stat(
+    vscode.Uri.file(process.env.HOME + "/.zshrc")
+  );
+  if (stats.type === vscode.FileType.File) {
+    const zshrc = (
+      await vscode.workspace.fs.readFile(
+        vscode.Uri.file(process.env.HOME + "/.zshrc")
+      )
+    ).toString();
+    if (zshrc.includes("createhackenv.sh")) {
+      return true;
+    }
+    if (zshrc.includes("weapon_vscode_launch_helper")) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const checkEnviromentSetup = async (): Promise<void> => {
+  logger.debug("Checking environment setup...");
+  let isSetup = await checkShellProfile();
+  if (isSetup) {
+    logger.info("shell profile is already set up.");
+  } else {
+    logger.warn(
+      "shell profile is not set up. Please check your shell profile."
+    );
+    const openPath = vscode.Uri.file(process.env.HOME + "/.zshrc");
+    vscode.workspace.openTextDocument(openPath).then((doc) => {
+      vscode.window.showTextDocument(doc);
+    });
+    vscode.window.showWarningMessage(
+      "[Weaponized] shell profile is not set up. Please check your shell profile (e.g., .bashrc, .zshrc). "
+    );
+  }
+};
 
 export const setupCommand: callback = async (args: any) => {
   logger.debug(`Setting up environment with args: ${JSON.stringify(args)}`);
@@ -34,8 +90,11 @@ export const setupCommand: callback = async (args: any) => {
     logger.trace(`Creating file: ${fullPath}`);
     await vscode.workspace.fs.writeFile(fullPath, Buffer.from(content));
   }
-  let settings = vscode.Uri.joinPath(dir, ".vscode/settings.json")
+  let settings = vscode.Uri.joinPath(dir, ".vscode/settings.json");
   vscode.window.showTextDocument(settings);
   logger.info("Setup completed successfully.");
-  vscode.window.showInformationMessage("Weaponized setup completed successfully.");  
+  vscode.window.showInformationMessage(
+    "Weaponized setup completed successfully."
+  );
+  await checkEnviromentSetup();
 };

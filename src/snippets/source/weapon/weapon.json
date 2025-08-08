@@ -23,7 +23,7 @@
 	"psql rce with copy sql query": {
 		"prefix": "psql",
 		"body": [
-			"drop table if exists ${1:RESULT}; create table ${1:RESULT} (data text); copy ${1:RESULT} from program '${2:COMMAND}' with csv; select * from ${1:RESULT};${0}"
+			"drop table if exists ${1:RESULT}; create table ${1:RESULT} (data text); copy ${1:RESULT} from program '${2:COMMAND}' ; select * from ${1:RESULT};${0}"
 		],
 		"description": "execute command on remote psql server"
 	}

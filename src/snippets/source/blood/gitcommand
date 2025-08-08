@@ -1,1 +1,1 @@
-git clone https://github.com/SpecterOps/bloodhound-docs.git docs --depth 1
+git clone https://github.com/SpecterOps/bloodhound.git docs --depth 1
