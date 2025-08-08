@@ -130,7 +130,7 @@ function registerTerminalForCapture(fp: string, loglevel: string) {
       let cmd = event.execution.commandLine.value;
       let cwd =
         event.execution.cwd?.fsPath || event.shellIntegration?.cwd || "unknown";
-      let logMessage = `\n\nweaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}] user@${cwd}$ ${cmd}\n`;
+      let logMessage = `\nweaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}][terminalName: ${terminal.name}] user@${cwd}$ ${cmd}\n`;
       logger.debug(logMessage);
       appendFileSync(logFile.fsPath, logMessage);
 
