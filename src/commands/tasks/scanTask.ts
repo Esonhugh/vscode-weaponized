@@ -4,6 +4,7 @@ import { logger } from "../../global/log";
 import { CreateTaskLikeInteractiveTerminal } from "./taskTermial";
 import { Context } from "../../global/context";
 import { Collects, Host } from "../../model";
+import { variables } from "../../variableProcessor/resovler";
 
 export const scanCommand: callback = async (args: any) => {
   let selectTargets = Context.HostState;
@@ -76,7 +77,7 @@ export const scanCommand: callback = async (args: any) => {
     }
   }
   logger.debug(`Selected scanner: ${scanner}`);
-  let scannerCommand = scannerConfig[scanner];
+  let scannerCommand = variables(scannerConfig[scanner]);
   if (!scannerCommand) {
     vscode.window.showErrorMessage(`Scanner command for ${scanner} not found.`);
     return;

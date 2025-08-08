@@ -126,7 +126,14 @@
         },
         "weaponized.user_vars": {
           "type": "object",
-          "default": {},
+          "default": {
+            "kali_wordlists": "/usr/share/wordlists",
+            "kali_exploits": "/usr/share/exploitdb",
+            "kali_seclists": "/usr/share/seclists",
+            "dns_top100000": "${config:weaponized.user_vars.kali_seclists}/Discovery/DNS/bitquark-subdomains-top100000.txt",
+            "dir_raft_medium": "${config:weaponized.user_vars.kali_seclists}/Discovery/Web-Content/raft-medium-directories.txt",
+            "rockyou": "${config:weaponized.user_vars.kali_wordlists}/rockyou.txt"
+          },
           "description": "This is the user defined variables for weaponized vscode extension. it will be used in the commands and tasks. you can add your own variables here, like {\"MY_VAR\": \"my_value\"}. it will be used in the commands and tasks. refer this like ${config:weaponized.user_vars.MY_VAR} in the commands/tasks.",
           "definitions": {
             "type": "object",
@@ -174,11 +181,15 @@
           },
           "default": {
             "rustscan": "rustscan -a $TARGET -- --script=vuln -A",
-            "wfuzz": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
-            "wfuzz https": "wfuzz -c -w $SUBDOMAIN_TOP_100000 -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "wfuzz subdomain": "wfuzz -c -w ${config:weaponized.user_vars.dns_top100000} -u http://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "ffuf subdomain": "ffuf -c -w ${config:weaponized.user_vars.dns_top100000} -u http://$TARGET -H 'Host: FUZZ.$TARGET' -fc 404",
+            "wfuzz https subdomains": "wfuzz -c -w ${config:weaponized.user_vars.dns_top100000} -u https://$TARGET -H 'Host: FUZZ.$TARGET' --hc 404",
+            "ffuf https subdomains": "ffuf -c -w ${config:weaponized.user_vars.dns_top100000} -u https://$TARGET -H 'Host: FUZZ.$TARGET' -fc 404",
             "nuclei": "nuclei -target $TARGET",
             "dirsearch": "dirsearch -u http://$TARGET",
-            "dirsearch https": "dirsearch -u https://$TARGET"
+            "dirsearch https": "dirsearch -u https://$TARGET",
+            "feroxbuster": "feroxbuster -u http://$TARGET -w ${config:weaponized.user_vars.dir_raft_medium} -x php,html,txt -t 50",
+            "feroxbuster https": "feroxbuster -u https://$TARGET -w ${config:weaponized.user_vars.dir_raft_medium} -x php,html,txt -t 50"
           }
         },
         "weaponized.terminal-log.enabled": {
