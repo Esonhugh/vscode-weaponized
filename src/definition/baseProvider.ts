@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 export interface BigDefinition {
   description: string;
-  extra?: string[];
+  extra_markdown_wiki?: string[];
 }
 
 export type definitionSearcher = (params: {
@@ -29,6 +29,8 @@ export class BaseDefinitionProvider
     return undefined;
   }
 
+  // definition return a markdown file uri with content from description
+  // if description has extra_markdown_wiki, use it as content instead of description
   public provideDefinition(
     document: vscode.TextDocument,
     position: vscode.Position,
@@ -36,8 +38,8 @@ export class BaseDefinitionProvider
   ): vscode.ProviderResult<vscode.Definition | vscode.DefinitionLink[]> {
     const description = this.findSnippetDescription({ document, position });
     if (description) {
-      const markdownString = description.extra
-        ? description.extra.join("\n")
+      const markdownString = description.extra_markdown_wiki
+        ? description.extra_markdown_wiki.join("\n")
         : description.description;
       const uri = vscode.Uri.parse(
         `weaponized-editor:${BaseDefinitionProvider.getWord(
@@ -49,6 +51,7 @@ export class BaseDefinitionProvider
     }
     return null;
   }
+  // hover only return description
   public provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,

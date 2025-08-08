@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as os from "os";
 import * as process from "process";
 
-export async function variablesWithCommands(str: string, recursive = false) {
+export async function variablesWithCommands(str: string, recursive = true) {
   // This function is similar to variables but it also resolves commands
   // It is used for cases where commands need to be executed to resolve variables
   // For example, when using ${command:someCommand}
@@ -34,8 +34,8 @@ export async function variablesWithCommands(str: string, recursive = false) {
   return str;
 }
 
-export function variables(str: string, recursive = false) {
-  if (!(str as any instanceof String)) {
+export function variables(str: string, recursive = true) {
+  if (!((str as any) instanceof String)) {
     str = String(str);
   }
   const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -163,7 +163,13 @@ export function variables(str: string, recursive = false) {
     return vscode.workspace.getConfiguration().get<string>(_, "");
   });
 
-  if (recursive) {
+  // still contains ${...}, resolve recursively
+  if (
+    recursive &&
+    str.match(
+      /\${(workspaceFolder|workspaceFolder:(.*?)|workspaceFolderBase:(.*?)|workspaceFolderBasename|fileWorkspaceFolder|relativeFile|fileBasename|fileBasenameNoExtension|fileExtname|fileDirname|cwd|pathSeparator|lineNumber|selectedText|env:(.*?)|config:(.*?)|command:(.*?)|userHome)}/
+    )
+  ) {
     str = variables(str, recursive);
   }
   return str;

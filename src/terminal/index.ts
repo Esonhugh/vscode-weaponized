@@ -1,4 +1,5 @@
 import {
+  MsfconsoleWeaponizedTerminalProvider,
   MeterpreterWeaponizedTerminalProvider,
   NetcatWeaponizedTerminalProvider,
   WebDeliveryWeaponizedTerminalProvider,
@@ -21,7 +22,11 @@ export function registerTerminalUtils(context: vscode.ExtensionContext) {
       "weaponized.terminal-logger.unregister",
       stopTempTerminalForCapture
     ),
-    
+
+    vscode.window.registerTerminalProfileProvider(
+      "weaponized.msfconsole",
+      MsfconsoleWeaponizedTerminalProvider
+    ),
     vscode.window.registerTerminalProfileProvider(
       "weaponized.meterpreter-handler",
       MeterpreterWeaponizedTerminalProvider

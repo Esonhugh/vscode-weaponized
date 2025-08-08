@@ -11,7 +11,8 @@ export const NetcatWeaponizedTerminalProvider = new BaseWeaponizedTerminalProvid
       vscode.window.showErrorMessage("Please set the 'weaponized.netcat' configuration in settings.");
       return [];
     }
-    netcatCommand = variables(netcatCommand); // Resolve variables in the command
+    let lprot = variables(vscode.workspace.getConfiguration("weaponized").get<string>("lport", "$LPORT"));
+    netcatCommand = variables(netcatCommand).replace("$LPORT", lprot); // Resolve variables in the command
     let args: string[] = [
       netcatCommand
     ];

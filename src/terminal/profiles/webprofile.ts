@@ -22,9 +22,7 @@ export const WebDeliveryWeaponizedTerminalProvider =
         .getConfiguration("weaponized")
         .get<string>("listenon", "$LISTEN_ON");
       let args: string[] = [
-        webDeliveryCommand
-          .replaceAll("${LISTEN_ON}", listenon)
-          .replaceAll("${config:weaponized.listenon}", listenon),
+        webDeliveryCommand = variables(webDeliveryCommand).replace("$LISTEN_ON", variables(listenon)),
       ];
 
       logger.debug(
