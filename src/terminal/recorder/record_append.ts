@@ -4,6 +4,7 @@ import "fs";
 import { appendFileSync } from "fs";
 import { callback } from "../../commands/utils";
 import { basename, dirname } from "path";
+import { variables } from "../../variableProcessor/resovler";
 
 type EventListener = (
   event: vscode.TerminalShellExecutionStartEvent
@@ -52,10 +53,7 @@ export const startTempTerminalRecord: callback = async (args: any) => {
       return;
     }
   }
-  if (fp.includes("${workspaceFolder}")) {
-    let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    fp = fp.replace("${workspaceFolder}", workspaceFolder);
-  }
+  fp = variables(fp);
   let loglevel = args?.loglevel;
   if (!loglevel) {
     loglevel = await vscode.window.showQuickPick(
