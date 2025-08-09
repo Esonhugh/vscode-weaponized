@@ -160,7 +160,7 @@ export let msfvenomPayloadCreation: callback = async (args) => {
 
   let runHandler: boolean = false;
   logger.info("ask startListen?");
-  if (!args || !args.startListen) {
+  if (!args || args.startListen === undefined) {
     let select = await vscode.window.showQuickPick(["Yes", "No"], {
       placeHolder: "Do you want to start the listener?",
     });
