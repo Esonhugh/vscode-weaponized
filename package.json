@@ -208,7 +208,9 @@
           "description": "Terminal log level for weaponized vscode extension. it can be 'command-only', 'command-and-output'. 'command-only' will only log the command, 'command-and-output' will log the command and the its output.",
           "enum": [
             "command-only",
-            "command-and-output"
+            "output-only",
+            "command-and-output",
+            "netcat-handler"
           ]
         }
       }

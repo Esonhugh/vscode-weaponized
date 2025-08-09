@@ -2,21 +2,8 @@ import * as vscode from "vscode";
 import { logger } from "../../global/log";
 import "fs";
 import { appendFileSync } from "fs";
-import { callback } from "../../commands/utils";
-import { basename, dirname } from "path";
-import { variables } from "../../variableProcessor/resovler";
-
-type EventListener = (
-  event: vscode.TerminalShellExecutionStartEvent
-) => Promise<void>;
-
-interface TerminalCapture {
-  filePath: string;
-  logLevel: string;
-  listener: EventListener;
-}
-
-let TerminalCaptures: TerminalCapture[] = [];
+import { TerminalCapture, TerminalCaptureRecorder } from "./store";
+import { TerminalRecorderMode } from "./mode";
 
 async function ForceFileExist(file: vscode.Uri) {
   try {
@@ -31,124 +18,86 @@ async function ForceFileExist(file: vscode.Uri) {
   }
 }
 
-export const startTempTerminalRecord: callback = async (args: any) => {
-  if (!vscode.workspace.workspaceFolders) {
-    logger.error(
-      "No workspace folders found. Cannot start temporary terminal record."
-    );
-    vscode.window.showErrorMessage(
-      "No workspace folders found. Cannot start temporary terminal record."
-    );
-    return;
-  }
-  let fp = args?.file;
-  if (!fp) {
-    fp = await vscode.window.showInputBox({
-      prompt: "Enter the file path to save terminal log",
-      value: "${workspaceFolder}/.vscode/.terminal.log",
-    });
-    if (!fp) {
-      logger.error("No file path provided for terminal log.");
-      vscode.window.showErrorMessage("No file path provided for terminal log.");
-      return;
-    }
-  }
-  fp = variables(fp);
-  let loglevel = args?.loglevel;
-  if (!loglevel) {
-    loglevel = await vscode.window.showQuickPick(
-      ["command-only", "command-and-output"],
-      {
-        placeHolder: "Select log level for terminal capture",
-      }
-    );
-  }
-  if (!loglevel) {
-    logger.error("No log level provided for terminal capture.");
-    vscode.window.showErrorMessage(
-      "No log level provided for terminal capture."
-    );
-    return;
-  }
-  registerTerminalForCapture(fp, loglevel);
-  logger.info(`Starting terminal logging at ${fp} with log level: ${loglevel}`);
-  vscode.window.showInformationMessage(
-    `Terminal logging started. Logs will be saved to ${fp} with log level: ${loglevel}`
-  );
-};
-
-export const stopTempTerminalForCapture: callback = async (args: any) => {
-  // empty the listener
-  logger.info("Unregistering terminal for capture.");
-  let fp = args?.file;
-  if (!fp) {
-    let options: string[] = [];
-    for (const capture of TerminalCaptures) {
-      options.push(`${capture.logLevel} - ${basename(capture.filePath)} - ${dirname(capture.filePath)}`); // Use the first registered file path
-    }
-    let choice = await vscode.window.showQuickPick(options, {
-      placeHolder: "Select the terminal log file to unregister",
-    });
-    if (!choice) {
-      logger.error("No file path selected for terminal log unregistration.");
-      vscode.window.showErrorMessage(
-        "No file path selected for terminal log unregistration."
-      );
-      return;
-    }
-    for (const capture of TerminalCaptures) {
-      if (choice === `${capture.logLevel} - ${basename(capture.filePath)} - ${dirname(capture.filePath)}`) {
-        fp = capture.filePath; // Get the file path from the selected option
-        break;
-      }
-    }
-  }
-  if (fp) {
-    unregisterTerminalForCapture(fp);
-  }
-  vscode.window.showInformationMessage(
-    "Terminal logging has been unregistered. No further logs will be captured."
-  );
-};
-
-function registerTerminalForCapture(fp: string, loglevel: string) {
+export function registerTerminalForCapture(fp: string, loglevel: string, processIds?: number[]) {
   logger.info(
     `Registering terminal for capture at ${fp}, with log level: ${loglevel}`
   );
   let logFile = vscode.Uri.parse(fp);
+  if (processIds) {
+    logger.info(
+      `Registering terminal for capture at ${fp} for specific process IDs: ${processIds.join(", ")}`
+    );
+  }
+
   let newCapture: TerminalCapture = {
     filePath: logFile.fsPath,
     logLevel: loglevel,
+    
     listener: async (event: vscode.TerminalShellExecutionStartEvent) => {
+      // perparing the basic infomations
       await ForceFileExist(logFile);
       const terminal = event.terminal;
       const terminalid = await event.terminal.processId;
-      logger.debug(`Terminal started: ${terminal.name}`);
+      if (processIds) {
+        if (!processIds.some((pid) => {
+          return pid === terminalid;
+        })) {
+          logger.debug(
+            `Skipping terminal capture for terminal ID ${terminalid} as it is not in the specified process IDs: ${processIds.join(", ")}`
+          );
+          return; // Skip this terminal if its ID is not in the specified process IDs
+        }
+      }
       let startTime = new Date();
       let cmd = event.execution.commandLine.value;
       let cwd =
         event.execution.cwd?.fsPath || event.shellIntegration?.cwd || "unknown";
-      let logMessage = `\nweaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}][terminalName: ${terminal.name}] user@${cwd}$ ${cmd}\n`;
+      let logMessage = `\nweaponized-terminal-logging:[${startTime.getTime()}][terminalid: ${terminalid}][terminalName: ${
+        terminal.name
+      }] user@${cwd}$ ${cmd}\n`;
       logger.debug(logMessage);
-      appendFileSync(logFile.fsPath, logMessage);
 
-      if (loglevel === "command-only") {
-        return; // Only log the command, no further action needed
-      }
+      const recordInput = () => {
+        appendFileSync(logFile.fsPath, logMessage);
+      };
+      const recordOutput = async () => {
+        let stream = await event.execution.read();
+        for await (const streamPart of stream) {
+          appendFileSync(logFile.fsPath, `${streamPart}`);
+        }
+      };
 
-      let stream = await event.execution.read();
-      for await (const streamPart of stream) {
-        appendFileSync(logFile.fsPath, `${streamPart}`);
+      switch (loglevel) {
+        case TerminalRecorderMode.CommandOnly:
+          recordInput();
+          break;
+        case TerminalRecorderMode.OutputOnly:
+          recordOutput();
+          break;
+        // Log both input and output
+        case TerminalRecorderMode.CommandAndOutput:
+          recordInput();
+          recordOutput();
+          break;
+        case TerminalRecorderMode.NetcatHandler:
+          if (terminal.name === "netcat handler") {
+            recordOutput();
+          }
+          break;
+        default:
+          logger.warn(
+            `Unknown log level: ${loglevel}. Defaulting to CommandOnly mode.`
+          );
       }
     },
   };
-  TerminalCaptures.push(newCapture);
+  TerminalCaptureRecorder.addCapture(newCapture);
 }
 
-function unregisterTerminalForCapture(fp: string) {
-  for (let i = 0; i < TerminalCaptures.length; i++) {
-    if (TerminalCaptures[i].filePath === fp) {
-      TerminalCaptures.splice(i, 1);
+export function unregisterTerminalForCapture(fp: string) {
+  for (let i = 0; i < TerminalCaptureRecorder.length; i++) {
+    if (TerminalCaptureRecorder.captures[i].filePath === fp) {
+      TerminalCaptureRecorder.removeCapture(fp);
       logger.info(`Unregistered terminal capture for file: ${fp}`);
       return;
     }
@@ -158,41 +107,4 @@ function unregisterTerminalForCapture(fp: string) {
     `No terminal capture found for file: ${fp}. Nothing to unregister.`
   );
   return;
-}
-
-export function activate() {
-  if (
-    vscode.workspace
-      .getConfiguration("weaponized")
-      .get<boolean>("terminal-log.enabled", false)
-  ) {
-    logger.info("Registering terminal for capture...");
-    if (!vscode.workspace.workspaceFolders) {
-      logger.error(
-        "No workspace folders found. Cannot register terminal for capture."
-      );
-      return;
-    }
-    let fp = vscode.workspace
-      .getConfiguration("weaponized")
-      .get<string>(
-        "terminal-log.path",
-        "${workspaceFolder}/.vscode/.terminal.log"
-      );
-    fp = variables(fp);
-    const loglevel = vscode.workspace
-      .getConfiguration("weaponized")
-      .get<string>("terminal-log.level", "command-only");
-    registerTerminalForCapture(fp, loglevel);
-  } else {
-    logger.info("Terminal logging is disabled in settings.");
-  }
-
-  vscode.window.onDidStartTerminalShellExecution(
-    async (event: vscode.TerminalShellExecutionStartEvent) => {
-      for (const capture of TerminalCaptures) {
-        await capture.listener(event);
-      }
-    }
-  );
 }
