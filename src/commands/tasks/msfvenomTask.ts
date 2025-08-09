@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { callback } from "../utils";
 import { logger } from "../../global/log";
 import { CreateTaskLikeInteractiveTerminal } from "./taskTermial";
+import { variables } from "../../variableProcessor/resovler";
 
 let msfpaylaodtypes = [
   "windows/x64/meterpreter/reverse_tcp",
@@ -157,6 +158,7 @@ export let msfvenomPayloadCreation: callback = async (args) => {
     );
     return;
   }
+  output = variables(output); // process the variables like ${workspaceFolder}
 
   let runHandler: boolean = false;
   logger.info("ask startListen?");

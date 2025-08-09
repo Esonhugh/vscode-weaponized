@@ -179,10 +179,7 @@ export function activate() {
         "terminal-log.path",
         "${workspaceFolder}/.vscode/.terminal.log"
       );
-    if (fp.includes("${workspaceFolder}")) {
-      let workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      fp = fp.replace("${workspaceFolder}", workspaceFolder);
-    }
+    fp = variables(fp);
     const loglevel = vscode.workspace
       .getConfiguration("weaponized")
       .get<string>("terminal-log.level", "command-only");

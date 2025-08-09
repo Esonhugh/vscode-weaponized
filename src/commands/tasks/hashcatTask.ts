@@ -9,6 +9,7 @@ import {
   hash_device_collects,
   hash_mode_collects,
 } from "../../variableProcessor/environmentCollects";
+import { variables } from "../../variableProcessor/resovler";
 
 export let hashcatCracker: callback = async (args) => {
   let hashcat = vscode.workspace
@@ -64,6 +65,7 @@ export let hashcatCracker: callback = async (args) => {
       value: "$ROCKYOU",
     });
   }
+  wordlist_extra = variables(wordlist_extra || "$ROCKYOU");
   let argsArray: string[] = [
     hashcat,
     "--force",
