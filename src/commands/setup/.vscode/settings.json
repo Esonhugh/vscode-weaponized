@@ -8,6 +8,7 @@
       "*nuclei.yaml"
     ]
   },
+  "python.terminal.activateEnvironment": false,
   "[markdown]": {
     "editor.wordWrap": "on",
     "editor.quickSuggestions": {

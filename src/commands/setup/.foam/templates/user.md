@@ -1,6 +1,7 @@
 ---
 title: ${1:$TM_FILENAME_BASE}
 type: user
+tag: ${FOAM_TITLE/^(\S*)@//}
 foam_template:
   filepath: 'users/$FOAM_TITLE/$FOAM_TITLE.md'
   name: 'user'

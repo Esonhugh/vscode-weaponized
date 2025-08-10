@@ -2,10 +2,11 @@ function generateFoamGraph(foam) {
   const graph = {
     nodeInfo: {},
     edges: new Set(),
+    userEdges: new Set(),
   };
-  foam.workspace.list().forEach(n => {
-    const type = n.type === 'note' ? n.properties.type ?? 'note' : n.type;
-    const title = n.type === 'note' ? n.title : n.uri.getBasename();
+  foam.workspace.list().forEach((n) => {
+    const type = n.type === "note" ? n.properties.type ?? "note" : n.type;
+    const title = n.type === "note" ? n.title : n.uri.getBasename();
     graph.nodeInfo[n.uri.path] = {
       id: n.uri.path,
       type: type,
@@ -15,17 +16,36 @@ function generateFoamGraph(foam) {
       tags: n.tags,
     };
   });
-  foam.graph.getAllConnections().forEach(c => {
+  foam.graph.getAllConnections().forEach((c) => {
+    const sourcePath = c.source.path;
+    const targetPath = c.target.path;
     graph.edges.add({
-      source: c.source.path,
-      target: c.target.path,
+      source: sourcePath,
+      target: targetPath,
     });
+    const sourceNode = graph.nodeInfo[sourcePath];
+    const targetNode = graph.nodeInfo[targetPath];
+    if (sourceNode && targetNode && targetNode.type === "user") {
+      graph.userEdges.add({
+        source: sourceNode.id,
+        target: targetNode.id,
+      });
+    }
   });
   // console.log("Graph nodes:", graph.nodeInfo);
+  // console.log("Graph edges: ", foam.graph.getAllConnections());
   // console.log("Graph edges sets:", (Array.from(graph.edges)));
+  // console.log("Graph user edges sets:", (Array.from(graph.userEdges)));
   return graph;
 }
 
+
+function FindUserPrivilegeEscalationPath ({
+  nodeInfo,
+  edges
+}) {
+
+}
 
 let meta = `---
 title: Final Report
@@ -34,7 +54,11 @@ type: report
 
 # Final Report
 
-`
+`;
+
+function ReturnBad() {
+  return "bad";
+}
 
 async function createNote({ trigger, foam, resolver, foamDate }) {
   console.log("Creating note for trigger:", trigger);
@@ -42,41 +66,42 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
   const graph = generateFoamGraph(foam);
   console.log("Generated graph!");
 
-  let userlist = [];
-  let hostlist = [];
+  let userNoteList = [];
+  let hostNoteList = [];
   for (const [path, meta] of Object.entries(graph.nodeInfo)) {
     if (meta.type === "user") {
-      userlist.push(meta);
+      userNoteList.push(meta);
     } else if (meta.type === "host") {
-      hostlist.push(meta);
+      hostNoteList.push(meta);
     } else {
       console.log(`Skipping node ${path} of type ${meta.type}`);
     }
   }
 
-  let hostInfomation = hostlist.map((hostMeta) => {
+  let hostInformation = hostNoteList.map((hostMeta) => {
     return `## Host: ${hostMeta.title}
 
 ![[${hostMeta.uri.path}]]
-`
-  })
-  let userInfomation = userlist.map((userMeta) => {
+`;
+  });
+  let userInformation = userNoteList.map((userMeta) => {
     return `## User: ${userMeta.title}
 
 ![[${userMeta.uri.path}]]
-`
-  })
-  
+`;
+  });
+
   let body = `## Hosts Information
 
-${hostInfomation.join("\n")}
+${hostInformation.join("\n")}
 ## Users Information
 
-${userInfomation.join("\n")}
-`
+${userInformation.join("\n")}
+`;
 
+  return ReturnBad();
   return {
     filepath: "report.md",
-    content: meta + body
+    content: meta + body,
   };
 }
