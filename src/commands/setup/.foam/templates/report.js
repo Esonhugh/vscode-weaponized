@@ -21,22 +21,29 @@ function generateFoamGraph(foam) {
       target: c.target.path,
     });
   });
-  console.log("Graph nodes:", graph.nodeInfo);
-  console.log("Graph edges sets:", (Array.from(graph.edges)));
+  // console.log("Graph nodes:", graph.nodeInfo);
+  // console.log("Graph edges sets:", (Array.from(graph.edges)));
   return graph;
 }
 
-let title = "# "
+
+let meta = `---
+title: Final Report
+type: report
+---
+
+# Final Report
+
+`
 
 async function createNote({ trigger, foam, resolver, foamDate }) {
   console.log("Creating note for trigger:", trigger);
   console.log("Foam instance:", Object.keys(foam));
   const graph = generateFoamGraph(foam);
+  console.log("Generated graph!");
 
   let userlist = [];
   let hostlist = [];
-  let workspacename = foam.workspace;
-  console.log("Workspace name:", JSON.stringify(workspacename));
   for (const [path, meta] of Object.entries(graph.nodeInfo)) {
     if (meta.type === "user") {
       userlist.push(meta);
@@ -47,9 +54,29 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
     }
   }
 
+  let hostInfomation = hostlist.map((hostMeta) => {
+    return `## Host: ${hostMeta.title}
+
+![[${hostMeta.uri.path}]]
+`
+  })
+  let userInfomation = userlist.map((userMeta) => {
+    return `## User: ${userMeta.title}
+
+![[${userMeta.uri.path}]]
+`
+  })
+  
+  let body = `## Hosts Information
+
+${hostInfomation.join("\n")}
+## Users Information
+
+${userInfomation.join("\n")}
+`
 
   return {
     filepath: "report.md",
-    content: "",
+    content: meta + body
   };
 }
