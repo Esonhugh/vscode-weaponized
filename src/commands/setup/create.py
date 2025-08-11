@@ -18,6 +18,8 @@ def create_value_map(filepath:str):
         if os.path.isfile(curr_file):
             variable_file_content_map[curr_file] = read_file_return_base64ed_content(curr_file)
         if os.path.isdir(curr_file):
+            if "utils" in curr_file:
+                continue
             variable_file_content_map.update(create_value_map(curr_file))
     return variable_file_content_map
 

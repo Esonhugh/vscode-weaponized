@@ -1,3 +1,167 @@
+function longestReferencePath(edges) {
+  if (!edges || edges.length === 0) {
+    return [];
+  }
+  var nodesSet = new Set();
+  edges.forEach(function (_a) {
+    var source = _a.source,
+      target = _a.target;
+    nodesSet.add(source);
+    nodesSet.add(target);
+  });
+  var nodes = Array.from(nodesSet);
+  var idOf = new Map();
+  nodes.forEach(function (n, i) {
+    return idOf.set(n, i);
+  });
+  var n = nodes.length;
+  var g = Array.from({ length: n }, function () {
+    return [];
+  });
+  var firstSeen = Array(n).fill(Infinity);
+  edges.forEach(function (e, idx) {
+    var u = idOf.get(e.source);
+    var v = idOf.get(e.target);
+    g[u].push(v);
+    firstSeen[u] = Math.min(firstSeen[u], idx);
+    firstSeen[v] = Math.min(firstSeen[v], idx);
+  });
+  var time = 0;
+  var dfn = Array(n).fill(-1);
+  var low = Array(n).fill(-1);
+  var onStack = Array(n).fill(false);
+  var stack = [];
+  var compId = Array(n).fill(-1);
+  var comps = [];
+  function tarjan(u) {
+    dfn[u] = low[u] = time++;
+    stack.push(u);
+    onStack[u] = true;
+    for (var _i = 0, _a = g[u]; _i < _a.length; _i++) {
+      var v = _a[_i];
+      if (dfn[v] === -1) {
+        tarjan(v);
+        low[u] = Math.min(low[u], low[v]);
+      } else if (onStack[v]) {
+        low[u] = Math.min(low[u], dfn[v]);
+      }
+    }
+    if (low[u] === dfn[u]) {
+      var comp = [];
+      while (true) {
+        var x = stack.pop();
+        onStack[x] = false;
+        compId[x] = comps.length;
+        comp.push(x);
+        if (x === u) {
+          break;
+        }
+      }
+      comps.push(comp);
+    }
+  }
+  for (var i = 0; i < n; i++) {
+    if (dfn[i] === -1) {
+      tarjan(i);
+    }
+  }
+  var C = comps.length;
+  if (C === 0) {
+    return [];
+  }
+  var dag = Array.from({ length: C }, function () {
+    return [];
+  });
+  var indeg = Array(C).fill(0);
+  var compSize = comps.map(function (c) {
+    return c.length;
+  });
+  var seenEdge = new Set();
+  for (var u = 0; u < n; u++) {
+    for (var _i = 0, _a = g[u]; _i < _a.length; _i++) {
+      var v = _a[_i];
+      var cu = compId[u],
+        cv = compId[v];
+      if (cu !== cv) {
+        var key = "".concat(cu, "->").concat(cv);
+        if (!seenEdge.has(key)) {
+          seenEdge.add(key);
+          dag[cu].push(cv);
+          indeg[cv]++;
+        }
+      }
+    }
+  }
+  var dist = Array(C).fill(-Infinity);
+  var parent = Array(C).fill(-1);
+  var q = [];
+  for (var c = 0; c < C; c++) {
+    if (indeg[c] === 0) {
+      dist[c] = compSize[c];
+      q.push(c);
+    }
+  }
+  var topo = [];
+  var indegTmp = indeg.slice();
+  while (q.length) {
+    var u = q.shift();
+    topo.push(u);
+    for (var _b = 0, _c = dag[u]; _b < _c.length; _b++) {
+      var v = _c[_b];
+      if (dist[u] + compSize[v] > dist[v]) {
+        dist[v] = dist[u] + compSize[v];
+        parent[v] = u;
+      }
+      if (--indegTmp[v] === 0) {
+        q.push(v);
+      }
+    }
+  }
+  var end = 0;
+  for (var c = 1; c < C; c++) {
+    if (dist[c] > dist[end]) {
+      end = c;
+    }
+  }
+  var compPath = [];
+  for (var x = end; x !== -1; x = parent[x]) {
+    compPath.push(x);
+  }
+  compPath.reverse();
+  function expandComp(comp) {
+    if (comp.length === 1) {
+      return comp.slice();
+    }
+    return comp.slice().sort(function (a, b) {
+      var fa = firstSeen[a],
+        fb = firstSeen[b];
+      if (fa !== fb) {
+        return fa - fb;
+      }
+      var sa = nodes[a],
+        sb = nodes[b];
+      return sa < sb ? -1 : sa > sb ? 1 : 0;
+    });
+  }
+  var pathNodeIds = [];
+  for (var _d = 0, compPath_1 = compPath; _d < compPath_1.length; _d++) {
+    var c = compPath_1[_d];
+    var expanded = expandComp(comps[c]);
+    for (var _e = 0, expanded_1 = expanded; _e < expanded_1.length; _e++) {
+      var v = expanded_1[_e];
+      if (
+        pathNodeIds.length === 0 ||
+        pathNodeIds[pathNodeIds.length - 1] !== v
+      ) {
+        pathNodeIds.push(v);
+      }
+    }
+  }
+  return pathNodeIds.map(function (i) {
+    return nodes[i];
+  });
+}
+
 function generateFoamGraph(foam) {
   const graph = {
     nodeInfo: {},
@@ -39,28 +203,36 @@ function generateFoamGraph(foam) {
   return graph;
 }
 
-
-function FindUserPrivilegeEscalationPath ({
-  nodeInfo,
-  edges
-}) {
-
-}
-
 let meta = `---
-title: Final Report
+title: Final Penetration Testing Report
 type: report
 ---
 
-# Final Report
+# Final Penetration Testing Report
 
 `;
 
-function ReturnBad() {
-  return "bad";
+function checkArrayDiffElements(arr1, arr2) {
+  let set1 = new Set(arr1);
+  let set2 = new Set(arr2);
+  let difference = [];
+  for (let item of set1) {
+    if (!set2.has(item)) {
+      difference.push(item);
+    }
+  }
+  for (let item of set2) {
+    if (!set1.has(item)) {
+      difference.push(item);
+    }
+  }
+  return difference;
 }
 
 async function createNote({ trigger, foam, resolver, foamDate }) {
+  function getId(uri) {
+    return foam.workspace.getIdentifier(uri) || "";
+  }
   console.log("Creating note for trigger:", trigger);
   console.log("Foam instance:", Object.keys(foam));
   const graph = generateFoamGraph(foam);
@@ -68,9 +240,11 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
 
   let userNoteList = [];
   let hostNoteList = [];
+  let userList = [];
   for (const [path, meta] of Object.entries(graph.nodeInfo)) {
     if (meta.type === "user") {
       userNoteList.push(meta);
+      userList.push(path);
     } else if (meta.type === "host") {
       hostNoteList.push(meta);
     } else {
@@ -81,25 +255,68 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
   let hostInformation = hostNoteList.map((hostMeta) => {
     return `## Host: ${hostMeta.title}
 
-![[${hostMeta.uri.path}]]
+![[${getId(hostMeta.uri)}]]
 `;
   });
-  let userInformation = userNoteList.map((userMeta) => {
-    return `## User: ${userMeta.title}
 
-![[${userMeta.uri.path}]]
+  let attackPath = longestReferencePath(Array.from(graph.userEdges));
+  let extraNotePath = checkArrayDiffElements(attackPath, userList);
+
+  let userInformation = [
+    "## Attack Path",
+    ""
+  ];
+  let attackNotes = attackPath.map((userPath, index) => {
+    let userMeta = graph.nodeInfo[userPath];
+    if (!userMeta) {
+      return `> Note with path ${userPath} not found in graph.`;
+    }
+    var currentNote = `
+
+![[${getId(userMeta.uri)}]]
 `;
+    if (index === 0) {
+      if (userMeta.type === "host") {
+        return ""
+      }
+      if (userMeta.type === "user") {
+        return `### Initial User: ${userMeta.title}` + currentNote;
+      }
+      return `### Initial Access: ${userMeta.title}` + currentNote;
+    }
+    return `### User ${userMeta.title} `+ currentNote;
   });
+  userInformation = userInformation.concat(attackNotes);
+
+  userInformation.push("## Extra Users", "");
+  
+  let extraNotes = extraNotePath.forEach((path) => {
+    let userMeta = graph.nodeInfo[path];
+    if (!userMeta) {
+      return `> Note with path ${path} not found in graph.`;
+    }
+    if (userMeta.type !== "user") {
+      return `> Note with path ${path} is not a user type.`;
+    }
+    userInformation.push(`### User: ${userMeta.title}
+
+![[${getId(userMeta.uri)}]]
+`);
+  });
+  userInformation.concat(extraNotes);
 
   let body = `## Hosts Information
 
 ${hostInformation.join("\n")}
-## Users Information
 
 ${userInformation.join("\n")}
 `;
 
-  return ReturnBad();
+  console.log("attack path:", attackPath);
+  console.log("body:", body);
+  console.log("extra notes:", extraNotePath);
+  console.log("user notes:", userNoteList);
+
   return {
     filepath: "report.md",
     content: meta + body,
