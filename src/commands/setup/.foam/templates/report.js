@@ -277,7 +277,7 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
 `;
     if (index === 0) {
       if (userMeta.type === "host") {
-        return ""
+        return "";
       }
       if (userMeta.type === "user") {
         return `### Initial User: ${userMeta.title}` + currentNote;
