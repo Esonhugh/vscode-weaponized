@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-
+import { logger } from "../global/log";
 export interface BigDefinition {
   description: string;
-  extra_markdown_wiki?: string[];
+  extra?: string[];
 }
 
 export type definitionSearcher = (params: {
@@ -38,9 +38,10 @@ export class BaseDefinitionProvider
   ): vscode.ProviderResult<vscode.Definition | vscode.DefinitionLink[]> {
     const description = this.findSnippetDescription({ document, position });
     if (description) {
-      const markdownString = description.extra_markdown_wiki
-        ? description.extra_markdown_wiki.join("\n")
-        : description.description;
+      let markdownString = description.description;
+      if (description.extra) {
+        markdownString = description.extra.join("\n");
+      }
       const uri = vscode.Uri.parse(
         `weaponized-editor:${BaseDefinitionProvider.getWord(
           document,
