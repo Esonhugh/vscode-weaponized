@@ -40,7 +40,7 @@ const checkShellProfile = async (): Promise<boolean> => {
   return false;
 };
 
-export const checkEnviromentSetup = async (): Promise<void> => {
+export const checkEnvironmentSetup = async (): Promise<void> => {
   logger.debug("Checking environment setup...");
   let isSetup = await checkShellProfile();
   if (isSetup) {
@@ -96,5 +96,5 @@ export const setupCommand: callback = async (args: any) => {
   vscode.window.showInformationMessage(
     "Weaponized setup completed successfully."
   );
-  await checkEnviromentSetup();
+  await checkEnvironmentSetup();
 };
