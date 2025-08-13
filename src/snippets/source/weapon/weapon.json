@@ -41,18 +41,6 @@
 		],
 		"description": "user credentials"
 	},
-	"user credentials yaml append": {
-		"prefix": "- user:",
-		"body": [
-			"- user: ${1:admin}",
-			"  password: ${2:password}",
-			"  nt_hash: ${2:5fbc3d5fec8206a30f4b6c473d68ae76}",
-			"  login: ${3:EXAMPLE}",
-			"  is_current: ${4:false}",
-			"  props: {}"
-		],
-		"description": "user credentials append"
-	},
 	"host yaml creation": {
 		"prefix": "```yaml host",
 		"body": [
@@ -66,20 +54,6 @@
 			"  is_current_dc: ${7:false}",
 			"  props: {}",
 			"```"
-		],
-		"description": "host information"
-	},
-	"host yaml append": {
-		"prefix": "- hostname:",
-		"body": [
-			"- hostname: ${1:example.com}",
-			"  ip: ${2:192.168.1.100}",
-			"  alias:",
-			"    - dc01.${1:example.com}",
-			"  is_dc: ${5:false}",
-			"  is_current: ${6:false}",
-			"  is_current_dc: ${7:false}",
-			"  props: {}"
 		],
 		"description": "host information"
 	}
