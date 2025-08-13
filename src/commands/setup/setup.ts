@@ -4,6 +4,18 @@ import { logger } from "../../global/log";
 import { fs } from "./assets";
 import process from "process";
 
+
+const zshrcContent = `# This function is used to set up the environment for Weaponized folders and auto source .vscode/.zshrc files
+weapon_vscode_launch_helper () {
+  if [ -n "$PROJECT_FOLDER" ]; then
+    if [ -f "$PROJECT_FOLDER/.vscode/.zshrc" ]; then
+      source $PROJECT_FOLDER/.vscode/.zshrc
+    fi
+  fi
+}
+weapon_vscode_launch_helper
+`;
+
 const checkShellProfile = async (): Promise<boolean> => {
   let stats = await vscode.workspace.fs.stat(
     vscode.Uri.file(process.env.HOME + "/.bashrc")
@@ -53,8 +65,12 @@ export const checkEnvironmentSetup = async (): Promise<void> => {
     vscode.workspace.openTextDocument(openPath).then((doc) => {
       vscode.window.showTextDocument(doc);
     });
+    vscode.env.clipboard.writeText(
+      zshrcContent
+    );
     vscode.window.showWarningMessage(
-      "[Weaponized] shell profile is not set up. Please check your shell profile (e.g., .bashrc, .zshrc). "
+      "[Weaponized] shell profile looks not setup correctly. Please check your shell profile (e.g., .bashrc, .zshrc).",
+      "and Copy the content in clipboard to your .zshrc",
     );
   }
 };
