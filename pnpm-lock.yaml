@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      http-string-parser:
+        specifier: ^0.0.6
+        version: 0.0.6
       table:
         specifier: ^6.9.0
         version: 6.9.0
@@ -18,6 +21,9 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0
     devDependencies:
+      '@types/http-string-parser':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/mocha':
         specifier: ^10.0.10
         version: 10.0.10
@@ -318,6 +324,9 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/http-string-parser@0.0.33':
+    resolution: {integrity: sha512-8F4z30z3/mcKcqjdAhCKOEcTG03Db3XMUkCIWaX+sYeNHypops+HQ3ATybD7vyvZAYtBQcEGboIC2Shratz5UQ==}
 
   '@types/istanbul-lib-coverage@2.0.6':
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
@@ -1185,6 +1194,9 @@ packages:
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
+
+  http-string-parser@0.0.6:
+    resolution: {integrity: sha512-sngOeBkIL32kum4Z+FulU+3Ve41B3js1IKfel0WAhwLqDJiUPC1UTqFRBr2/IDw9dbks6B4xSIYgPiJU7ivxww==}
 
   https-proxy-agent@7.0.6:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
@@ -2618,6 +2630,8 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  '@types/http-string-parser@0.0.33': {}
+
   '@types/istanbul-lib-coverage@2.0.6': {}
 
   '@types/json-schema@7.0.15': {}
@@ -3612,6 +3626,8 @@ snapshots:
       debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
+
+  http-string-parser@0.0.6: {}
 
   https-proxy-agent@7.0.6:
     dependencies:
