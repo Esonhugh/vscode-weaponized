@@ -11,6 +11,7 @@ import { switchActiveHost } from "./switch/host";
 import { switchActiveUser } from "./switch/user";
 import { cyberChefMagicDecoder } from "./decoder/cyberchef";
 import { copyCommand } from "./copy/copy";
+import { rawHTTPRequest } from "./http/request";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -42,6 +43,9 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
     vscode.workspace.registerTextDocumentContentProvider(
       "weaponized-editor",
       new ReadOnlyProvider()
-    )
-  );
+    ),
+    vscode.commands.registerCommand(
+      "weapon.http_raw_request",
+      rawHTTPRequest
+  ));
 }

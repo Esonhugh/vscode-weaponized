@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { logger } from "../../global/log";
 
 export type MarkdownHTTPCodeLensGenerator = (
-  post: string,
+  post: string[],
   startLine: number,
   document: vscode.TextDocument
 ) => vscode.CodeLens[];
@@ -21,7 +21,7 @@ export class MarkdownHTTPCodeLensProvider implements vscode.CodeLensProvider {
     const lines = document.getText().split("\n");
 
     let inYaml = false;
-    let currentPost = "";
+    let currentPost = [];
     let yamlStartLine = 0;
 
     for (let i = 0; i < lines.length; i++) {
@@ -38,9 +38,9 @@ export class MarkdownHTTPCodeLensProvider implements vscode.CodeLensProvider {
             }
           }
           inYaml = false;
-          currentPost = "";
+          currentPost = [];
         } else {
-          currentPost += line + "\n";
+          currentPost.push(line);
         }
       } else if (line.startsWith("```http")) {
         inYaml = true;
