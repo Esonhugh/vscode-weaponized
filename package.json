@@ -26,7 +26,8 @@
     "workspaceContains:**/.vscode/.zshrc",
     "workspaceContains:**/hosts/**.md",
     "workspaceContains:**/users/**.md",
-    "workspaceContains:**/services/**.md"
+    "workspaceContains:**/services/**.md",
+    "workspaceContains:**/.weaponized"
   ],
   "main": "./dist/extension.js",
   "contributes": {
