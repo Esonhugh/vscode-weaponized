@@ -12,6 +12,7 @@ import { switchActiveUser } from "./switch/user";
 import { cyberChefMagicDecoder } from "./decoder/cyberchef";
 import { copyCommand } from "./copy/copy";
 import { rawHTTPRequest } from "./http/request";
+import { rawHTTPRequestToCurl } from "./http/request_to_curl";
 
 export function registerCommandsPackage(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -44,8 +45,10 @@ export function registerCommandsPackage(context: vscode.ExtensionContext) {
       "weaponized-editor",
       new ReadOnlyProvider()
     ),
+    vscode.commands.registerCommand("weapon.http_raw_request", rawHTTPRequest),
     vscode.commands.registerCommand(
-      "weapon.http_raw_request",
-      rawHTTPRequest
-  ));
+      "weapon.http_raw_request_to_curl",
+      rawHTTPRequestToCurl
+    )
+  );
 }

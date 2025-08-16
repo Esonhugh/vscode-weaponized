@@ -3,7 +3,7 @@ import { targetFilePattern } from "../global/const";
 import { markdownCodelens } from "./yamlconfig";
 import { CommandCodeLensProvider } from "./command/commandProvider";
 import { NoteCreationProvider } from "./newnote/noteProvider";
-import { httpRepeater } from "./httpreapter";
+import { httpRepeater, httpToCurl } from "./httpreapter";
 
 export function registerCodeLensProviders(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -18,6 +18,10 @@ export function registerCodeLensProviders(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },
       new NoteCreationProvider()
+    ),
+    vscode.languages.registerCodeLensProvider(
+      { language: "markdown", scheme: "file", pattern: targetFilePattern },
+      httpToCurl
     ),
     vscode.languages.registerCodeLensProvider(
       { language: "markdown", scheme: "file", pattern: targetFilePattern },

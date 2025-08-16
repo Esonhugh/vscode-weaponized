@@ -2,6 +2,9 @@ import { callback } from "../utils";
 import { parseRequest, ParseRequestResult } from "http-string-parser";
 import * as vscode from "vscode";
 import { logger } from "../../global/log";
+import fetch, { type RequestInit, type Response } from "node-fetch";
+import { Agent as httpsAgent } from "https";
+import { Agent as HttpAgent } from "http";
 
 export const rawHTTPRequest: callback = async (args) => {
   let request: string | undefined = args.request ? args.request : undefined;
@@ -34,20 +37,26 @@ export const rawHTTPRequest: callback = async (args) => {
         headers
       )}, body: ${body ? body : "none"}`
     );
-    let response: Response | undefined = undefined;
+    let requestInit: RequestInit = {
+      method,
+      headers,
+      redirect: 'manual',
+      follow: 0, // Disable automatic following of redirects
+    };
     if (method === "GET" || method === "HEAD") {
       // For GET and HEAD requests, we should not send a body
-      response = await fetch(url, {
-        method,
-        headers,
-      });
+      requestInit.body = undefined;
+      // requestInit.body = body; // Explicitly set body to null for clarity
     } else {
-      response = await fetch(url, {
-        method,
-        headers,
-        body,
+      requestInit.body = body;
+    }
+    if (isHTTPS) {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      requestInit.agent = new httpsAgent({
+        rejectUnauthorized: false, // Disable SSL verification for testing purposes
       });
     }
+    let response: Response = await fetch(url, requestInit);
     let responseText: string = `HTTP/1.1 ${response.status} ${response.statusText}\n`;
     for (const [key, value] of response.headers.entries()) {
       responseText += `${key}: ${value}\n`;
