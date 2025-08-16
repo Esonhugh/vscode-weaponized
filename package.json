@@ -21,7 +21,12 @@
     "Snippets"
   ],
   "activationEvents": [
-    "workspaceContains:**/.vscode/.zshrc"
+    "workspaceContains:**/.foam/templates/*.md",
+    "workspaceContains:**/.vscode/settings.json",
+    "workspaceContains:**/.vscode/.zshrc",
+    "workspaceContains:**/hosts/**.md",
+    "workspaceContains:**/users/**.md",
+    "workspaceContains:**/services/**.md"
   ],
   "main": "./dist/extension.js",
   "contributes": {
