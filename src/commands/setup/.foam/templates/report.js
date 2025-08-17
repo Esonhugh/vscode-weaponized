@@ -167,10 +167,14 @@ function generateFoamGraph(foam) {
     nodeInfo: {},
     edges: new Set(),
     userEdges: new Set(),
+    hostEdges: new Set(),
   };
   foam.workspace.list().forEach((n) => {
     const type = n.type === "note" ? n.properties.type ?? "note" : n.type;
     const title = n.type === "note" ? n.title : n.uri.getBasename();
+    if (type === "report") {
+      return // ignore all report type notes
+    }
     graph.nodeInfo[n.uri.path] = {
       id: n.uri.path,
       type: type,
@@ -189,8 +193,14 @@ function generateFoamGraph(foam) {
     });
     const sourceNode = graph.nodeInfo[sourcePath];
     const targetNode = graph.nodeInfo[targetPath];
-    if (sourceNode && targetNode && targetNode.type === "user") {
+    if (sourceNode && targetNode && (targetNode.type === "user" || sourceNode.type === "user")) {
       graph.userEdges.add({
+        source: sourceNode.id,
+        target: targetNode.id,
+      });
+    }
+    if (sourceNode && targetNode && (targetNode.type === "host" || sourceNode.type === "host")) {
+      graph.hostEdges.add({
         source: sourceNode.id,
         target: targetNode.id,
       });
@@ -203,13 +213,41 @@ function generateFoamGraph(foam) {
   return graph;
 }
 
+function calcTheMermaid(foam, graph) {
+  function getId(uri) {
+    return foam.workspace.getIdentifier(uri) || "";
+  }
+  let ret = {
+    hostEdges: [],
+    userEdges: []
+  }
+  for (const hostEdge of Array.from(graph.hostEdges)) {
+    // Perform calculations or modifications based on host edges
+    const { source, target } = hostEdge;
+    let sourceNode = graph.nodeInfo[source];
+    let targetNode = graph.nodeInfo[target];
+    if (sourceNode && targetNode && targetNode.type === "host" && sourceNode.type === "host") {
+      ret.hostEdges.push(`${getId(sourceNode.uri)} ---> ${getId(targetNode.uri)}`);
+    }
+  }
+  for (const userEdge of Array.from(graph.userEdges)) {
+    // Perform calculations or modifications based on user edges
+    const { source, target } = userEdge;
+    let sourceNode = graph.nodeInfo[source];
+    let targetNode = graph.nodeInfo[target];
+    if (sourceNode && targetNode) {
+      ret.userEdges.push(`${getId(sourceNode.uri)} ---> ${getId(targetNode.uri)}`);
+    }
+  }
+  return ret;
+}
+
 let meta = `---
 title: Final Penetration Testing Report
 type: report
 ---
 
 # Final Penetration Testing Report
-
 `;
 
 function checkArrayDiffElements(arr1, arr2) {
@@ -233,7 +271,7 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
   function getId(uri) {
     return foam.workspace.getIdentifier(uri) || "";
   }
-  console.log("Creating note for trigger:", trigger);
+  console.log("BEGIN ======= Creating note for trigger:", trigger);
   console.log("Foam instance:", Object.keys(foam));
   const graph = generateFoamGraph(foam);
   console.log("Generated graph!");
@@ -305,9 +343,26 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
   });
   userInformation.concat(extraNotes);
 
-  let body = `## Hosts Information
+  let grapher = calcTheMermaid(foam, graph);
+  console.log("Grapher:", grapher);
+
+  // You can use the grapher object to generate a mermaid diagram
+  // For example:
+  let mermaidDiagram = `graph TD;\n`;
+  for (const edge of grapher.userEdges) {
+    mermaidDiagram += `  ${edge}\n`;
+  }
+  mermaidDiagram = "```mermaid\n" + mermaidDiagram + "```";
+  console.log("Mermaid Diagram:", mermaidDiagram);
+
+  
+  let body = `${meta}
+## Hosts Information
 
 ${hostInformation.join("\n")}
+
+## Users Relation graph
+${mermaidDiagram}
 
 ${userInformation.join("\n")}
 `;
@@ -319,6 +374,6 @@ ${userInformation.join("\n")}
 
   return {
     filepath: "report.md",
-    content: meta + body,
+    content: body,
   };
 }
