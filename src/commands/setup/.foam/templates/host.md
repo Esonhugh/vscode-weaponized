@@ -16,6 +16,11 @@ foam_template:
   is_dc: false
   ip: 10.10.10.10
   alias: ["${1:$TM_FILENAME_BASE}"] # if is DC, please set the dc hostname as the first alias, such as ["dc01.example.com"]
+  is_current: false
+  is_current_dc: false
+  props: 
+    key: value
+    ENV_KEY: exported_in_env
 ```
 
 ```zsh 

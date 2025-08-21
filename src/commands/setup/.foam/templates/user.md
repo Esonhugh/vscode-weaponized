@@ -17,6 +17,10 @@ foam_template:
   user: ${FOAM_TITLE/@(\S*)$//}
   password: pass
   nt_hash: fffffffffffffffffffffffffffffffffff
+  is_current: false
+  props:
+    key: value
+    ENV_KEY: exported_in_env
 ```
 
 ```zsh
