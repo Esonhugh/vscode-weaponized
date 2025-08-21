@@ -71,7 +71,11 @@ export class Host {
       collects[`TARGET`] = this.hostname;
     }
     for (let key in this.props) {
-      collects[`${envVarSafer(key)}`] = this.props[key];
+      if (key.startsWith("ENV_")) {
+        let realkey = key.replace("ENV_", "");
+        collects[`${envVarSafer(realkey)}`] = this.props[key];
+      }
+      // collects[`${envVarSafer(key)}`] = this.props[key];
     }
     return collects;
   }

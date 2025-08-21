@@ -104,7 +104,7 @@
       "properties": {
         "weaponized.lhost": {
           "type": "string",
-          "default": "${LHOST}",
+          "default": "$LHOST",
           "description": "This is the LHOST setting for weaponized vscode extension. it's for receive reverse shell or prompt reverse links."
         },
         "weaponized.lport": {
