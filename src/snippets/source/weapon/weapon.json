@@ -16,7 +16,7 @@
 	"psql login": {
 		"prefix": "psql",
 		"body": [
-			"psql -h ${1:\\$RHOST} -U \"${2:\\$USER}\" ${3:\\$DATABASE} ${0}"
+			"PGPASSWORD='$1' psql -h ${2:\\$RHOST} -U \"${3:\\$USER}\" ${4:\\$DATABASE} $0"
 		],
 		"description": "login to psql as postgres user"
 	},
@@ -56,5 +56,14 @@
 			"```"
 		],
 		"description": "host information"
+	},
+	"shell block creation": {
+		"prefix": "```sh",
+		"body": [
+			"```sh",
+			"$0",
+			"```"
+		],
+		"description": "shell block"
 	}
 }
