@@ -290,6 +290,7 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
     }
   }
 
+  // 1. Hosts Information
   let hostInformation = hostNoteList.map((hostMeta) => {
     return `## Host: ${hostMeta.title}
 
@@ -300,10 +301,7 @@ content-inline![[${getId(hostMeta.uri)}]]
   let attackPath = longestReferencePath(Array.from(graph.userEdges));
   let extraNotePath = checkArrayDiffElements(attackPath, userList);
 
-  let userInformation = [
-    "## Attack Path",
-    ""
-  ];
+  // 2. Users Information with Attack Path
   let attackNotes = attackPath.map((userPath, index) => {
     let userMeta = graph.nodeInfo[userPath];
     if (!userMeta) {
@@ -324,11 +322,12 @@ content-inline![[${getId(userMeta.uri)}]]
     }
     return `### User ${userMeta.title} `+ currentNote;
   });
-  userInformation = userInformation.concat(attackNotes);
+  // userInformation = userInformation.concat(attackNotes);
 
-  userInformation.push("## Extra Users", "");
+  // 3. Users Information - Extra Users not in attack path
+  // userInformation.push("## Extra Users", "");
   
-  let extraNotes = extraNotePath.forEach((path) => {
+  let extraNotes = extraNotePath.map((path) => {
     let userMeta = graph.nodeInfo[path];
     if (!userMeta) {
       return `> Note with path ${path} not found in graph.`;
@@ -336,13 +335,14 @@ content-inline![[${getId(userMeta.uri)}]]
     if (userMeta.type !== "user") {
       return `> Note with path ${path} is not a user type.`;
     }
-    userInformation.push(`### User: ${userMeta.title}
+    return `### User: ${userMeta.title}
 
-![[${getId(userMeta.uri)}]]
-`);
+content-inline![[${getId(userMeta.uri)}]]
+`;
   });
-  userInformation.concat(extraNotes);
+  // userInformation.concat(extraNotes);
 
+  // 4. Generate Mermaid graph for Users based attack path
   let grapher = calcTheMermaid(foam, graph);
   console.log("Grapher:", grapher);
 
@@ -355,16 +355,23 @@ content-inline![[${getId(userMeta.uri)}]]
   mermaidDiagram = "```mermaid\n" + mermaidDiagram + "```";
   console.log("Mermaid Diagram:", mermaidDiagram);
 
-  
+  // 5. Final assembly in order
   let body = `${meta}
 ## Hosts Information
 
 ${hostInformation.join("\n")}
 
-## Users Relation graph
+## Full Relations graph
 ${mermaidDiagram}
 
-${userInformation.join("\n")}
+## Privilege Escalation Path
+
+${attackNotes.join("\n")}
+
+## Extra Pwned Users
+
+${extraNotes.join("\n")}
+
 `;
 
   console.log("attack path:", attackPath);
