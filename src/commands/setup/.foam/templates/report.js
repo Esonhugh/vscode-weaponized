@@ -173,7 +173,7 @@ function generateFoamGraph(foam) {
     const type = n.type === "note" ? n.properties.type ?? "note" : n.type;
     const title = n.type === "note" ? n.title : n.uri.getBasename();
     if (type === "report") {
-      return // ignore all report type notes
+      return; // ignore all report type notes
     }
     graph.nodeInfo[n.uri.path] = {
       id: n.uri.path,
@@ -293,7 +293,7 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
   let hostInformation = hostNoteList.map((hostMeta) => {
     return `## Host: ${hostMeta.title}
 
-![[${getId(hostMeta.uri)}]]
+content-inline![[${getId(hostMeta.uri)}]]
 `;
   });
 
@@ -311,7 +311,7 @@ async function createNote({ trigger, foam, resolver, foamDate }) {
     }
     var currentNote = `
 
-![[${getId(userMeta.uri)}]]
+content-inline![[${getId(userMeta.uri)}]]
 `;
     if (index === 0) {
       if (userMeta.type === "host") {
