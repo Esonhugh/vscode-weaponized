@@ -264,6 +264,7 @@
     "gen-blood": "ts-node ./src/snippets/source/blood/gen.ts",
     "gen-setup": "python3 ./src/commands/setup/create.py",
     "vscode:prepublish": "pnpm run package",
+    "prepare": "pnpm run gen-setup",
     "vscode:publish": "vsce package --no-dependencies",
     "compile": "webpack",
     "watch": "webpack --watch",
